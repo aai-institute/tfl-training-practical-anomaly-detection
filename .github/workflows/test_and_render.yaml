@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:
+      - solutions
+  pull_request:
+    branches:
+      - solutions
+
+jobs:
+  test_and_render:
+    runs-on: ubuntu-latest
+    container:
+      image: europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection:latest
+      options: --user root
+      credentials:
+        username: _json_key
+        password: ${{ secrets.GAR_JSON_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+        with:
+          fetch-depth: 0
+          lfs: true
+          persist-credentials: false
+      # lfs=true is not enough, see https://stackoverflow.com/questions/61463578/github-actions-actions-checkoutv2-lfs-true-flag-not-converting-pointers-to-act
+      - name: Pull LFS Objects
+        run: git lfs pull
+      - name: Install package
+        run: pip install -e .
+      - name: Fetch config
+        run: if [ -n ${{ secrets.CONFIG_LOCAL }} ]; then echo ${{ secrets.CONFIG_LOCAL }} > ./config_local.json && echo "retrieved local config"; fi
+      - name: Run tests and render
+        run: |
+          bash build_scripts/run-tests-render-notebooks.sh
+          bash build_scripts/build-docs.sh
+      - name: Prepare Pages
+        if: github.ref == 'refs/heads/solutions'
+        run: |
+          mv docs/_build/html/* public/
+      - name: Deploy Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        if: github.ref == 'refs/heads/solutions'
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: public
+          TARGET_FOLDER: .
+          CLEAN: true
+          SINGLE_COMMIT: true

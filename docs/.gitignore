@@ -1,0 +1,5 @@
+_build
+*.ipynb
+rise_template/**/*.rst
+rise.css
+images

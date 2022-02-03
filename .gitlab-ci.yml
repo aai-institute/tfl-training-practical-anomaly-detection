@@ -1,0 +1,43 @@
+include:
+  - project: 'resources/gitlab-ci-templates'
+    ref: master
+    file: '/docker-build/template.yml'
+
+stages:
+  - docker-build
+  - test-and-render
+  - pages
+
+docker-build:
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == "master"
+    changes:
+      - Dockerfile
+      - requirements*.txt
+
+test-and-render:
+  image: $DOCKER_BUILD_IMAGE_FULL_NAME:$DOCKER_BUILD_IMAGE_TAG
+  stage: test-and-render
+  script:
+    - if [ -e $CONFIG_LOCAL ]; then mv $CONFIG_LOCAL ./config_local.json && echo "retrieved local config"; fi
+    - pip install -e .
+    - bash build_scripts/run-tests-render-notebooks.sh
+    - bash build_scripts/build-docs.sh
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == "solutions"
+  artifacts:
+    paths:
+      - docs/_build
+
+pages:
+  stage: pages
+  script:
+    - mv docs/_build/html/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    variables:
+      - $CI_COMMIT_REF_NAME == "solutions"
