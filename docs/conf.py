@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# tfl_training_anomaly_detection documentation build configuration file
+# tfl-training-anomaly-detection documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -85,7 +85,7 @@ nbsphinx_prolog = """
 # adding links to source files (this works for gitlab and github like hosts and might need to be adjusted for others)
 # see https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode
 def linkcode_resolve(domain, info):
-    link_prefix = "https://github.com/appliedAI-Initiative/tfl-training-practical-anomaly-detection/blob/develop"
+    link_prefix = "https://github.com/appliedAI-Initiative/tfl-training-anomaly-detection/blob/develop"
     if domain != "py":
         return None
     if not info["module"]:
@@ -166,7 +166,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "tfl_training_anomaly_detection"
+project = "tfl-training-anomaly-detection"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -291,7 +291,7 @@ html_static_path = []
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "tfl_training_anomaly_detection_doc"
+htmlhelp_basename = "tfl-training-anomaly-detection_doc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -335,7 +335,7 @@ latex_elements = {
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ("index", "tfl_training_anomaly_detection", "", ["appliedAI Transferlab"], 1)
+    ("index", "tfl-training-anomaly-detection", "", ["appliedAI Transferlab"], 1)
 ]
 
 # If true, show URL addresses after external links.
