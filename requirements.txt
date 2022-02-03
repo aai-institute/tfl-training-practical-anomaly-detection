@@ -126,7 +126,7 @@ widgetsnbextension==3.5.1
 #zeromq==4.3.4
 zipp==3.4.1
 #zlib==1.2.11
-zstd==1.4.9
+#zstd==1.4.9
 astunparse==1.6.3
 cachetools==4.2.2
 charset-normalizer==2.0.4
