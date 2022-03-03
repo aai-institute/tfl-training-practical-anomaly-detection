@@ -17,6 +17,7 @@ from sklearn.metrics import precision_recall_curve, roc_curve, average_precision
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KernelDensity
 from sklearn.ensemble import IsolationForest as iForest
+from sklearn.utils import shuffle
 tfd = tfp.distributions
 
 from plotly import express as px
@@ -314,6 +315,25 @@ def contamination(nominal, anomaly, p):
         )
     ])
 
+def get_house_pricing_data(neighborhood = 'CollgCr', anomaly_neighborhood='NoRidge'):
+    """
+    Load house pricing data for one neighborhood.
+    The method returns also test data which are made of data from selected neighborhood plus data
+    from another neighborhood, considered as anomaly.
+    :param neighborhood: str, key corresponding to neighborhood.
+    :param anomaly_neighborhood: neighborhood to use as anomaly. Must be different to neighborhood
+    :return: train data, i.e. data only from selected neighborhood, test data, i.e. data with 
+        contamination, and test labels, i.e. a list of zeros and one corresponding to normal or 
+        anomalous data respectively.
+    """
+    house_data = pd.read_csv('../data/house_prices/house_prices.csv')
+    neighborhood_data = house_data[house_data["Neighborhood"] == neighborhood].drop(columns=['Neighborhood'])
+    X_train, X_test = train_test_split(neighborhood_data, test_size=0.2)
+    X_anomalies = house_data[house_data["Neighborhood"] == anomaly_neighborhood].drop(columns=['Neighborhood'])
+    y_test = [0]*len(X_test) + [1]*len(X_anomalies)
+    X_test = X_test.append(X_anomalies, ignore_index=True)
+    X_test, y_test = shuffle(X_test, y_test)
+    return X_train.reset_index(drop=True), X_test.reset_index(drop=True), y_test
 
 def benchmark_algorithms():
     """
