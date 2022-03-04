@@ -12,6 +12,7 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 
 from sklearn.datasets import make_spd_matrix, fetch_kddcup99
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import precision_recall_curve, roc_curve, average_precision_score, roc_auc_score, precision_score, \
     recall_score, f1_score
 from sklearn.model_selection import train_test_split
@@ -315,9 +316,9 @@ def contamination(nominal, anomaly, p):
         )
     ])
 
-def get_house_pricing_data(neighborhood = 'CollgCr', anomaly_neighborhood='NoRidge'):
+def get_house_prices_data(neighborhood = 'CollgCr', anomaly_neighborhood='NoRidge'):
     """
-    Load house pricing data for one neighborhood.
+    Load house prices data for one neighborhood.
     The method returns also test data which are made of data from selected neighborhood plus data
     from another neighborhood, considered as anomaly.
     :param neighborhood: str, key corresponding to neighborhood.
@@ -462,6 +463,18 @@ def anomaly_from_classification(data, target, nominal_classes, anomaly_classes, 
 
     return [X, y]
 
+def load_contaminated_data(dataset):
+    if dataset == 'house-prices':
+        X_train, X_test, y_test = get_house_prices_data(neighborhood = 'CollgCr', anomaly_neighborhood='Edwards')
+        X = X_train.append(X_test, ignore_index=True)
+        y = np.array([0] * len(X_train) + y_test)
+        X, y = shuffle(X, y)
+        #for the rkde experiment, 0 must be the label for anomalies, and 1 for normal data
+        y = np.abs(y-1)
+    else:
+        X, y = data.load_data_outlier(dataset)
+    return X, y
+
 
 ######################################################################
 # The following code is based on https://github.com/lminvielle/mom-kde
@@ -470,12 +483,9 @@ def anomaly_from_classification(data, target, nominal_classes, anomaly_classes, 
 
 def perform_rkde_experiment(
         algos,
-        datasets,
-        n_exp,
+        dataset,
         outlierprop_range,
         kernel,
-        WRITE_SCORE,
-        scores_file
 ):
     """
     Replicates the experiments from https://github.com/lminvielle/mom-kde
@@ -484,75 +494,61 @@ def perform_rkde_experiment(
     #   Processing
     # =======================================================
 
-    for i_exp in range(n_exp):
-        print('EXP: {} / {}'.format(i_exp + 1, n_exp))
-        for dataset in datasets:
-            print('Dataset: ', dataset)
-            X0, y0 = data.load_data_outlier(dataset)
+    print('Dataset: ', dataset)
+    X0, y0 = load_contaminated_data(dataset)
+    total_scores = pd.DataFrame()
 
-            # Plot data is possiblr
-            if dataset == 'banana':
-                plt.scatter(X0[:, 0], X0[:, 1], c=y0)
-                plt.show()
-            if dataset == 'titanic':
-                fig = px.scatter_3d(x=X0[:, 0], y=X0[:, 1], z=X0[:, 2], color=y0)
-                fig.show()
-            # Find bandwidth
-            h_cv, _, _ = kde_lib.bandwidth_cvgrid(X0)
-            print("h CV: ", h_cv)
-            for i_outlierprop, outlier_prop in enumerate(outlierprop_range):
-                epsilon = outlier_prop / (1 - outlier_prop)
-                print('\nOutlier prop: {} ({} / {})'.format(outlier_prop, i_outlierprop + 1, len(outlierprop_range)))
-                # balance the inlier / outlier according to epsilon
+    # Plot data is possiblr
+    if dataset == 'banana':
+        plt.scatter(X0[:, 0], X0[:, 1], c=y0)
+        plt.show()
+    if dataset == 'titanic':
+        fig = px.scatter_3d(x=X0[:, 0], y=X0[:, 1], z=X0[:, 2], color=y0)
+        fig.show()
+    if dataset == 'house-prices':
+        fig = px.scatter_3d(X0, x='LotArea', y='OverallCond', z='SalePrice', color=y0)
+        fig.show()
+
+    scaler = MinMaxScaler()
+    X0 = scaler.fit_transform(X0)
+    for i_outlierprop, outlier_prop in enumerate(outlierprop_range):
+        epsilon = outlier_prop / (1 - outlier_prop)
+        print('\nOutlier prop: {} ({} / {})'.format(outlier_prop, i_outlierprop + 1, len(outlierprop_range)))
+        X, y = data.balance_outlier(X0, y0, e=epsilon)
+        n_outliers = np.sum(y == 0)
+        if epsilon == 0:
+            k_range = [1]
+        else:
+            if epsilon < 1 / 3:
+                k_max = 2 * n_outliers + 1
+            else:
+                k_max = X.shape[0] / 2
+            k_range = np.linspace(1, k_max, 5).astype(int)
+
+        # Find bandwidth
+        h_cv, _, _ = kde_lib.bandwidth_cvgrid(X)
+
+        # Processing all algos
+        for algo in algos:
+            print('Algo: ', algo)
+            model = Density_model(algo, dataset, outlier_prop, kernel, h_cv)
+            # if mom, run on several k
+            if algo == 'mom-kde':
+                k_range_run = k_range
+            else:
+                k_range_run = [1]
+            for k in k_range_run:
+                model.fit(X, X, grid=None, k=k, norm_mom=False)
                 if epsilon != 0:
-                    X, y = data.balance_outlier(X0, y0, e=epsilon)
-                else:
-                    X = X0.copy()
-                    y = y0.copy()
-                n_outliers = np.sum(y == 0)
-                # evaluate on observations
-                X_plot = X
-                # compute true density
-                X_inlier = X0[y0 == 1]
-                true_dens = kde_lib.kde(X_inlier, X_plot, h_cv, 'gaussian')
-                # set range for k (number blocks) according to outliers
-                if epsilon == 0:
-                    k_range = [1]
-                else:
-                    if epsilon < 1 / 3:
-                        k_max = 2 * n_outliers + 1
-                    else:
-                        k_max = X.shape[0] / 2
-                    k_range = np.linspace(1, k_max, 5).astype(int)
-                # Processing all algos
-                for algo in algos:
-                    print('Algo: ', algo)
-                    model = Density_model(algo, dataset, outlier_prop, kernel, h_cv)
-                    # if mom, run on several k
-                    if algo == 'mom-kde':
-                        k_range_run = k_range
-                    else:
-                        k_range_run = [1]
-                    for k in k_range_run:
-
-                        model.fit(X, X_plot, grid=None, k=k, norm_mom=False)
-                        if epsilon != 0:
-                            model.compute_anomaly_roc(y)
-                        if WRITE_SCORE:
-                            model.write_score(scores_file)
+                    model.compute_anomaly_roc(y)
+                new_scores = model.get_score()
+                total_scores = total_scores.append(new_scores, ignore_index=True)
+    return total_scores
 
 
 # =======================================================
 #   Useful functions
 # =======================================================
-
-
-def verify(dataframe, message):
-    """
-    Verify dataframe
-    """
-    if dataframe.empty:
-        raise ValueError('empty data frame: ' + message)
 
 
 def set_datasetname(dataset):
@@ -577,141 +573,3 @@ algoname = {
     'spkde': 'SPKDE',
     'rkde': 'RKDE'
 }
-def plot_rkde_experiment(
-    algos,
-    datasets,
-    outlierprop_range,
-    scores_file
-):
-    """
-    Visualization of the experiments.
-    """
-    min_metrics = ['jensen', 'kullback_f0_f', 'kullback_f_f0']
-    # =======================================================
-    #   Parameters
-    # =======================================================
-
-    # Which metric ?
-    #metric = 'kullback_f0_f'
-    #metric = 'kullback_f_f0'
-    metric = 'auc_anomaly'
-
-    SHOW = 1
-    LEGEND = 1
-
-    # Plot params
-    rc('text', usetex=True)
-    rc('font', **{'family': 'serif', 'serif': ['Times New Roman']})
-    FIGSIZE = (5, 4)
-
-    SMALL_SIZE = 16
-
-    plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-    # plt.rc('axes', titlesize=TINY_SIZE)     # fontsize of the axes title
-    # plt.rc('axes', labelsize=TINY_SIZE)    # fontsize of the x and y labels
-    # plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-    # plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-    # plt.rc('legend', fontsize=TINY_SIZE)    # legend fontsize
-    # plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-    HSPACE = None
-    # TOP = 0.95
-    TOP = None
-    BOTTOM = 0.17
-    # BOTTOM = None
-    LEFT = 0.19
-    # LEFT = None
-
-
-    # =======================================================
-    #   Processing
-    # =======================================================
-    x_plot = outlierprop_range
-
-    scores = pd.read_csv(scores_file)
-
-    scores_arr_mean = np.zeros((len(algos), len(x_plot)))
-    scores_arr_std = np.zeros((len(algos), len(x_plot)))
-
-    for i_dataset, dataset in enumerate(datasets):
-        print('\nDataset: ', dataset)
-        #select dataset
-        scores_select = scores[scores.dataset == dataset]
-        verify(scores_select, 'scores_select, dataset')
-
-        fig, ax = plt.subplots(figsize=FIGSIZE)
-        plt.subplots_adjust(hspace=HSPACE, top=TOP, bottom=BOTTOM, left=LEFT)
-        #Setup scores
-        for i_algo, algo in enumerate(algos):
-            print('Algo', algo)
-            tmp_algo = scores_select[scores_select.algo == algo]
-            verify(tmp_algo, 'algo')
-            for i_outlierprop, outlierprop in enumerate(outlierprop_range):
-                tmp_prop = tmp_algo[tmp_algo.outlier_prop == outlierprop]
-                verify(tmp_prop, 'epsilon')
-                if algo == 'mom-kde':
-                    range_k = list(set(tmp_prop.n_block))
-                    # print('range K:', range_k)
-                    scores_mean_k = np.zeros(len(range_k))
-                    scores_std_k = np.zeros(len(range_k))
-                    for i_k, k in enumerate(range_k):
-                        tmp_k = tmp_prop[tmp_prop.n_block == k]
-                        scores_mean_k[i_k] = np.mean(tmp_k[metric])
-                        scores_std_k[i_k] = np.std(tmp_k[metric])
-                    if metric in min_metrics:
-                        # print('select min score')
-                        best_score = np.min(scores_mean_k)
-                        best_ik = np.argmin(scores_mean_k)
-                        best_k = range_k[best_ik]
-                    else:
-                        # print('select max score')
-                        best_score = np.max(scores_mean_k)
-                        best_ik = np.argmax(scores_mean_k)
-                        best_k = range_k[best_ik]
-                    # print('best k: ', best_k)
-                    score_mean = best_score
-                    score_std = scores_std_k[best_ik]
-                else:
-                    tmp = tmp_prop[metric]
-                    verify(tmp, 'metric')
-                    if i_outlierprop == 0:
-                        print('n exp', tmp.shape)
-                    score_mean = np.mean(tmp)
-                    score_std = np.std(tmp)
-                scores_arr_mean[i_algo, i_outlierprop] = score_mean
-                scores_arr_std[i_algo, i_outlierprop] = score_std
-
-        #Plots
-        for i_algo, algo in enumerate(algos):
-            if algo == 'kde':
-                marker = 'o'
-                ls = ''
-            elif algo == 'spkde':
-                marker = ''
-                ls = '--'
-            else:
-                marker = ''
-                ls = '-'
-            algo_name = algoname.get(algo, algo)
-            ax.plot(x_plot,
-                    scores_arr_mean[i_algo, :],
-                    label=algo_name,
-                    linestyle=ls,
-                    marker=marker)
-            ax.grid(alpha=.3)
-            ax.fill_between(x_plot,
-                            scores_arr_mean[i_algo, :] - scores_arr_std[i_algo, :],
-                            scores_arr_mean[i_algo, :] + scores_arr_std[i_algo, :],
-                            alpha=0.2)
-            metric_name = metricname.get(metric, metric)
-            ax.set_ylabel(metric_name)
-            ax.set_xlabel("$|\mathcal{O}| / n$")
-            ax.xaxis.set_major_locator(plt.MaxNLocator(5))
-            ax.yaxis.set_major_locator(plt.MaxNLocator(5))
-            ax.set_title(set_datasetname(dataset))
-
-        if i_dataset == 0:
-            if LEGEND:
-                ax.legend()
-
-    if SHOW:
-        plt.show()

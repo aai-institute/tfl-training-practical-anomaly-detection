@@ -150,6 +150,10 @@ def balance_outlier(X, y, outlier_label=0, e=0.1):
     X : data
     y : labels must be in [1, 0], with 1 being inliers and 0 being outliers
     """
+    if e == 0:
+        X = X.copy()
+        y = y.copy()
+        return X, y
     X_inlier = X[y == 1]
     X_outlier = X[y == 0]
     n_inlier_in = np.sum(y == 1)
