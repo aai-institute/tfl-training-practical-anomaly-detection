@@ -463,9 +463,9 @@ def anomaly_from_classification(data, target, nominal_classes, anomaly_classes, 
 
     return [X, y]
 
-def load_contaminated_data(dataset):
+def load_contaminated_data(dataset, dataset_options):
     if dataset == 'house-prices':
-        X_train, X_test, y_test = get_house_prices_data(neighborhood = 'CollgCr', anomaly_neighborhood='Edwards')
+        X_train, X_test, y_test = get_house_prices_data(**dataset_options)
         X = X_train.append(X_test, ignore_index=True)
         y = np.array([0] * len(X_train) + y_test)
         X, y = shuffle(X, y)
@@ -484,6 +484,7 @@ def load_contaminated_data(dataset):
 def perform_rkde_experiment(
         algos,
         dataset,
+        dataset_options,
         outlierprop_range,
         kernel,
 ):
@@ -495,7 +496,7 @@ def perform_rkde_experiment(
     # =======================================================
 
     print('Dataset: ', dataset)
-    X0, y0 = load_contaminated_data(dataset)
+    X0, y0 = load_contaminated_data(dataset, dataset_options)
     total_scores = pd.DataFrame()
 
     # Plot data is possiblr
