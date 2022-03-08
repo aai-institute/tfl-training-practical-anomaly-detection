@@ -82,12 +82,19 @@ class Density_model:
                                                        K=k,
                                                        median='geometric',
                                                        return_model=True)
-        elif self.algo == 'rkde':
+        elif self.algo == 'rkde-hampel':
             self.X_data = X
             self.density, self.model = kde_lib.rkde(X,
                                                     X_plot,
                                                     self.bandwidth,
                                                     type_rho='hampel',
+                                                    return_model=True)
+        elif self.algo == 'rkde-huber':
+            self.X_data = X
+            self.density, self.model = kde_lib.rkde(X,
+                                                    X_plot,
+                                                    self.bandwidth,
+                                                    type_rho='huber',
                                                     return_model=True)
         elif self.algo == 'spkde':
             self.X_data = X
