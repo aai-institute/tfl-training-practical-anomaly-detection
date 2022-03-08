@@ -40,6 +40,6 @@ BUILD_DIR=$(dirname "$0")
 (
   cd "${BUILD_DIR}/.." || (echo "Unknown error, could not find directory ${BUILD_DIR}" && exit 255)
   python build_scripts/update_docs.py
-  sphinx-build -W -b html -d "temp/doctrees" docs "docs/_build/html"
+  sphinx-build -b html -d "temp/doctrees" docs "docs/_build/html"
   sphinx-build -b doctest -d "temp/doctrees" docs "docs/_build/doctest"
 )
