@@ -11,7 +11,7 @@ resources = {"metadata": {"path": NOTEBOOKS_DIR}}
 
 log = logging.getLogger(__name__)
 
-OMITTED_NOTEBOOKS = []
+OMITTED_NOTEBOOKS = ['extreme_value_theory_for_anomaly_detection.ipynb']
 
 
 @pytest.mark.parametrize(
