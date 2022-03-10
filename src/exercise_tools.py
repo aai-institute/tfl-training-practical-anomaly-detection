@@ -507,7 +507,7 @@ def perform_rkde_experiment(
         fig = px.scatter_3d(x=X0[:, 0], y=X0[:, 1], z=X0[:, 2], color=y0)
         fig.show()
     if dataset == 'house-prices':
-        fig = px.scatter_3d(X0, x='LotArea', y='OverallCond', z='SalePrice', color=y0)
+        fig = px.scatter_3d(X0, x='LotArea', y='OverallCond', z='SalePrice', color=np.abs(y0-1))
         fig.show()
 
     scaler = MinMaxScaler()
