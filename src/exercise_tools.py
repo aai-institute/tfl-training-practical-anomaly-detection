@@ -527,7 +527,7 @@ def perform_rkde_experiment(
             k_range = np.linspace(1, k_max, 5).astype(int)
 
         # Find bandwidth
-        h_cv, _, _ = kde_lib.bandwidth_cvgrid(X)
+        h_cv, _, _ = kde_lib.bandwidth_cvgrid(X, kernel=kernel)
 
         # Processing all algos
         for algo in algos:

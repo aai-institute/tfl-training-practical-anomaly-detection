@@ -382,7 +382,7 @@ def spkde(X_data, X_plot, h, outliers_fraction, return_model=False):
         return z
 
 
-def bandwidth_cvgrid(X_data, loo=False, kfold=5):
+def bandwidth_cvgrid(X_data, loo=False, kfold=5, kernel='gaussian'):
     """
     Compute the best bandwidth along a grid search.
 
@@ -399,11 +399,11 @@ def bandwidth_cvgrid(X_data, loo=False, kfold=5):
     print("Finding best bandwidth...")
     sigma = np.logspace(-1.5, 0.5, 80)  # grid for method 2 et 3
     if loo:
-        grid = GridSearchCV(KernelDensity(kernel='gaussian'),
+        grid = GridSearchCV(KernelDensity(kernel=kernel),
                             {'bandwidth': sigma},
                             cv=LeaveOneOut())
     else:
-        grid = GridSearchCV(KernelDensity(kernel='gaussian'),
+        grid = GridSearchCV(KernelDensity(kernel=kernel),
                             {'bandwidth': sigma},
                             cv=KFold(n_splits=kfold))
     grid.fit(X_data)
