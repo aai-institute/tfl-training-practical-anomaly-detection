@@ -1,7 +1,7 @@
 FROM jupyter/minimal-notebook:python-3.9.7
 
 USER root
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update -yq && apt-get -yq install ffmpeg
 
 # pandoc needed for docu, see https://nbsphinx.readthedocs.io/en/0.7.1/installation.html?highlight=pandoc#pandoc
 # gh-pages action uses rsync
