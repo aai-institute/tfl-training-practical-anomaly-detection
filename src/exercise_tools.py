@@ -419,9 +419,12 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
     return X_train.reset_index(drop=True), X_test.reset_index(drop=True), y_test
 
 
-def get_mnist_data():
+def get_mnist_data(load_full_dataset=True):
     """Loads mnist data into pandas Dataframe with columns data and target"""
-    raw_mnist = pd.read_csv("../data/mnist/mnist_784.csv")
+    if load_full_dataset:
+        raw_mnist = pd.read_csv("../data/mnist/mnist_784.csv")
+    else:
+        raw_mnist = pd.read_csv("../data/mnist/mnist_784_trial.csv")
     target = raw_mnist.values[:, -1]
     data = raw_mnist.values[:, :-1]
     mnist = {"data": data, "target": target}
