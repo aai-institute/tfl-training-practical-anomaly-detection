@@ -1,11 +1,13 @@
 import itertools as it
+import logging
+import os
 from math import ceil
 
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 import tensorflow_probability as tfp
-from sklearn.datasets import fetch_kddcup99, make_spd_matrix
+from sklearn.datasets import fetch_kddcup99, fetch_openml, make_spd_matrix
 from sklearn.ensemble import IsolationForest as iForest
 from sklearn.metrics import (
     average_precision_score,
@@ -31,6 +33,8 @@ from matplotlib import rc
 from matplotlib.patches import Ellipse
 from plotly import express as px
 
+logger = logging.getLogger(__name__)
+
 
 # Helper function
 def visualize_kde(kernel, bandwidth, X_train, y_train):
@@ -52,7 +56,7 @@ def visualize_kde(kernel, bandwidth, X_train, y_train):
     scores = np.exp(kde.score_samples(grid_points)).reshape(50, 50)
     colormesh = axis.contourf(xs, ys, scores)
     fig.colorbar(colormesh)
-    axis.set_title("Density Conturs (Bandwidth={})".format(bandwidth))
+    axis.set_title("Density Contours (Bandwidth={})".format(bandwidth))
     axis.set_aspect("equal")
     plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train)
     plt.show()
@@ -76,15 +80,15 @@ def visualize_mahalanobis(data, y, scores, mu, sigma_diag, thr):
     handles, _ = scatter_gt.legend_elements()
     axes.legend(handles, ["Nominal", "Anomaly"])
     axes.set_aspect("equal")
-    # Draw descicion contour
-    descion_border = Ellipse(
+    # Draw decision contour
+    decision_border = Ellipse(
         mu,
         width=2 * np.sqrt(sigma_diag[0]) * thr,
         height=2 * np.sqrt(sigma_diag[1]) * thr,
         color="red",
         fill=False,
     )
-    axes.add_patch(descion_border)
+    axes.add_patch(decision_border)
 
     # Evaluate threshold
     y_pred = scores > thr
@@ -104,10 +108,20 @@ def get_kdd_data():
     Download KDD dataset. Provides labels only for the test set.
     :return: X_train, X_test, y_test
     """
-    KDD99 = fetch_kddcup99(subset="SA")
+    is_testing = os.getenv("is_test", "False") == "True"
+    if is_testing:
+        logger.info("Loading reduced kdd cup data for testing pipeline.")
+        import pickle as pkl
 
-    X = KDD99["data"]
-    y = KDD99["target"]
+        with open("../data/kddcup99/kddcup99_trial.pkl", "rb") as f:
+            KDD99_trial = pkl.load(f)
+        X = KDD99_trial["data"]
+        y = KDD99_trial["target"]
+    else:
+        KDD99 = fetch_kddcup99(subset="SA")
+
+        X = KDD99["data"]
+        y = KDD99["target"]
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
@@ -419,14 +433,26 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
     return X_train.reset_index(drop=True), X_test.reset_index(drop=True), y_test
 
 
-def get_mnist_data(load_full_dataset=True):
-    """Loads mnist data into pandas Dataframe with columns data and target"""
-    if load_full_dataset:
-        raw_mnist = pd.read_csv("../data/mnist/mnist_784.csv")
-    else:
+def get_mnist_data():
+    """
+    Loads mnist data into pandas Dataframe with columns data and target.
+    If dataset is not already cached, fetching it through openml could give some problems with the SSL Certificate.
+    So, if SSLCertVerificationError is raised, run the following:
+
+    import ssl
+    ssl._create_default_https_context = ssl._create_unverified_context
+    get_mnist_data()
+    """
+    is_testing = os.getenv("is_test", "False") == "True"
+    if is_testing:
+        logger.info("Loading reduced mnist data for testing pipeline.")
         raw_mnist = pd.read_csv("../data/mnist/mnist_784_trial.csv")
-    target = raw_mnist.values[:, -1]
-    data = raw_mnist.values[:, :-1]
+        target = raw_mnist.values[:, -1]
+        data = raw_mnist.values[:, :-1]
+    else:
+        raw_mnist = fetch_openml("mnist_784", version=1)
+        data = raw_mnist.data.values
+        target = raw_mnist.target
     mnist = {"data": data, "target": target}
     return mnist
 

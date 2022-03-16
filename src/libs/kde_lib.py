@@ -1,20 +1,20 @@
 import numpy as np
-from sklearn.neighbors import KernelDensity
+from cvxopt import matrix, solvers
 from scipy.spatial.distance import euclidean
 from sklearn.metrics.pairwise import rbf_kernel
-from cvxopt import matrix, solvers
-from sklearn.model_selection import GridSearchCV, LeaveOneOut, KFold
+from sklearn.model_selection import GridSearchCV, KFold, LeaveOneOut
+from sklearn.neighbors import KernelDensity
 
 
 def gaussian_kernel(X, h, d):
     """
     Apply gaussian kernel to the input distance X
     """
-    K = np.exp(-X / (2 * (h**2))) / ((2 * np.pi * (h**2))**(d / 2))
+    K = np.exp(-X / (2 * (h ** 2))) / ((2 * np.pi * (h ** 2)) ** (d / 2))
     return K
 
 
-def rho(x, typ='hampel', a=0, b=0, c=0):
+def rho(x, typ="hampel", a=0, b=0, c=0):
     """
     Rho function for Huber and Hampel loss
     Parameters
@@ -29,32 +29,32 @@ def rho(x, typ='hampel', a=0, b=0, c=0):
     -------
     value of rho function at x
     """
-    if typ == 'huber':
-        in1 = (x <= a)
-        in2 = (x > a)
-        in1_t = x[in1]**2 / 2
-        in2_t = x[in2] * a - a**2 / 2
+    if typ == "huber":
+        in1 = x <= a
+        in2 = x > a
+        in1_t = x[in1] ** 2 / 2
+        in2_t = x[in2] * a - a ** 2 / 2
         L = np.sum(in1_t) + np.sum(in2_t)
-    if typ == 'hampel':
-        in1 = (x < a)
+    if typ == "hampel":
+        in1 = x < a
         in2 = np.logical_and(a <= x, x < b)
         in3 = np.logical_and(b <= x, x < c)
-        in4 = (c <= x)
-        in1_t = (x[in1]**2) / 2
-        in2_t = a * x[in2] - a**2 / 2
-        in3_t = (a * (x[in3] - c)**2 / (2 * (b - c))) + a * (b + c - a) / 2
+        in4 = c <= x
+        in1_t = (x[in1] ** 2) / 2
+        in2_t = a * x[in2] - a ** 2 / 2
+        in3_t = (a * (x[in3] - c) ** 2 / (2 * (b - c))) + a * (b + c - a) / 2
         in4_t = np.ones(x[in4].shape) * a * (b + c - a) / 2
         L = np.sum(in1_t) + np.sum(in2_t) + np.sum(in3_t) + np.sum(in4_t)
-    if typ == 'square':
-        t = x**2
-    if typ == 'abs':
+    if typ == "square":
+        t = x ** 2
+    if typ == "abs":
         t = np.abs(x)
         L = np.sum(t)
 
     return L / x.shape[0]
 
 
-def loss(x, typ='hampel', a=0, b=0, c=0):
+def loss(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel loss
     Parameters
@@ -72,7 +72,7 @@ def loss(x, typ='hampel', a=0, b=0, c=0):
     return rho(x, typ=typ, a=a, b=b, c=c) / x.shape[0]
 
 
-def psi(x, typ='hampel', a=0, b=0, c=0):
+def psi(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel psu function
     Parameters
@@ -87,25 +87,25 @@ def psi(x, typ='hampel', a=0, b=0, c=0):
     -------
     Value of psi function
     """
-    if typ == 'huber':
+    if typ == "huber":
         return np.minimum(x, a)
-    if typ == 'hampel':
-        in1 = (x < a)
+    if typ == "hampel":
+        in1 = x < a
         in2 = np.logical_and(a <= x, x < b)
         in3 = np.logical_and(b <= x, x < c)
-        in4 = (c <= x)
+        in4 = c <= x
         in1_t = x[in1]
         in2_t = np.ones(x[in2].shape) * a
         in3_t = a * (c - x[in3]) / (c - b)
         in4_t = np.zeros(x[in4].shape)
         return np.concatenate((in1_t, in2_t, in3_t, in4_t)).reshape((-1, x.shape[1]))
-    if typ == 'square':
+    if typ == "square":
         return 2 * x
-    if typ == 'abs':
+    if typ == "abs":
         return 1
 
 
-def phi(x, typ='hampel', a=0, b=0, c=0):
+def phi(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel phi
     Parameters
@@ -130,9 +130,9 @@ def irls(Km, type_rho, n, a, b, c, alpha=10e-8, max_it=100):
     """
     # init weights
     w = np.ones((n, 1)) / n
-    #first pass
+    # first pass
     t1 = np.diag(Km).reshape((-1, 1))  #  (-1, dimension)
-    t2 = - 2 * np.dot(Km, w)
+    t2 = -2 * np.dot(Km, w)
     t3 = np.dot(np.dot(w.T, Km), w)
     t = t1 + t2 + t3
     norm = np.sqrt(t)
@@ -148,20 +148,20 @@ def irls(Km, type_rho, n, a, b, c, alpha=10e-8, max_it=100):
         w = phi(norm, typ=type_rho, a=a, b=b, c=c)
         w = w / np.sum(w)
         t1 = np.diag(Km).reshape((-1, 1))  #  (-1, dimension)
-        t2 = - 2 * np.dot(Km, w)
+        t2 = -2 * np.dot(Km, w)
         t3 = np.dot(np.dot(w.T, Km), w)
         t = t1 + t2 + t3
         norm = np.sqrt(t)
         # update loss
         J = loss(norm, typ=type_rho, a=a, b=b, c=c)
         losses.append(J)
-        if ((np.abs(J - J_old) < (J_old * alpha)) or (count == max_it)):
+        if (np.abs(J - J_old) < (J_old * alpha)) or (count == max_it):
             print("Stop at {} iterations".format(count))
             stop = 1
     return w, norm, losses
 
 
-def kde(X_data, X_plot, h, kernel='gaussian', return_model=False):
+def kde(X_data, X_plot, h, kernel="gaussian", return_model=False):
     """
     Fit a KDE
     Parameters
@@ -196,7 +196,7 @@ def area_density(z, grid):
 
     """
     if grid is None:
-        print('\nWARNING: no grid ==> return area = 1')
+        print("\nWARNING: no grid ==> return area = 1")
         return 1
     shapes = [el.shape[0] for el in grid]
     area = np.trapz(z.reshape(shapes), grid[0], axis=0)
@@ -205,7 +205,7 @@ def area_density(z, grid):
     return area
 
 
-def area_MC_mom(X, model_momkde, n_mc=100000, distribution='kde', h=1):
+def area_MC_mom(X, model_momkde, n_mc=100000, distribution="kde", h=1):
     """
     Parameters
     -----
@@ -219,7 +219,7 @@ def area_MC_mom(X, model_momkde, n_mc=100000, distribution='kde', h=1):
     cube_lows = []
     cube_highs = []
     dim = X.shape[1]
-    if distribution == 'uniform':
+    if distribution == "uniform":
         for d in range(dim):
             x_min, x_max = X[:, d].min(), X[:, d].max()
             offset = np.abs(x_max - x_min) * 0.5
@@ -227,7 +227,7 @@ def area_MC_mom(X, model_momkde, n_mc=100000, distribution='kde', h=1):
             cube_highs.append(x_max + offset)
         x_mc = np.random.uniform(cube_lows, cube_highs, size=(n_mc, X.shape[1]))
         p_mc = 1 / np.product(np.array(cube_highs) - np.array(cube_lows))
-    elif distribution == 'kde':
+    elif distribution == "kde":
         kde = KernelDensity(h)
         kde.fit(X)
         x_mc = kde.sample(n_mc)
@@ -243,17 +243,19 @@ def area_MC_mom(X, model_momkde, n_mc=100000, distribution='kde', h=1):
     return area
 
 
-def mom_kde(X_data,
-            X_plot,
-            h,
-            outliers_fraction,
-            grid,
-            K='auto',
-            kernel='gaussian',
-            median='pointwise',
-            norm=True,
-            return_model=False,
-            h_std=False):
+def mom_kde(
+    X_data,
+    X_plot,
+    h,
+    outliers_fraction,
+    grid,
+    K="auto",
+    kernel="gaussian",
+    median="pointwise",
+    norm=True,
+    return_model=False,
+    h_std=False,
+):
     """
     Returns
     -----
@@ -261,7 +263,7 @@ def mom_kde(X_data,
         Warning : the KDE_K is not normed to area=1, only z is normed.
     """
     n_samples = X_data.shape[0]
-    if K == 'auto':
+    if K == "auto":
         K = int(2 * n_samples * outliers_fraction) + 1
     # print("N blocks: ", K)
     # print("N samples per block: ", int(n_samples / K))
@@ -270,7 +272,7 @@ def mom_kde(X_data,
     np.random.shuffle(X_shuffle)
     z = []
     for k in range(K):
-        values = X_shuffle[k * int(n_samples / K):(k + 1) * int(n_samples / K), :]
+        values = X_shuffle[k * int(n_samples / K) : (k + 1) * int(n_samples / K), :]
         if h_std:
             std = np.std(values)
             h0 = h * std
@@ -280,16 +282,19 @@ def mom_kde(X_data,
         kde.fit(values)
         KDE_K.append(kde)
         z.append(np.exp(kde.score_samples(X_plot)))
-    if median == 'pointwise':
+    if median == "pointwise":
         z = np.median(z, axis=0)
-    elif median == 'geometric':
+    elif median == "geometric":
         distance = euclidean
-        z = min(map(lambda p1: (p1, sum(map(lambda p2: distance(p1, p2), z))), z), key=lambda x: x[1])[0]
+        z = min(
+            map(lambda p1: (p1, sum(map(lambda p2: distance(p1, p2), z))), z),
+            key=lambda x: x[1],
+        )[0]
     else:
-        raise ValueError('Wrong value for argument median: ' + median)
+        raise ValueError("Wrong value for argument median: " + median)
     if norm:
         if grid is None:
-            print('no grid specified, computing area with MC')
+            print("no grid specified, computing area with MC")
             area = area_MC_mom(X_data, KDE_K)
         else:
             area = area_density(z, grid)
@@ -301,7 +306,7 @@ def mom_kde(X_data,
         return z
 
 
-def rkde(X_data, X_plot, h, type_rho='hampel', return_model=False):
+def rkde(X_data, X_plot, h, type_rho="hampel", return_model=False):
     """
     RKDE implementation
     Parameters
@@ -318,23 +323,25 @@ def rkde(X_data, X_plot, h, type_rho='hampel', return_model=False):
     """
     # kernel matrix
     n_samples, d = X_data.shape
-    gamma = 1. / (2 * (h**2))
-    Km = rbf_kernel(X_data, X_data, gamma=gamma) * (2 * np.pi * h**2)**(-d / 2.)
+    gamma = 1.0 / (2 * (h ** 2))
+    Km = rbf_kernel(X_data, X_data, gamma=gamma) * (2 * np.pi * h ** 2) ** (-d / 2.0)
     # find a, b, c via iterative reweighted least square
     a = b = c = 0
     alpha = 10e-8
     max_it = 100
-    #first it. reweighted least ssquare with rho = absolute function
-    w, norm, losses = irls(Km, 'abs', n_samples, a, b, c, alpha, max_it)
+    # first it. reweighted least ssquare with rho = absolute function
+    w, norm, losses = irls(Km, "abs", n_samples, a, b, c, alpha, max_it)
     a = np.median(norm)
     b = np.percentile(norm, 75)
     c = np.percentile(norm, 95)
     # find weights via second iterative reweighted least square with input rho
     w, norm, losses = irls(Km, type_rho, n_samples, a, b, c, alpha, max_it)
-    #kernel evaluated on plot data
-    gamma = 1. / (2 * (h**2))
-    K_plot = rbf_kernel(X_plot, X_data, gamma=gamma) * (2 * np.pi * h**2)**(-d / 2.)
-    #final density
+    # kernel evaluated on plot data
+    gamma = 1.0 / (2 * (h ** 2))
+    K_plot = rbf_kernel(X_plot, X_data, gamma=gamma) * (2 * np.pi * h ** 2) ** (
+        -d / 2.0
+    )
+    # final density
     z = np.dot(K_plot, w)
     if return_model:
         return z, w
@@ -358,9 +365,9 @@ def spkde(X_data, X_plot, h, outliers_fraction, return_model=False):
 
     """
     d = X_data.shape[1]
-    beta = 1. / (1 - outliers_fraction)
-    gamma = 1. / (2 * (h**2))
-    G = rbf_kernel(X_data, X_data, gamma=gamma) * (2 * np.pi * h**2)**(-d / 2.)
+    beta = 1.0 / (1 - outliers_fraction)
+    gamma = 1.0 / (2 * (h ** 2))
+    G = rbf_kernel(X_data, X_data, gamma=gamma) * (2 * np.pi * h ** 2) ** (-d / 2.0)
 
     P = matrix(G)
     q = matrix(-beta / X_data.shape[0] * np.sum(G, axis=0))
@@ -369,9 +376,9 @@ def spkde(X_data, X_plot, h, outliers_fraction, return_model=False):
     A = matrix(np.ones((1, X_data.shape[0])))
     b = matrix(1.0)
     sol = solvers.qp(P, q, G, h_solver, A, b)
-    a = np.array(sol['x']).reshape((-1, ))
+    a = np.array(sol["x"]).reshape((-1,))
     # final density
-    GG = rbf_kernel(X_data, X_plot, gamma=gamma) * (2 * np.pi * h**2)**(-d / 2.)
+    GG = rbf_kernel(X_data, X_plot, gamma=gamma) * (2 * np.pi * h ** 2) ** (-d / 2.0)
     z = np.zeros((X_plot.shape[0]))
     for j in range(X_plot.shape[0]):
         for i in range(len(a)):
@@ -382,7 +389,7 @@ def spkde(X_data, X_plot, h, outliers_fraction, return_model=False):
         return z
 
 
-def bandwidth_cvgrid(X_data, loo=False, kfold=5, kernel='gaussian'):
+def bandwidth_cvgrid(X_data, loo=False, kfold=5, kernel="gaussian"):
     """
     Compute the best bandwidth along a grid search.
 
@@ -398,16 +405,10 @@ def bandwidth_cvgrid(X_data, loo=False, kfold=5, kernel='gaussian'):
     """
     print("Finding best bandwidth...")
     sigma = np.logspace(-1.5, 0.5, 80)  # grid for method 2 et 3
-    if loo:
-        grid = GridSearchCV(KernelDensity(kernel=kernel),
-                            {'bandwidth': sigma},
-                            cv=LeaveOneOut())
-    else:
-        grid = GridSearchCV(KernelDensity(kernel=kernel),
-                            {'bandwidth': sigma},
-                            cv=KFold(n_splits=kfold))
+    cv = LeaveOneOut() if loo else KFold(n_splits=kfold)
+    grid = GridSearchCV(KernelDensity(kernel=kernel), {"bandwidth": sigma}, cv=cv)
     grid.fit(X_data)
-    h = grid.best_params_['bandwidth']
-    losses = grid.cv_results_['mean_test_score']
+    h = grid.best_params_["bandwidth"]
+    losses = grid.cv_results_["mean_test_score"]
     # print('best h: ', h)
     return h, sigma, losses
