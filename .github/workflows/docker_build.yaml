@@ -2,7 +2,7 @@ name: Build docker image with the presentation
 
 on:
   push:
-    branches: [master, fix-notebooks-tests]
+    branches: [master]
   workflow_dispatch:
     inputs:
       reason:
