@@ -36,6 +36,17 @@ from plotly import express as px
 logger = logging.getLogger(__name__)
 
 
+def check_is_testing_pipeline():
+    return os.getenv("IS_TEST_CI_PIPELINE", "False") in [
+        "True",
+        "TRUE" "T",
+        "yes",
+        "YES",
+        "Y",
+        "1",
+    ]
+
+
 # Helper function
 def visualize_kde(kernel, bandwidth, X_train, y_train):
     """
@@ -81,14 +92,14 @@ def visualize_mahalanobis(data, y, scores, mu, sigma_diag, thr):
     axes.legend(handles, ["Nominal", "Anomaly"])
     axes.set_aspect("equal")
     # Draw decision contour
-    decision_border = Ellipse(
+    decision_boundary = Ellipse(
         mu,
         width=2 * np.sqrt(sigma_diag[0]) * thr,
         height=2 * np.sqrt(sigma_diag[1]) * thr,
         color="red",
         fill=False,
     )
-    axes.add_patch(decision_border)
+    axes.add_patch(decision_boundary)
 
     # Evaluate threshold
     y_pred = scores > thr
@@ -108,7 +119,7 @@ def get_kdd_data():
     Download KDD dataset. Provides labels only for the test set.
     :return: X_train, X_test, y_test
     """
-    is_testing = os.getenv("is_test", "False") == "True"
+    is_testing = check_is_testing_pipeline()
     if is_testing:
         logger.info("Loading reduced kdd cup data for testing pipeline.")
         import pickle as pkl
@@ -443,7 +454,7 @@ def get_mnist_data():
     ssl._create_default_https_context = ssl._create_unverified_context
     get_mnist_data()
     """
-    is_testing = os.getenv("is_test", "False") == "True"
+    is_testing = check_is_testing_pipeline()
     if is_testing:
         logger.info("Loading reduced mnist data for testing pipeline.")
         raw_mnist = pd.read_csv("../data/mnist/mnist_784_trial.csv")
