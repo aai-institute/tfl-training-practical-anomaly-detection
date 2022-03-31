@@ -82,12 +82,19 @@ class Density_model:
                                                        K=k,
                                                        median='geometric',
                                                        return_model=True)
-        elif self.algo == 'rkde':
+        elif self.algo == 'rkde-hampel':
             self.X_data = X
             self.density, self.model = kde_lib.rkde(X,
                                                     X_plot,
                                                     self.bandwidth,
                                                     type_rho='hampel',
+                                                    return_model=True)
+        elif self.algo == 'rkde-huber':
+            self.X_data = X
+            self.density, self.model = kde_lib.rkde(X,
+                                                    X_plot,
+                                                    self.bandwidth,
+                                                    type_rho='huber',
                                                     return_model=True)
         elif self.algo == 'spkde':
             self.X_data = X
@@ -179,7 +186,7 @@ class Density_model:
         else:
             print('no algo specified')
 
-    def write_score(self, file_path):
+    def get_score(self):
         """
         Writes scores to file
         Parameters
@@ -190,35 +197,19 @@ class Density_model:
         -------
 
         """
-        new_score_df = pd.DataFrame([[
-            self.algo,
-            self.dataset,
-            self.bandwidth,
-            self.outliers_fraction,
-            self.n_block,
-            self.kullback_f0_f,
-            self.kullback_f_f0,
-            self.jensen,
-            self.auc_anomaly,
-        ]])
         header_list = [
             "algo",
-            "dataset",
             "bandwidth",
             "outlier_prop",
             "n_block",
-            "kullback_f0_f",
-            "kullback_f_f0",
-            "jensen",
             "auc_anomaly",
         ]
-        write_header = False
-        if not os.path.isfile(file_path):
-            write_header = True
-        with open(file_path, 'a') as f:
-            if write_header:
-                new_score_df.to_csv(f, header=header_list, index=False)
-            else:
-                new_score_df.to_csv(f, header=False, index=False)
-        f.close()
-        return
+        new_score_df = pd.DataFrame([[
+            self.algo,
+            self.bandwidth,
+            self.outliers_fraction,
+            self.n_block,
+            self.auc_anomaly,
+        ]], columns = header_list)
+        
+        return new_score_df
