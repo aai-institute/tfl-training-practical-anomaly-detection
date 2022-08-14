@@ -32,6 +32,7 @@ jobs:
       - name: Run tests and render
         run: |
           bash build_scripts/run-tests-render-notebooks.sh
+          find . -name "*.ipynb" -type f -delete
           bash build_scripts/build-docs.sh
       - name: Prepare Pages
         if: github.ref == 'refs/heads/solutions'
