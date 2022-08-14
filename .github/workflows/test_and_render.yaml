@@ -31,9 +31,8 @@ jobs:
         run: if [ -n ${{ secrets.CONFIG_LOCAL }} ]; then echo ${{ secrets.CONFIG_LOCAL }} > ./config_local.json && echo "retrieved local config"; fi
       - name: Run tests and render
         run: |
-          bash build_scripts/run-tests-render-notebooks.sh
-          find temp/ -name "*.ipynb" -type f -delete
           bash build_scripts/build-docs.sh
+          bash build_scripts/run-tests-render-notebooks.sh
       - name: Prepare Pages
         if: github.ref == 'refs/heads/solutions'
         run: |
