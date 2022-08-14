@@ -11,7 +11,7 @@ resources = {"metadata": {"path": NOTEBOOKS_DIR}}
 
 log = logging.getLogger(__name__)
 
-OMITTED_NOTEBOOKS = []
+OMITTED_NOTEBOOKS = ['anomaly_detection_approaches.ipynb']  # omitted due to missing data. Will align with Fabio
 
 
 @pytest.mark.parametrize(
