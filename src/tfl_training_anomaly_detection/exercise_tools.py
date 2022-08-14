@@ -29,7 +29,6 @@ from libs.exp_lib import Density_model
 tfd = tfp.distributions
 
 from matplotlib import pyplot as plt
-from matplotlib import rc
 from matplotlib.patches import Ellipse
 from plotly import express as px
 
@@ -39,16 +38,16 @@ logger = logging.getLogger(__name__)
 def check_is_testing_pipeline():
     return os.getenv("IS_TEST_CI_PIPELINE", "False") in [
         "True",
-        "TRUE" "T",
+        "TRUE",
+        "T",
         "yes",
         "YES",
         "Y",
-        "1",
+        "1"
     ]
 
-
 # Helper function
-def visualize_kde(kernel, bandwidth, X_train, y_train):
+def visualize_kde(kernel: str, bandwidth: float, X_train: np.array, y_train: np.array):
     """
     Visualize kde
     :param kernel: the kde kernel
@@ -73,14 +72,14 @@ def visualize_kde(kernel, bandwidth, X_train, y_train):
     plt.show()
 
 
-def visualize_mahalanobis(data, y, scores, mu, sigma_diag, thr):
+def visualize_mahalanobis(data, y: pd.Series, scores, mu, sigma_diag, thr):
     """
     Visualizes the Mahalanobis distance
     :param data: the data set
     :param y: labels (0=nominal, 1=anomaly)
     :param mu: mean for the Mahalanobis distance
-    :param sigma_diag: diaogonal vector of the covariance matrix
-    :param thr: the treshold to classify a point as anomaly
+    :param sigma_diag: diagonal vector of the covariance matrix
+    :param thr: the threshold to classify a point as anomaly
     """
     _, axes = plt.subplots(figsize=(6, 6))
 
@@ -124,7 +123,7 @@ def get_kdd_data():
         logger.info("Loading reduced kdd cup data for testing pipeline.")
         import pickle as pkl
 
-        with open("../data/kddcup99/kddcup99_trial.pkl", "rb") as f:
+        with open("../../data/kddcup99/kddcup99_trial.pkl", "rb") as f:
             KDD99_trial = pkl.load(f)
         X = KDD99_trial["data"]
         y = KDD99_trial["target"]
@@ -146,8 +145,7 @@ def evaluate(y_true, y_pred, axes=None, save_as=None):
     Compute and display the ROC and PR curve as well as ROC AUC and AP
     :param y_true: Ground truth
     :param y_pred: Predictions
-    :param save_as: Location for the figure to be saved. If save_as
-                    is None then the figure is not saved
+    :param save_as: Location for the figure to be saved. If save_as is None then the figure is not saved
     :return: None
     """
     if axes is None:
@@ -183,7 +181,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
     Create the base distributions for the exercise
     :param dim: Base Dimensionality
     :param dim_irrelevant: Additional noise dimensions
-    :return: Dictonary of distributions
+    :return: Dictionary of distributions
     """
     distributions = dict()
 
@@ -427,10 +425,10 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
     :param neighborhood: str, key corresponding to neighborhood.
     :param anomaly_neighborhood: neighborhood to use as anomaly. Must be different to neighborhood
     :return: train data, i.e. data only from selected neighborhood, test data, i.e. data with
-        contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
-        anomalous data respectively.
+    contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
+    anomalous data respectively.
     """
-    house_data = pd.read_csv("../data/house_prices/house_prices.csv")
+    house_data = pd.read_csv("../../data/house_prices/house_prices.csv")
     neighborhood_data = house_data[house_data["Neighborhood"] == neighborhood].drop(
         columns=["Neighborhood"]
     )
@@ -457,7 +455,7 @@ def get_mnist_data():
     is_testing = check_is_testing_pipeline()
     if is_testing:
         logger.info("Loading reduced mnist data for testing pipeline.")
-        raw_mnist = pd.read_csv("../data/mnist/mnist_784_trial.csv")
+        raw_mnist = pd.read_csv("../../data/mnist/mnist_784_trial.csv")
         target = raw_mnist.values[:, -1]
         data = raw_mnist.values[:, :-1]
     else:

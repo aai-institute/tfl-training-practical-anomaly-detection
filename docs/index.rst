@@ -11,7 +11,8 @@ rise_template
 .. toctree::
    :caption: Modules
 
-   tfl-training-anomaly-detection/index
+   tfl_training_anomaly_detection/index
+   libs/index
 
 
 

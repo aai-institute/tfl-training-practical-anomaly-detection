@@ -8,11 +8,17 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+
 # Sampling Layer
 class Sampling(layers.Layer):
-    """Sample from Z from N(z_mean, z_log_var)"""
+    """
+    Sample from Z from N(z_mean, z_log_var)
+    """
 
     def call(self, inputs):
+        """
+        Implementation of call function
+        """
         z_mean, z_log_var = inputs
         batch = tf.shape(z_mean)[0]
         dim = tf.shape(z_mean)[1]
@@ -57,6 +63,7 @@ class VAE(keras.Model):
     """
     Implementation of a variational autoencoder
     """
+
     def __init__(self, encoder, decoder, **kwargs):
         """
         Initilization
@@ -117,6 +124,7 @@ class VAE(keras.Model):
             'kl_loss': self.kl_loss_tracker.result()
         }
 
+
 def build_contaminated_minst(data, contamination=.03, p_noise=.1):
     """
 
@@ -135,25 +143,25 @@ def build_contaminated_minst(data, contamination=.03, p_noise=.1):
     selection = np.random.choice(n, n_cont)
 
     # Transposed images
-    transpose = int(n_cont/3)
+    transpose = int(n_cont / 3)
     selection_trans = selection[:transpose]
-    data[selection_trans] = np.transpose(data[selection_trans], axes=[0,2,1,3])
+    data[selection_trans] = np.transpose(data[selection_trans], axes=[0, 2, 1, 3])
 
     # Blacked out image parts
-    blackout = int(n_cont * (2/3))
+    blackout = int(n_cont * (2 / 3))
     selection_blackout = selection[transpose: blackout]
     n_blackout = len(selection_blackout)
     x = np.random.binomial(n=1, size=n_blackout, p=.5)
-    #y = np.random.binomial(n=1, size=n_blackout, p=.5)
+    # y = np.random.binomial(n=1, size=n_blackout, p=.5)
     for i, sel in enumerate(selection_blackout):
         xi = x[i]
-        data[sel][xi*14:14 + xi*14, :] = 0
+        data[sel][xi * 14:14 + xi * 14, :] = 0
 
     # Noisy images
     selection_noisy = selection[blackout:]
     n_noisy = len(selection_noisy)
     noise = np.random.binomial(n=1, p=p_noise, size=(n_noisy, 28, 28, 1))
-    data[selection_noisy] = (1-noise) * data[selection_noisy] + noise * (1 - data[selection_noisy])
+    data[selection_noisy] = (1 - noise) * data[selection_noisy] + noise * (1 - data[selection_noisy])
 
     y = np.zeros(data.shape[0])
     for i, sel in enumerate([selection_trans, selection_noisy, selection_blackout]):

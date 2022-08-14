@@ -212,11 +212,9 @@ def generate(
     """
     Synthetic data generator
 
-    param_gauss = [mean_1, mean_2, var_1, var_2]
-    outlier_type in ['gaussian', 'dirac', 'uniform']
-    outlier_param - gaussian: [mean_outlier,var_outlier]
-                  - dirac: [loc]
-                  - uniform: [min,max]
+    :param param_gauss: [mean_1, mean_2, var_1, var_2]
+    :param outlier_type: ['gaussian', 'dirac', 'uniform']
+    :param outlier_param: gaussian: [mean_outlier,var_outlier], dirac: [loc], uniform: [min,max]
     """
     n_inliers = int((1.0 - outliers_fraction) * n_samples)
     n_outliers = int(outliers_fraction * n_samples)
