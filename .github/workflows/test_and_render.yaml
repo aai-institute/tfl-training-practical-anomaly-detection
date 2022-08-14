@@ -32,7 +32,7 @@ jobs:
       - name: Run tests and render
         run: |
           bash build_scripts/run-tests-render-notebooks.sh
-          # bash build_scripts/build-docs.sh
+          bash build_scripts/build-docs.sh
       - name: Prepare Pages
         if: github.ref == 'refs/heads/solutions'
         run: |
