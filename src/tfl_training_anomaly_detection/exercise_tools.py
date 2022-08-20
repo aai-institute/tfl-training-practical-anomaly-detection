@@ -50,6 +50,7 @@ def check_is_testing_pipeline():
 def visualize_kde(kernel: str, bandwidth: float, X_train: np.array, y_train: np.array):
     """
     Visualize kde
+
     :param kernel: the kde kernel
     :param bandwidth: the kde bandwidth
     :param X_train: training data
@@ -75,6 +76,7 @@ def visualize_kde(kernel: str, bandwidth: float, X_train: np.array, y_train: np.
 def visualize_mahalanobis(data, y: pd.Series, scores, mu, sigma_diag, thr):
     """
     Visualizes the Mahalanobis distance
+
     :param data: the data set
     :param y: labels (0=nominal, 1=anomaly)
     :param mu: mean for the Mahalanobis distance
@@ -116,6 +118,7 @@ def visualize_mahalanobis(data, y: pd.Series, scores, mu, sigma_diag, thr):
 def get_kdd_data():
     """
     Download KDD dataset. Provides labels only for the test set.
+
     :return: X_train, X_test, y_test
     """
     is_testing = check_is_testing_pipeline()
@@ -143,6 +146,7 @@ def get_kdd_data():
 def evaluate(y_true, y_pred, axes=None, save_as=None):
     """
     Compute and display the ROC and PR curve as well as ROC AUC and AP
+
     :param y_true: Ground truth
     :param y_pred: Predictions
     :param save_as: Location for the figure to be saved. If save_as is None then the figure is not saved
@@ -179,6 +183,7 @@ def evaluate(y_true, y_pred, axes=None, save_as=None):
 def create_distributions(dim=2, dim_irrelevant=0):
     """
     Create the base distributions for the exercise
+
     :param dim: Base Dimensionality
     :param dim_irrelevant: Additional noise dimensions
     :return: Dictionary of distributions
@@ -398,6 +403,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
 def contamination(nominal, anomaly, p):
     """
     Build the mixture model (1-@p)*@nominal + @p*@anomaly
+
     :param nominal: Nominal Distribution
     :param anomaly: Anomaly Distribution
     :param p: Probability of anomaly
@@ -422,11 +428,12 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
     Load house prices data for one neighborhood.
     The method returns also test data which are made of data from selected neighborhood plus data
     from another neighborhood, considered as anomaly.
+
     :param neighborhood: str, key corresponding to neighborhood.
     :param anomaly_neighborhood: neighborhood to use as anomaly. Must be different to neighborhood
     :return: train data, i.e. data only from selected neighborhood, test data, i.e. data with
-    contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
-    anomalous data respectively.
+        contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
+        anomalous data respectively.
     """
     house_data = pd.read_csv("../../data/house_prices/house_prices.csv")
     neighborhood_data = house_data[house_data["Neighborhood"] == neighborhood].drop(
@@ -476,7 +483,6 @@ def benchmark_algorithms():
     - Irrelevant Dimensions: Gaussian Noise (variance = 0.1)
     - Number of Irrelevant Dimansions: 0 - 10
     - Contamination level: 1% - 20%
-
 
     :return: DataFrame with ROC AUC and AP for each experiment
     """
@@ -578,6 +584,7 @@ def anomaly_from_classification(data, target, nominal_classes, anomaly_classes, 
     """
     Build an anomaly detection data set from a classification data set. The new data set contains
     only binary labels where 0 denotes the nominal class.
+
     :param data: Data
     :param target: Target
     :param nominal_classes: List like, the nominal classes

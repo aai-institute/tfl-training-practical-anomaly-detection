@@ -17,17 +17,15 @@ def gaussian_kernel(X, h, d):
 def rho(x, typ="hampel", a=0, b=0, c=0):
     """
     Rho function for Huber and Hampel loss
-    Parameters
-    ----------
-    x: data point
-    typ: 'huber' or 'hampel
-    a: threshold parameter
-    b: threshold parameter
-    c: threshold parameter
 
-    Returns
-    -------
-    value of rho function at x
+    :param x: data point
+    :param typ: 'huber' or 'hampel
+    :param a: threshold parameter
+    :param b: threshold parameter
+    :param c: threshold parameter
+
+
+    :return: value of rho function at x
     """
     if typ == "huber":
         in1 = x <= a
@@ -57,17 +55,13 @@ def rho(x, typ="hampel", a=0, b=0, c=0):
 def loss(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel loss
-    Parameters
-    ----------
-    x: data point
-    typ: 'huber' or 'hampel'
-    a: threshold parameter
-    b: threshold parameter
-    c: threshold parameter
 
-    Returns
-    -------
-    Loss
+    :param x: data point
+    :param typ: 'huber' or 'hampel'
+    :param a: threshold parameter
+    :param b: threshold parameter
+    :param c: threshold parameter
+    :return: Loss
     """
     return rho(x, typ=typ, a=a, b=b, c=c) / x.shape[0]
 
@@ -75,17 +69,14 @@ def loss(x, typ="hampel", a=0, b=0, c=0):
 def psi(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel psu function
-    Parameters
-    ----------
-    x: data point
-    typ: 'huber' or 'hampel'
-    a: threshold parameter
-    b: threshold parameter
-    c: threshold parameter
 
-    Returns
-    -------
-    Value of psi function
+    :param x: data point
+    :param typ: 'huber' or 'hampel'
+    :param a: threshold parameter
+    :param b: threshold parameter
+    :param c: threshold parameter
+
+    :return: Value of psi function
     """
     if typ == "huber":
         return np.minimum(x, a)
@@ -108,17 +99,13 @@ def psi(x, typ="hampel", a=0, b=0, c=0):
 def phi(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel phi
-    Parameters
-    ----------
-    x: data point
-    typ: 'huber' or 'hampel'
-    a: threshold parameter
-    b: threshold parameter
-    c: threshold parameter
 
-    Returns
-    -------
-    Value of phi function
+    :param x: data point
+    :param typ: 'huber' or 'hampel'
+    :param a: threshold parameter
+    :param b: threshold parameter
+    :param c: threshold parameter
+    :return: Value of phi function
     """
     x[x == 0] = 10e-6
     return psi(x, typ=typ, a=a, b=b, c=c) / x
@@ -164,17 +151,13 @@ def irls(Km, type_rho, n, a, b, c, alpha=10e-8, max_it=100):
 def kde(X_data, X_plot, h, kernel="gaussian", return_model=False):
     """
     Fit a KDE
-    Parameters
-    ----------
-    X_data: data to train on
-    X_plot: data to score
-    h: bandwidth
-    kernel: Kernel
-    return_model: Return the kde model?
 
-    Returns
-    -------
-    Density of X_plot, the fitted kde (if return_model == True)
+    :param X_data: data to train on
+    :param X_plot: data to score
+    :param h: bandwidth
+    :param kernel: Kernel
+    :param return_model: Return the kde model?
+    :return: Density of X_plot, the fitted kde (if return_model == True)
     """
     kde_fit = KernelDensity(kernel=kernel, bandwidth=h).fit(X_data)
     if return_model:
@@ -186,14 +169,10 @@ def kde(X_data, X_plot, h, kernel="gaussian", return_model=False):
 def area_density(z, grid):
     """
     Area density
-    Parameters
-    ----------
-    z
-    grid
 
-    Returns
-    -------
-
+    :param z
+    :param grid
+    :return:
     """
     if grid is None:
         print("\nWARNING: no grid ==> return area = 1")
@@ -207,14 +186,10 @@ def area_density(z, grid):
 
 def area_MC_mom(X, model_momkde, n_mc=100000, distribution="kde", h=1):
     """
-    Parameters
-    -----
-    distribution : 'uniform', 'kde'
-    h : if 'kde', need to specifiy the bandwidth h
 
-    Returns
-    -----
-    area : the area of model_momkde over X
+    :param distribution : 'uniform', 'kde'
+    :param h : if 'kde', need to specifiy the bandwidth h
+    :return: the area of model_momkde over X
     """
     cube_lows = []
     cube_highs = []
@@ -257,9 +232,8 @@ def mom_kde(
     h_std=False,
 ):
     """
-    Returns
-    -----
-    (if return_model=True) KDE_K: the list of all kdes fitted on the blocks.
+
+    :return: (if return_model=True) KDE_K: the list of all kdes fitted on the blocks.
         Warning : the KDE_K is not normed to area=1, only z is normed.
     """
     n_samples = X_data.shape[0]
@@ -309,17 +283,13 @@ def mom_kde(
 def rkde(X_data, X_plot, h, type_rho="hampel", return_model=False):
     """
     RKDE implementation
-    Parameters
-    ----------
-    X_data:
-    X_plot:
-    h: bandwidth
-    type_rho: 'huber' or 'hampel'
-    return_model: Should we return the model?
 
-    Returns
-    -------
-    Density estimate of X_plot, models weight vector
+    :param X_data:
+    :param X_plot:
+    :param h: bandwidth
+    :param type_rho: 'huber' or 'hampel'
+    :param return_model: Should we return the model?
+    :return: Density estimate of X_plot, models weight vector
     """
     # kernel matrix
     n_samples, d = X_data.shape
@@ -352,17 +322,13 @@ def rkde(X_data, X_plot, h, type_rho="hampel", return_model=False):
 def spkde(X_data, X_plot, h, outliers_fraction, return_model=False):
     """
     SPKDE implementation
-    Parameters
-    ----------
-    X_data:
-    X_plot:
-    h:
-    outliers_fraction:
-    return_model:
 
-    Returns
-    -------
-
+    :param X_data:
+    :param X_plot:
+    :param h:
+    :param outliers_fraction:
+    :param return_model:
+    :return:
     """
     d = X_data.shape[1]
     beta = 1.0 / (1 - outliers_fraction)
@@ -393,15 +359,8 @@ def bandwidth_cvgrid(X_data, loo=False, kfold=5, kernel="gaussian"):
     """
     Compute the best bandwidth along a grid search.
 
-    Parameters
-    -----
-    X_data : input data
-
-    Returns
-    -----
-    h : the best bandwidth
-    sigma : the search grid
-    losses : the scores along the grid
+    :param X_data : input data
+    :return: h : the best bandwidth, sigma : the search grid, osses : the scores along the grid
     """
     print("Finding best bandwidth...")
     sigma = np.logspace(-1.5, 0.5, 80)  # grid for method 2 et 3
