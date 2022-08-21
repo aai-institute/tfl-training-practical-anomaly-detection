@@ -28,7 +28,8 @@ class Sampling(layers.Layer):
 
 # Encoder network
 def build_encoder_minst(latent_dim=2):
-    """Build convolutional encoder for the MNIST data set
+    """Build convolutional encoder for the MNIST data set.
+
     :param letent_dim: output dimension of the encoder
     """
     encoder_inputs = keras.Input(shape=(28, 28, 1))
@@ -45,7 +46,9 @@ def build_encoder_minst(latent_dim=2):
 
 
 def build_decoder_mnist(latent_dim=2):
-    """Build decoder for the MNIST data set
+    """
+    Build decoder for the MNIST data set.
+
     :param latent_dim: input dimension of the decoder
     """
     latent_inputs = keras.Input(shape=(latent_dim,))
@@ -66,11 +69,10 @@ class VAE(keras.Model):
 
     def __init__(self, encoder, decoder, **kwargs):
         """
-        Initilization
+        Initilization. Note: the output dimension of the encoder needs to match the input dimension of the decoder.
+
         :param encoder: the encoder network
         :param decoder: the decoder network
-
-        Note: the output dimension of the encoder needs to match the input dimension of the decoder.
         """
         super(VAE, self).__init__(**kwargs)
         self.encoder = encoder
@@ -92,10 +94,10 @@ class VAE(keras.Model):
 
     def train_step(self, data):
         """
-        Implements a single training step for the vae
-        :param data: the training batch
+        Implements a single training step for the vae.
 
-        :returns: training loss
+        :param data: the training batch
+        :return: training loss
         """
         with tf.GradientTape() as tape:
             z_mean, z_log_var, z = self.encoder(data)
@@ -127,15 +129,11 @@ class VAE(keras.Model):
 
 def build_contaminated_minst(data, contamination=.03, p_noise=.1):
     """
+    Build contaminated MNIST datset. We use 3 different contamination types: noise, occlusion, and transposing.
 
-    Parameters
-    ----------
-    data: MNIST data set with shape (None, 28, 28, 1) whith values between 0 and 1
-    contamination: proportion of contamination
-
-    Returns: MNIST data set with random corruptions
-    -------
-
+    :param data: MNIST data set with shape (None, 28, 28, 1) whith values between 0 and 1
+    :param contamination: proportion of contamination.
+    :return: MNIST data set with random corruptions
     """
     data = data.copy()
     n = len(data)
