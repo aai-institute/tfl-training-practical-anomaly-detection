@@ -43,5 +43,5 @@ WORKDIR "${HOME}"
 
 COPY --chown=${NB_UID}:${NB_GID} . $CODE_DIR
 
-RUN echo ${CFG_LOCAL} > config_local.json
+RUN echo ${CFG_LOCAL} > ./config_local.json
 RUN echo ${CFG_LOCAL}
