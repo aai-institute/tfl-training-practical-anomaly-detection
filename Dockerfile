@@ -1,7 +1,7 @@
 FROM jupyter/minimal-notebook:python-3.9.7
 
-ARG test
-RUN echo ${test}
+ARG cfg_local
+
 
 USER root
 RUN apt-get update -yq && apt-get -yq install ffmpeg
@@ -42,3 +42,6 @@ RUN pip install -r requirements.txt
 WORKDIR "${HOME}"
 
 COPY --chown=${NB_UID}:${NB_GID} . $CODE_DIR
+
+RUN echo ${CFG_LOCAL} > config_local.json
+RUN echo ${CFG_LOCAL}
