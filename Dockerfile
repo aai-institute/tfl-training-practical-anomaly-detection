@@ -25,14 +25,12 @@ RUN chmod +x /tmp/code/entrypoint.sh
 ENTRYPOINT ["/tmp/code/entrypoint.sh"]
 
 # End of HACK
-
 WORKDIR /tmp
 COPY build_scripts build_scripts
 RUN bash build_scripts/install-presentation-requirements.sh
 
 COPY requirements-test.txt .
 RUN pip install -r requirements-test.txt
-
 
 # NOTE: this breaks down when requirements contain pytorch (file system too large to fit in RAM, even with 16GB)
 # If pytorch is a requirement, the suggested solution is to keep a requirements-docker.txt and only install
