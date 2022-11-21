@@ -1,5 +1,8 @@
 FROM jupyter/minimal-notebook:python-3.9.7
 
+ARG test
+RUN echo ${test}
+
 USER root
 RUN apt-get update -yq && apt-get -yq install ffmpeg
 
