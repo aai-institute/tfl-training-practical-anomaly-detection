@@ -39,8 +39,8 @@ BUILD_DIR=$(dirname "$0")
   cd "${BUILD_DIR}/.." || (echo "Unknown error, could not find directory ${BUILD_DIR}" && exit 255)
   conda install -y -c conda-forge notebook rise jupyter_contrib_nbextensions
   python build_scripts/configure_spellcheck_dict.py
-  jupyter nbextension enable spellchecker/main
-  jupyter nbextension enable equation-numbering/main
+  #jupyter nbextension enable spellchecker/main
+  #jupyter nbextension enable equation-numbering/main
 )
 
 
