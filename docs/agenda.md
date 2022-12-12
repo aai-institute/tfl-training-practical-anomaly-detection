@@ -1,4 +1,4 @@
-# Schedule
+# Schedule 
 
 The workshop is planned for up to two full days. A possible schedule is depicted below:  
 

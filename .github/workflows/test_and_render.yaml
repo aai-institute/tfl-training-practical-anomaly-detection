@@ -33,8 +33,8 @@ jobs:
         run: echo "${{ secrets.CONFIG_LOCAL }}" > ./config_local.json && echo "retrieved local config"
       - name: Run tests and render
         run: |
-          bash build_scripts/run-tests-render-notebooks.sh
           bash build_scripts/build-docs.sh
+          bash build_scripts/run-tests-render-notebooks.sh
       - name: Prepare Pages
         if: github.ref == 'refs/heads/solutions'
         run: |

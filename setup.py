@@ -6,7 +6,7 @@ def read_requirements(filename: str):
 
 
 setup(
-    name="tfl-training-anomaly-detection",
+    name="tfl_training_anomaly_detection",
     python_requires=">=3.8",
     package_dir={"": "src"},
     packages=find_packages(where="src"),

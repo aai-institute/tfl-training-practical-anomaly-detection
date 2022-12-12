@@ -11,17 +11,8 @@ resources = {"metadata": {"path": NOTEBOOKS_DIR}}
 
 log = logging.getLogger(__name__)
 
-OMITTED_NOTEBOOKS = [
-    # Should not be run by pipeline
-    "00-setup-and-info.ipynb",
-    # HTML(camera.animate().to_html5_video())
-    # Requested MovieWriter (ffmpeg) not available
-    "extreme_value_theory_for_anomaly_detection.ipynb",
-    # FileNotFoundError: [Errno 2] No such file or directory: '../data/numenta/NAB/data/realKnownCause/nyc_taxi.csv'
-    "anomaly_detection_on_time_series.ipynb",
-    # Timeout
-    "anomaly_detection_approaches.ipynb"
-]
+OMITTED_NOTEBOOKS = ['anomaly_detection_approaches.ipynb']  # omitted due to missing data. Will align with Fabio
+
 
 @pytest.mark.parametrize(
     "notebook",

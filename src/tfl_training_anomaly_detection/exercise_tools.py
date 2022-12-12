@@ -1,11 +1,13 @@
 import itertools as it
+import logging
+import os
 from math import ceil
 
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 import tensorflow_probability as tfp
-from sklearn.datasets import fetch_kddcup99, make_spd_matrix
+from sklearn.datasets import fetch_kddcup99, fetch_openml, make_spd_matrix
 from sklearn.ensemble import IsolationForest as iForest
 from sklearn.metrics import (
     average_precision_score,
@@ -27,15 +29,28 @@ from libs.exp_lib import Density_model
 tfd = tfp.distributions
 
 from matplotlib import pyplot as plt
-from matplotlib import rc
 from matplotlib.patches import Ellipse
 from plotly import express as px
 
+logger = logging.getLogger(__name__)
+
+
+def check_is_testing_pipeline():
+    return os.getenv("IS_TEST_CI_PIPELINE", "False") in [
+        "True",
+        "TRUE",
+        "T",
+        "yes",
+        "YES",
+        "Y",
+        "1"
+    ]
 
 # Helper function
-def visualize_kde(kernel, bandwidth, X_train, y_train):
+def visualize_kde(kernel: str, bandwidth: float, X_train: np.array, y_train: np.array):
     """
     Visualize kde
+
     :param kernel: the kde kernel
     :param bandwidth: the kde bandwidth
     :param X_train: training data
@@ -52,20 +67,21 @@ def visualize_kde(kernel, bandwidth, X_train, y_train):
     scores = np.exp(kde.score_samples(grid_points)).reshape(50, 50)
     colormesh = axis.contourf(xs, ys, scores)
     fig.colorbar(colormesh)
-    axis.set_title("Density Conturs (Bandwidth={})".format(bandwidth))
+    axis.set_title("Density Contours (Bandwidth={})".format(bandwidth))
     axis.set_aspect("equal")
     plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train)
     plt.show()
 
 
-def visualize_mahalanobis(data, y, scores, mu, sigma_diag, thr):
+def visualize_mahalanobis(data, y: pd.Series, scores, mu, sigma_diag, thr):
     """
     Visualizes the Mahalanobis distance
+
     :param data: the data set
     :param y: labels (0=nominal, 1=anomaly)
     :param mu: mean for the Mahalanobis distance
-    :param sigma_diag: diaogonal vector of the covariance matrix
-    :param thr: the treshold to classify a point as anomaly
+    :param sigma_diag: diagonal vector of the covariance matrix
+    :param thr: the threshold to classify a point as anomaly
     """
     _, axes = plt.subplots(figsize=(6, 6))
 
@@ -76,15 +92,15 @@ def visualize_mahalanobis(data, y, scores, mu, sigma_diag, thr):
     handles, _ = scatter_gt.legend_elements()
     axes.legend(handles, ["Nominal", "Anomaly"])
     axes.set_aspect("equal")
-    # Draw descicion contour
-    descion_border = Ellipse(
+    # Draw decision contour
+    decision_boundary = Ellipse(
         mu,
         width=2 * np.sqrt(sigma_diag[0]) * thr,
         height=2 * np.sqrt(sigma_diag[1]) * thr,
         color="red",
         fill=False,
     )
-    axes.add_patch(descion_border)
+    axes.add_patch(decision_boundary)
 
     # Evaluate threshold
     y_pred = scores > thr
@@ -102,12 +118,23 @@ def visualize_mahalanobis(data, y, scores, mu, sigma_diag, thr):
 def get_kdd_data():
     """
     Download KDD dataset. Provides labels only for the test set.
+
     :return: X_train, X_test, y_test
     """
-    KDD99 = fetch_kddcup99(subset="SA")
+    is_testing = check_is_testing_pipeline()
+    if is_testing:
+        logger.info("Loading reduced kdd cup data for testing pipeline.")
+        import pickle as pkl
 
-    X = KDD99["data"]
-    y = KDD99["target"]
+        with open("../../data/kddcup99/kddcup99_trial.pkl", "rb") as f:
+            KDD99_trial = pkl.load(f)
+        X = KDD99_trial["data"]
+        y = KDD99_trial["target"]
+    else:
+        KDD99 = fetch_kddcup99(subset="SA")
+
+        X = KDD99["data"]
+        y = KDD99["target"]
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
@@ -119,10 +146,10 @@ def get_kdd_data():
 def evaluate(y_true, y_pred, axes=None, save_as=None):
     """
     Compute and display the ROC and PR curve as well as ROC AUC and AP
+
     :param y_true: Ground truth
     :param y_pred: Predictions
-    :param save_as: Location for the figure to be saved. If save_as
-                    is None then the figure is not saved
+    :param save_as: Location for the figure to be saved. If save_as is None then the figure is not saved
     :return: None
     """
     if axes is None:
@@ -156,9 +183,10 @@ def evaluate(y_true, y_pred, axes=None, save_as=None):
 def create_distributions(dim=2, dim_irrelevant=0):
     """
     Create the base distributions for the exercise
+
     :param dim: Base Dimensionality
     :param dim_irrelevant: Additional noise dimensions
-    :return: Dictonary of distributions
+    :return: Dictionary of distributions
     """
     distributions = dict()
 
@@ -375,6 +403,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
 def contamination(nominal, anomaly, p):
     """
     Build the mixture model (1-@p)*@nominal + @p*@anomaly
+
     :param nominal: Nominal Distribution
     :param anomaly: Anomaly Distribution
     :param p: Probability of anomaly
@@ -399,13 +428,14 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
     Load house prices data for one neighborhood.
     The method returns also test data which are made of data from selected neighborhood plus data
     from another neighborhood, considered as anomaly.
+
     :param neighborhood: str, key corresponding to neighborhood.
     :param anomaly_neighborhood: neighborhood to use as anomaly. Must be different to neighborhood
     :return: train data, i.e. data only from selected neighborhood, test data, i.e. data with
         contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
         anomalous data respectively.
     """
-    house_data = pd.read_csv("../data/house_prices/house_prices.csv")
+    house_data = pd.read_csv("../../data/house_prices/house_prices.csv")
     neighborhood_data = house_data[house_data["Neighborhood"] == neighborhood].drop(
         columns=["Neighborhood"]
     )
@@ -419,6 +449,30 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
     return X_train.reset_index(drop=True), X_test.reset_index(drop=True), y_test
 
 
+def get_mnist_data():
+    """
+    Loads mnist data into pandas Dataframe with columns data and target.
+    If dataset is not already cached, fetching it through openml could give some problems with the SSL Certificate.
+    So, if SSLCertVerificationError is raised, run the following:
+
+    import ssl
+    ssl._create_default_https_context = ssl._create_unverified_context
+    get_mnist_data()
+    """
+    is_testing = check_is_testing_pipeline()
+    if is_testing:
+        logger.info("Loading reduced mnist data for testing pipeline.")
+        raw_mnist = pd.read_csv("../../data/mnist/mnist_784_trial.csv")
+        target = raw_mnist.values[:, -1]
+        data = raw_mnist.values[:, :-1]
+    else:
+        raw_mnist = fetch_openml("mnist_784", version=1)
+        data = raw_mnist.data.values
+        target = raw_mnist.target
+    mnist = {"data": data, "target": target}
+    return mnist
+
+
 def benchmark_algorithms():
     """
     Conduct a series of experiments with KDE and iForest and return result summary
@@ -429,7 +483,6 @@ def benchmark_algorithms():
     - Irrelevant Dimensions: Gaussian Noise (variance = 0.1)
     - Number of Irrelevant Dimansions: 0 - 10
     - Contamination level: 1% - 20%
-
 
     :return: DataFrame with ROC AUC and AP for each experiment
     """
@@ -531,6 +584,7 @@ def anomaly_from_classification(data, target, nominal_classes, anomaly_classes, 
     """
     Build an anomaly detection data set from a classification data set. The new data set contains
     only binary labels where 0 denotes the nominal class.
+
     :param data: Data
     :param target: Target
     :param nominal_classes: List like, the nominal classes
@@ -634,7 +688,7 @@ def perform_rkde_experiment(
             k_range = np.linspace(1, k_max, 5).astype(int)
 
         # Find bandwidth
-        h_cv, _, _ = kde_lib.bandwidth_cvgrid(X)
+        h_cv, _, _ = kde_lib.bandwidth_cvgrid(X, kernel=kernel)
 
         # Processing all algos
         for algo in algos:
@@ -659,14 +713,6 @@ def perform_rkde_experiment(
 # =======================================================
 
 
-def verify(dataframe, message):
-    """
-    Verify dataframe
-    """
-    if dataframe.empty:
-        raise ValueError("empty data frame: " + message)
-
-
 def set_datasetname(dataset):
     """
     Set dataset name
@@ -684,141 +730,3 @@ metricname = {
 
 # Set the algorithm name
 algoname = {"mom-kde": "MoM-KDE", "kde": "KDE", "spkde": "SPKDE", "rkde": "RKDE"}
-
-
-def plot_rkde_experiment(algos, datasets, outlierprop_range, scores_file):
-    """
-    Visualization of the experiments.
-    """
-    min_metrics = ["jensen", "kullback_f0_f", "kullback_f_f0"]
-    # =======================================================
-    #   Parameters
-    # =======================================================
-
-    # Which metric ?
-    # metric = 'kullback_f0_f'
-    # metric = 'kullback_f_f0'
-    metric = "auc_anomaly"
-
-    SHOW = 1
-    LEGEND = 1
-
-    # Plot params
-    rc("text", usetex=True)
-    rc("font", **{"family": "serif", "serif": ["Times New Roman"]})
-    FIGSIZE = (5, 4)
-
-    SMALL_SIZE = 16
-
-    plt.rc("font", size=SMALL_SIZE)  # controls default text sizes
-    # plt.rc('axes', titlesize=TINY_SIZE)     # fontsize of the axes title
-    # plt.rc('axes', labelsize=TINY_SIZE)    # fontsize of the x and y labels
-    # plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-    # plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-    # plt.rc('legend', fontsize=TINY_SIZE)    # legend fontsize
-    # plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-    HSPACE = None
-    # TOP = 0.95
-    TOP = None
-    BOTTOM = 0.17
-    # BOTTOM = None
-    LEFT = 0.19
-    # LEFT = None
-
-    # =======================================================
-    #   Processing
-    # =======================================================
-    x_plot = outlierprop_range
-
-    scores = pd.read_csv(scores_file)
-
-    scores_arr_mean = np.zeros((len(algos), len(x_plot)))
-    scores_arr_std = np.zeros((len(algos), len(x_plot)))
-
-    for i_dataset, dataset in enumerate(datasets):
-        print("\nDataset: ", dataset)
-        # select dataset
-        scores_select = scores[scores.dataset == dataset]
-        verify(scores_select, "scores_select, dataset")
-
-        fig, ax = plt.subplots(figsize=FIGSIZE)
-        plt.subplots_adjust(hspace=HSPACE, top=TOP, bottom=BOTTOM, left=LEFT)
-        # Setup scores
-        for i_algo, algo in enumerate(algos):
-            print("Algo", algo)
-            tmp_algo = scores_select[scores_select.algo == algo]
-            verify(tmp_algo, "algo")
-            for i_outlierprop, outlierprop in enumerate(outlierprop_range):
-                tmp_prop = tmp_algo[tmp_algo.outlier_prop == outlierprop]
-                verify(tmp_prop, "epsilon")
-                if algo == "mom-kde":
-                    range_k = list(set(tmp_prop.n_block))
-                    # print('range K:', range_k)
-                    scores_mean_k = np.zeros(len(range_k))
-                    scores_std_k = np.zeros(len(range_k))
-                    for i_k, k in enumerate(range_k):
-                        tmp_k = tmp_prop[tmp_prop.n_block == k]
-                        scores_mean_k[i_k] = np.mean(tmp_k[metric])
-                        scores_std_k[i_k] = np.std(tmp_k[metric])
-                    if metric in min_metrics:
-                        # print('select min score')
-                        best_score = np.min(scores_mean_k)
-                        best_ik = np.argmin(scores_mean_k)
-                        best_k = range_k[best_ik]
-                    else:
-                        # print('select max score')
-                        best_score = np.max(scores_mean_k)
-                        best_ik = np.argmax(scores_mean_k)
-                        best_k = range_k[best_ik]
-                    # print('best k: ', best_k)
-                    score_mean = best_score
-                    score_std = scores_std_k[best_ik]
-                else:
-                    tmp = tmp_prop[metric]
-                    verify(tmp, "metric")
-                    if i_outlierprop == 0:
-                        print("n exp", tmp.shape)
-                    score_mean = np.mean(tmp)
-                    score_std = np.std(tmp)
-                scores_arr_mean[i_algo, i_outlierprop] = score_mean
-                scores_arr_std[i_algo, i_outlierprop] = score_std
-
-        # Plots
-        for i_algo, algo in enumerate(algos):
-            if algo == "kde":
-                marker = "o"
-                ls = ""
-            elif algo == "spkde":
-                marker = ""
-                ls = "--"
-            else:
-                marker = ""
-                ls = "-"
-            algo_name = algoname.get(algo, algo)
-            ax.plot(
-                x_plot,
-                scores_arr_mean[i_algo, :],
-                label=algo_name,
-                linestyle=ls,
-                marker=marker,
-            )
-            ax.grid(alpha=0.3)
-            ax.fill_between(
-                x_plot,
-                scores_arr_mean[i_algo, :] - scores_arr_std[i_algo, :],
-                scores_arr_mean[i_algo, :] + scores_arr_std[i_algo, :],
-                alpha=0.2,
-            )
-            metric_name = metricname.get(metric, metric)
-            ax.set_ylabel(metric_name)
-            ax.set_xlabel("$|\mathcal{O}| / n$")
-            ax.xaxis.set_major_locator(plt.MaxNLocator(5))
-            ax.yaxis.set_major_locator(plt.MaxNLocator(5))
-            ax.set_title(set_datasetname(dataset))
-
-        if i_dataset == 0:
-            if LEGEND:
-                ax.legend()
-
-    if SHOW:
-        plt.show()
