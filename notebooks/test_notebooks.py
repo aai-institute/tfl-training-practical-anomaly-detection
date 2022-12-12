@@ -11,7 +11,13 @@ resources = {"metadata": {"path": NOTEBOOKS_DIR}}
 
 log = logging.getLogger(__name__)
 
-OMITTED_NOTEBOOKS = ['anomaly_detection_approaches.ipynb']  # omitted due to missing data. Will align with Fabio
+OMITTED_NOTEBOOKS = [
+    # Should not be run in the pipeline
+    "00-setup-and-info.ipynb",
+    # HTML(camera.animate().to_html5_video())
+    # RuntimeError: Requested MovieWriter (ffmpeg) not available
+    "extreme_value_theory_for_anomaly_detection.ipynb"
+]  # omitted due to missing data. Will align with Fabio
 
 
 @pytest.mark.parametrize(
