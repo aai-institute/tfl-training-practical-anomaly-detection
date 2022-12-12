@@ -16,7 +16,9 @@ OMITTED_NOTEBOOKS = [
     "00-setup-and-info.ipynb",
     # HTML(camera.animate().to_html5_video())
     # RuntimeError: Requested MovieWriter (ffmpeg) not available
-    "extreme_value_theory_for_anomaly_detection.ipynb"
+    "extreme_value_theory_for_anomaly_detection.ipynb",
+    # FileNotFoundError: [Errno 2] No such file or directory: '../../data/house_prices/house_prices.csv'
+    "anomaly_detection_approaches.ipynb"
 ]  # omitted due to missing data. Will align with Fabio
 
 
