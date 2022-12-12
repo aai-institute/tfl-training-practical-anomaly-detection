@@ -30,7 +30,7 @@ jobs:
       - name: Install package
         run: pip install -e .
       - name: Fetch config
-        run: if [ -n ${{ secrets.CONFIG_LOCAL }} ]; then echo ${{ secrets.CONFIG_LOCAL }} > ./config_local.json && echo "retrieved local config"; fi
+        run: echo "${{ secrets.CONFIG_LOCAL }}" > ./config_local.json && echo "retrieved local config"
       - name: Run tests and render
         run: |
           bash build_scripts/run-tests-render-notebooks.sh
