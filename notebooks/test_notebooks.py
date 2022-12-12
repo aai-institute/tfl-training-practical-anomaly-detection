@@ -11,8 +11,9 @@ resources = {"metadata": {"path": NOTEBOOKS_DIR}}
 
 log = logging.getLogger(__name__)
 
-OMITTED_NOTEBOOKS = []
-
+OMITTED_NOTEBOOKS = [
+    "00-setup-and-info.ipynb"
+]
 
 @pytest.mark.parametrize(
     "notebook",

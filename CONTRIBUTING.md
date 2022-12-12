@@ -12,7 +12,7 @@ everything should go smoothly.
 
 In summary, to get a running container you should do something like
 ```shell
-docker pull europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_intro_bayesian_ml:latest
+docker pull europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection:latest
 docker run -it --rm -p 8888:8888 \
   -v $(pwd)/src:/home/jovyan/src \ 
   -v $(pwd)/data:/home/jovyan/data \

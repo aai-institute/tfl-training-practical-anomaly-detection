@@ -6,7 +6,11 @@ from cvxopt import matrix, solvers
 from sklearn.model_selection import GridSearchCV, LeaveOneOut, KFold
 
 
-def gaussian_kernel(X, h, d):
+def gaussian_kernel(
+        X,
+        h,
+        d
+):
     """
     Apply gaussian kernel to the input distance X
     """
@@ -14,7 +18,13 @@ def gaussian_kernel(X, h, d):
     return K
 
 
-def rho(x, typ='hampel', a=0, b=0, c=0):
+def rho(
+        x,
+        typ='hampel',
+        a=0,
+        b=0,
+        c=0
+):
     """
     Rho function for Huber and Hampel loss
     Parameters
@@ -54,7 +64,13 @@ def rho(x, typ='hampel', a=0, b=0, c=0):
     return L / x.shape[0]
 
 
-def loss(x, typ='hampel', a=0, b=0, c=0):
+def loss(
+        x,
+        typ='hampel',
+        a=0,
+        b=0,
+        c=0
+):
     """
     Compute Huber or Hampel loss
     Parameters
@@ -72,7 +88,13 @@ def loss(x, typ='hampel', a=0, b=0, c=0):
     return rho(x, typ=typ, a=a, b=b, c=c) / x.shape[0]
 
 
-def psi(x, typ='hampel', a=0, b=0, c=0):
+def psi(
+        x,
+        typ='hampel',
+        a=0,
+        b=0,
+        c=0
+):
     """
     Compute Huber or Hampel psu function
     Parameters
