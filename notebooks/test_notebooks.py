@@ -18,7 +18,7 @@ OMITTED_NOTEBOOKS = [
     # Requested MovieWriter (ffmpeg) not available
     "extreme_value_theory_for_anomaly_detection.ipynb",
     # FileNotFoundError: [Errno 2] No such file or directory: '../data/numenta/NAB/data/realKnownCause/nyc_taxi.csv'
-    "anomaly_detection_on_time_series.ipynb"
+    "anomaly_detection_on_time_series.ipynb",
     # Timeout
     "anomaly_detection_approaches.ipynb"
 ]
