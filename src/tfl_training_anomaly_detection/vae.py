@@ -8,11 +8,17 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+
 # Sampling Layer
 class Sampling(layers.Layer):
-    """Sample from Z from N(z_mean, z_log_var)"""
+    """
+    Sample from Z from N(z_mean, z_log_var)
+    """
 
     def call(self, inputs):
+        """
+        Implementation of call function
+        """
         z_mean, z_log_var = inputs
         batch = tf.shape(z_mean)[0]
         dim = tf.shape(z_mean)[1]
@@ -22,7 +28,8 @@ class Sampling(layers.Layer):
 
 # Encoder network
 def build_encoder_minst(latent_dim=2):
-    """Build convolutional encoder for the MNIST data set
+    """Build convolutional encoder for the MNIST data set.
+
     :param letent_dim: output dimension of the encoder
     """
     encoder_inputs = keras.Input(shape=(28, 28, 1))
@@ -39,7 +46,9 @@ def build_encoder_minst(latent_dim=2):
 
 
 def build_decoder_mnist(latent_dim=2):
-    """Build decoder for the MNIST data set
+    """
+    Build decoder for the MNIST data set.
+
     :param latent_dim: input dimension of the decoder
     """
     latent_inputs = keras.Input(shape=(latent_dim,))
@@ -57,13 +66,13 @@ class VAE(keras.Model):
     """
     Implementation of a variational autoencoder
     """
+
     def __init__(self, encoder, decoder, **kwargs):
         """
-        Initilization
+        Initilization. Note: the output dimension of the encoder needs to match the input dimension of the decoder.
+
         :param encoder: the encoder network
         :param decoder: the decoder network
-
-        Note: the output dimension of the encoder needs to match the input dimension of the decoder.
         """
         super(VAE, self).__init__(**kwargs)
         self.encoder = encoder
@@ -85,10 +94,10 @@ class VAE(keras.Model):
 
     def train_step(self, data):
         """
-        Implements a single training step for the vae
-        :param data: the training batch
+        Implements a single training step for the vae.
 
-        :returns: training loss
+        :param data: the training batch
+        :return: training loss
         """
         with tf.GradientTape() as tape:
             z_mean, z_log_var, z = self.encoder(data)
@@ -117,17 +126,14 @@ class VAE(keras.Model):
             'kl_loss': self.kl_loss_tracker.result()
         }
 
+
 def build_contaminated_minst(data, contamination=.03, p_noise=.1):
     """
+    Build contaminated MNIST datset. We use 3 different contamination types: noise, occlusion, and transposing.
 
-    Parameters
-    ----------
-    data: MNIST data set with shape (None, 28, 28, 1) whith values between 0 and 1
-    contamination: proportion of contamination
-
-    Returns: MNIST data set with random corruptions
-    -------
-
+    :param data: MNIST data set with shape (None, 28, 28, 1) whith values between 0 and 1
+    :param contamination: proportion of contamination.
+    :return: MNIST data set with random corruptions
     """
     data = data.copy()
     n = len(data)
@@ -135,25 +141,25 @@ def build_contaminated_minst(data, contamination=.03, p_noise=.1):
     selection = np.random.choice(n, n_cont)
 
     # Transposed images
-    transpose = int(n_cont/3)
+    transpose = int(n_cont / 3)
     selection_trans = selection[:transpose]
-    data[selection_trans] = np.transpose(data[selection_trans], axes=[0,2,1,3])
+    data[selection_trans] = np.transpose(data[selection_trans], axes=[0, 2, 1, 3])
 
     # Blacked out image parts
-    blackout = int(n_cont * (2/3))
+    blackout = int(n_cont * (2 / 3))
     selection_blackout = selection[transpose: blackout]
     n_blackout = len(selection_blackout)
     x = np.random.binomial(n=1, size=n_blackout, p=.5)
-    #y = np.random.binomial(n=1, size=n_blackout, p=.5)
+    # y = np.random.binomial(n=1, size=n_blackout, p=.5)
     for i, sel in enumerate(selection_blackout):
         xi = x[i]
-        data[sel][xi*14:14 + xi*14, :] = 0
+        data[sel][xi * 14:14 + xi * 14, :] = 0
 
     # Noisy images
     selection_noisy = selection[blackout:]
     n_noisy = len(selection_noisy)
     noise = np.random.binomial(n=1, p=p_noise, size=(n_noisy, 28, 28, 1))
-    data[selection_noisy] = (1-noise) * data[selection_noisy] + noise * (1 - data[selection_noisy])
+    data[selection_noisy] = (1 - noise) * data[selection_noisy] + noise * (1 - data[selection_noisy])
 
     y = np.zeros(data.shape[0])
     for i, sel in enumerate([selection_trans, selection_noisy, selection_blackout]):
