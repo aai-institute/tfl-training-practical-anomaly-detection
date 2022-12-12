@@ -38,7 +38,7 @@ BUILD_DIR=$(dirname "$0")
 (
   cd "${BUILD_DIR}/.." || (echo "Unknown error, could not find directory ${BUILD_DIR}" && exit 255)
   conda install -y -c conda-forge notebook rise jupyter_contrib_nbextensions
-  python build_scripts/configure_spellcheck_dict.py
+  #python build_scripts/configure_spellcheck_dict.py
   jupyter nbextension enable spellchecker/main
   jupyter  nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
   jupyter nbextension enable jupyter-black-master/jupyter-black
