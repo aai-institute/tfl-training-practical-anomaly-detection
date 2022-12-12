@@ -1,10 +1,10 @@
 on:
   push:
     branches:
-      - solutions
+      - master
   pull_request:
     branches:
-      - solutions
+      - master
 
 jobs:
   test_and_render:
@@ -17,11 +17,13 @@ jobs:
         password: ${{ secrets.GAR_JSON_KEY }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v2.4.1
         with:
           fetch-depth: 0
           lfs: true
           persist-credentials: false
+      - name: Set safe directories
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       # lfs=true is not enough, see https://stackoverflow.com/questions/61463578/github-actions-actions-checkoutv2-lfs-true-flag-not-converting-pointers-to-act
       - name: Pull LFS Objects
         run: git lfs pull

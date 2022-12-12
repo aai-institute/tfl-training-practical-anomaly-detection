@@ -7,3 +7,10 @@ sphinxcontrib-websupport==1.2.4
 sphinx_rtd_theme
 nbsphinx
 ipython
+notebook
+rise
+jupyter_contrib_nbextensions
+black
+isort
+flake8
+pre-commit
