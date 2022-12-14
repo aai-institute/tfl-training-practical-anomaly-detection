@@ -43,6 +43,9 @@ BUILD_DIR=$(dirname "$0")
   jupyter  nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
   jupyter nbextension enable jupyter-black-master/jupyter-black
   jupyter nbextension enable equation-numbering/main
+  jupyter nbextension install --py hide_code
+  jupyter nbextension enable --py hide_code
+  jupyter serverextension enable --py hide_code
 )
 
 
