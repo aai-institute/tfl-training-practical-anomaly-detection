@@ -39,6 +39,7 @@ extensions.
 To configure everything, activate a conda env and run
 ```bash
 conda install -c conda-forge notebook rise jupyter_contrib_nbextensions jupyter_nbextensions_configurator
+conda install -c conda-forge ffmpeg
 python ./configure_spellcheck_dict.py
 jupyter nbextension enable spellchecker/main
 jupyter nbextension enable equation-numbering/main
@@ -61,6 +62,5 @@ pip install -r requirements.txt
 pip install -e src
 ```
 
-### HTML Animations
-Some notebook cells use HTML animations. If you encounter an error 'Requested MovieWriter (ffmpeg) not available' try following the advices given 
-[here](https://suryadayn.medium.com/error-requested-moviewriter-ffmpeg-not-available-easy-fix-9d1890a487d3).
+## References
+You can find the main references for the workshop [here](docs/references.md).
