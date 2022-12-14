@@ -137,8 +137,8 @@ cython==0.29.24
 dm-tree==0.1.6
 flatbuffers==1.12
 gast==0.4.0
-google-auth==1.35.0
-google-auth-oauthlib==0.4.6
+# google-auth==1.35.0
+# google-auth-oauthlib==0.4.6
 # google-pasta==0.2.0
 # grpcio==1.39.0
 #h5py==3.1.0
