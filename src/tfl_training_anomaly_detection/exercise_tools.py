@@ -127,7 +127,7 @@ def get_kdd_data():
         logger.info("Loading reduced kdd cup data for testing pipeline.")
         import pickle as pkl
 
-        with open("../../data/kddcup99/kddcup99_trial.pkl", "rb") as f:
+        with open("../data/kddcup99/kddcup99_trial.pkl", "rb") as f:
             KDD99_trial = pkl.load(f)
         X = KDD99_trial["data"]
         y = KDD99_trial["target"]
@@ -463,7 +463,7 @@ def get_mnist_data():
     is_testing = check_is_testing_pipeline()
     if is_testing:
         logger.info("Loading reduced mnist data for testing pipeline.")
-        raw_mnist = pd.read_csv("../../data/mnist/mnist_784_trial.csv")
+        raw_mnist = pd.read_csv("../data/mnist/mnist_784_trial.csv")
         target = raw_mnist.values[:, -1]
         data = raw_mnist.values[:, :-1]
     else:
