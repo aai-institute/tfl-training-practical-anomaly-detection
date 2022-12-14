@@ -2,25 +2,19 @@ import numpy as np
 from cvxopt import matrix, solvers
 from scipy.spatial.distance import euclidean
 from sklearn.metrics.pairwise import rbf_kernel
-from cvxopt import matrix, solvers
-from sklearn.model_selection import GridSearchCV, LeaveOneOut, KFold
+from sklearn.model_selection import GridSearchCV, KFold, LeaveOneOut
+from sklearn.neighbors import KernelDensity
 
 
 def gaussian_kernel(X, h, d):
     """
     Apply gaussian kernel to the input distance X
     """
-    K = np.exp(-X / (2 * (h**2))) / ((2 * np.pi * (h**2))**(d / 2))
+    K = np.exp(-X / (2 * (h ** 2))) / ((2 * np.pi * (h ** 2)) ** (d / 2))
     return K
 
 
-def rho(
-        x,
-        typ='hampel',
-        a=0,
-        b=0,
-        c=0
-):
+def rho(x, typ="hampel", a=0, b=0, c=0):
     """
     Rho function for Huber and Hampel loss
 
@@ -58,13 +52,7 @@ def rho(
     return L / x.shape[0]
 
 
-def loss(
-        x,
-        typ='hampel',
-        a=0,
-        b=0,
-        c=0
-):
+def loss(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel loss
 
@@ -78,13 +66,7 @@ def loss(
     return rho(x, typ=typ, a=a, b=b, c=c) / x.shape[0]
 
 
-def psi(
-        x,
-        typ='hampel',
-        a=0,
-        b=0,
-        c=0
-):
+def psi(x, typ="hampel", a=0, b=0, c=0):
     """
     Compute Huber or Hampel psu function
 

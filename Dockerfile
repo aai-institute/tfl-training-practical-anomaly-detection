@@ -38,6 +38,9 @@ RUN pip install -r requirements-test.txt
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+# ffmpeg does not seem to get installed with apg-get install. Forcing it through conda
+RUN conda install -c conda-forge ffmpeg
+
 WORKDIR "${HOME}"
 
 COPY --chown=${NB_UID}:${NB_GID} . $CODE_DIR
