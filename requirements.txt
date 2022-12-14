@@ -127,7 +127,6 @@ widgetsnbextension==3.5.1
 zipp==3.4.1
 #zlib==1.2.11
 #zstd==1.4.9
-hide-code==0.7.0
 astunparse==1.6.3
 cachetools==4.2.2
 charset-normalizer==2.0.4
@@ -178,4 +177,5 @@ wrapt==1.12.1
 pyot==3.1.1
 celluloid==0.2.0
 ffmpeg-python==0.2.0
+# hide-code==0.7.0
 
