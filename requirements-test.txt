@@ -14,3 +14,4 @@ black
 isort
 flake8
 pre-commit
+hide-code==0.7.0
