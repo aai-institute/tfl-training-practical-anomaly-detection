@@ -43,8 +43,9 @@ def check_is_testing_pipeline():
         "yes",
         "YES",
         "Y",
-        "1"
+        "1",
     ]
+
 
 # Helper function
 def visualize_kde(kernel: str, bandwidth: float, X_train: np.array, y_train: np.array):
@@ -435,7 +436,7 @@ def get_house_prices_data(neighborhood="CollgCr", anomaly_neighborhood="NoRidge"
         contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
         anomalous data respectively.
     """
-    house_data = pd.read_csv("../../data/house_prices/house_prices.csv")
+    house_data = pd.read_csv("../data/house_prices/house_prices.csv")
     neighborhood_data = house_data[house_data["Neighborhood"] == neighborhood].drop(
         columns=["Neighborhood"]
     )
