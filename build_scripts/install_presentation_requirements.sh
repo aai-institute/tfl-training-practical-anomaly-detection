@@ -5,7 +5,7 @@ set -euo pipefail
 function usage() {
   cat > /dev/stdout <<EOF
 Usage:
-  install-presentation-requirements.sh [FLAGS]
+  install_presentation_requirements.sh [FLAGS]
 
   Installs and enables rise, spellchecker and other tools required for the presentation
 
@@ -38,11 +38,14 @@ BUILD_DIR=$(dirname "$0")
 (
   cd "${BUILD_DIR}/.." || (echo "Unknown error, could not find directory ${BUILD_DIR}" && exit 255)
   conda install -y -c conda-forge notebook rise jupyter_contrib_nbextensions
-  #python build_scripts/configure_spellcheck_dict.py
+  python build_scripts/configure_spellcheck_dict.py
+  jupyter contrib nbextension install --user
+  jupyter nbextensions_configurator enable --user
   jupyter nbextension enable spellchecker/main
-  jupyter  nbextension install https://github.com/drillan/jupyter-black/archive/master.zip --user
-  jupyter nbextension enable jupyter-black-master/jupyter-black
   jupyter nbextension enable equation-numbering/main
+  jupyter nbextension enable toc2/main
+  jupyter nbextension enable hinterland/hinterland
+  jupyter nbextension enable hide_input/main
+  jupyter nbextension enable init_cell/main
+
 )
-
-
