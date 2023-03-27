@@ -3,25 +3,54 @@ This file is mainly copy-pasta from rise's examples
 https://github.com/damianavila/RISE/blob/master/examples/rise.css
 that was further customized for appliedAI purposes
 */
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
 
-.reveal {
-    color: white !important;
+
+body {
     font-family: 'Work Sans', sans-serif !important;
+    text-transform: initial !important;
+    letter-spacing: initial !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    text-size-adjust: 100% !important;
+    ‑webkit‑text‑size‑adjust: 100% !important;
 }
 
-/* Overriding reveal styles in headers */
-.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
-    text-transform: initial;   /* sky.css says uppercase */
-    letter-spacing: initial;   /* sky.css says -0.08em */
-    font-family: 'Work Sans', sans-serif !important;
+
+.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
+    font-size: 1.5rem !important;
+}
+
+.navbar-default .navbar-nav > li > a {
     color: #00747b !important;
 }
 
-/* Overriding reveal styles in normal text */
+.filename {
+    font-size: 2.4rem !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.reveal, .md-slide {
+    color: white !important;
+}
+
+h1, h2 {
+    color: #00747b !important;
+}
+
+h3, h4, h5, h6 {
+    color: #808080 !important;
+}
+
+.reveal p, .reveal ol, .reveal dl, .reveal ul,
 div.text_cell_render {
-    font-family: 'Work Sans', sans-serif !important;
-    color: #1c9b90 !important;
+    color: #212529 !important;
+}
+
+/*copied from stackoverflow, better spacing between list items*/
+li + li {
+  margin-top: 0.2em;
 }
 
 body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
@@ -36,6 +65,11 @@ body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .r
 .reveal .rendered_html h5:first-child {
     margin-top: 0.2em;
 }
+
+.CodeMirror-lines, .output_text {
+    font-size: 1.5rem !important;
+}
+
 
 h1.plan, h2.plan, h3.plan {
     text-align: center;
@@ -73,6 +107,24 @@ div.plan-container {
     display: none;
 }
 
+#toc-header, .toc-item li {
+    margin: auto !important;
+    color: #808080 !important;
+}
+
+#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
+    margin: auto !important;
+    color: #00747b !important;
+}
+
+#toc-wrapper {
+    top: auto !important;
+    bottom: auto !important;
+    margin-top: 2rem !important;
+    color: #00747b !important;
+}
+
+
 #rise-header {
     margin: 10px;
     left: 5%;
@@ -92,15 +144,8 @@ div.plan-container {
 }
 
 
-/*Styles for explicit html in markdown cells*/
-.md-slide {
-    color: white;
-    font-family: 'Work Sans', sans-serif !important;
-}
-
 .md-slide.title {
   position: relative;
   top: -50%;
   margin-left: 5%;
-  font-size: 1em;
 }

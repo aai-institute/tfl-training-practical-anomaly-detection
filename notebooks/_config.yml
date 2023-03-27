@@ -1,0 +1,7 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+title: thesan_output
+author: appliedAI TransferLab
+logo: _static/images/transferlab-logo.svg
+
