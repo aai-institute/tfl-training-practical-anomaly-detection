@@ -1,5 +1,5 @@
 Example: tfl-training-anomaly-detection Documentation
-==================================
+=====================================================
 
 .. toctree::
    :caption: Overview
