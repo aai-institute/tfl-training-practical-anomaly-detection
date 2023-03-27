@@ -1,5 +1,2 @@
 _build
-*.ipynb
-rise_template/**/*.rst
-rise.css
-images
+_static/images

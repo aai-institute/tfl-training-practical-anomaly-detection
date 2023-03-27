@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# tfl-training-anomaly-detection documentation build configuration file
+# Example: tfl-training-anomaly-detection documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -10,9 +10,11 @@
 import ast
 import logging
 import os
+from pathlib import Path
 import sys
 
 import pkg_resources
+from sphinx.util.fileutil import copy_asset
 
 log = logging.getLogger("docs")
 
@@ -35,57 +37,27 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.linkcode",
     "sphinx_rtd_theme",
-    "nbsphinx",
-    # see https://github.com/spatialaudio/nbsphinx/issues/24 for an explanation why this extension is necessary
-    "IPython.sphinxext.ipython_console_highlighting",
 ]
 
 
-# Needed because Mathjax 3 collides with plotly.
-# See https://github.com/spatialaudio/nbsphinx/issues/572#issuecomment-853389268
-# TODO: remove this once plotly supports Mathjax 3
-mathjax_path = (
-    "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-)
-mathjax2_config = {
-    "tex2jax": {
-        "inlineMath": [["$", "$"], ["\\(", "\\)"]],
-        "processEscapes": True,
-        "ignoreClass": "document",
-        "processClass": "math|output_area",
-    }
-}
-
-# taking the non-reveal of rise.css here
-# see https://nbsphinx.readthedocs.io/en/latest/custom-css.html for a guide on custom css for nbsphinx
-# TODO: this is not sufficient, things are rendered quite differently with nbsphinx
-nbsphinx_prolog = """
-.. raw:: html
-
-    <style>
-        div.text_cell_render {
-            font-family: 'Work Sans', sans-serif !important;
-            color: #1c9b90 !important;
-        }
-        .md-slide {
-            color: white;
-            font-family: 'Work Sans', sans-serif !important;
-        }
-        
-        .md-slide.title {
-          position: relative;
-          top: -50%;
-          margin-left: 5%;
-          font-size: 1em;
-        }
-    </style>
-"""
+# Copying images, so they can be referenced in the notebooks html output
+# See https://www.sphinx-doc.org/en/master/development/theming.html#add-your-own-static-files-to-the-build-assets
+def copy_images(app, exc):
+    if app.builder.format == "html" and not exc:
+        staticdir = os.path.join(app.builder.outdir, "_static", "_static", "images")
+        images_dir = Path(__file__).parent.parent / "notebooks" / "_static" / "images"
+        log.info(f"Copying images from {images_dir} to {staticdir}")
+        copy_asset(str(images_dir), staticdir)
 
 
-# adding links to source files (this works for gitlab and github like hosts and might need to be adjusted for others)
+def setup(app):
+    app.connect("build-finished", copy_images)
+
+
+# adding links to source files (this works for GitLab and GitHub like hosts and might need to be adjusted for others)
 # see https://www.sphinx-doc.org/en/master/usage/extensions/linkcode.html#module-sphinx.ext.linkcode
 def linkcode_resolve(domain, info):
-    link_prefix = "https://github.com/appliedAI-Initiative/tfl-training-anomaly-detection/blob/develop"
+    link_prefix = "https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master"
     if domain != "py":
         return None
     if not info["module"]:
@@ -166,7 +138,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "tfl-training-anomaly-detection"
+project = "tfl_training_anomaly_detection"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -247,7 +219,7 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ["_static"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -291,7 +263,7 @@ html_static_path = []
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "tfl-training-anomaly-detection_doc"
+htmlhelp_basename = "Example: tfl-training-anomaly-detection_doc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -335,7 +307,7 @@ latex_elements = {
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ("index", "tfl-training-anomaly-detection", "", ["appliedAI Transferlab"], 1)
+    ("index", "Example: tfl-training-anomaly-detection", "", ["appliedAI TransferLab"], 1)
 ]
 
 # If true, show URL addresses after external links.
