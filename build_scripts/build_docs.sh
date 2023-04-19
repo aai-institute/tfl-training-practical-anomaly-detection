@@ -104,9 +104,9 @@ DOCS_STATIC_DIR="docs/_static"
     jupyter nbconvert --to html notebooks/*.ipynb ${EXECUTE_FLAG}\
     --output-dir $DOCS_STATIC_DIR \
     --TagRemovePreprocessor.enabled True \
-    --TagRemovePreprocessor.remove_cell_tags remove-cell \
-    --TagRemovePreprocessor.remove_input_tags remove-input \
-    --TagRemovePreprocessor.remove_all_outputs_tags remove-output \
+    --TagRemovePreprocessor.remove_cell_tags remove-cell-nbconv \
+    --TagRemovePreprocessor.remove_input_tags remove-input-nbconv \
+    --TagRemovePreprocessor.remove_all_outputs_tags remove-output-nbconv \
     --no-prompt \
     --template classic
     echo "...done, your notebooks are now available as html in the docs/_static directory."
@@ -138,6 +138,17 @@ rendered notebooks."
     jupyter-book build notebooks
   else
     echo "Skipping jupyter book build step"
+  fi
+
+  echo "Searching for built jupyter book"
+  if [ -f "notebooks/_build/html/index.html" ]; then
+    echo "Moving the built jupyter book to the docs directory"
+    rm -r docs/_static/jupyter_book 2>/dev/null || true
+    mkdir -p docs/_static/jupyter_book
+    cp -r notebooks/_build/html/* docs/_static/jupyter_book/
+  else
+    echo "Could not find the built jupyter book in notebooks/_build/html"
+    echo "This is normal in CI, as the built files may be committed inside the docs"
   fi
 
   echo "Building documentation with sphinx"

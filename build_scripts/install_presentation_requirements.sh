@@ -47,5 +47,5 @@ BUILD_DIR=$(dirname "$0")
   jupyter nbextension enable hinterland/hinterland
   jupyter nbextension enable hide_input/main
   jupyter nbextension enable init_cell/main
-
+  jupyter nbextension enable exercise2/main
 )
