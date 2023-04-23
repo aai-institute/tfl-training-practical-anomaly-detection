@@ -1,11 +1,15 @@
-rise_template
-=============
+
+
+Example: tfl-training-anomaly-detection Documentation
+=====================================================
 
 .. toctree::
-   :caption: Guides and Tutorials
+   :caption: Overview
    :glob:
 
-   *
+   intro
+   exercises
+
 
 
 .. toctree::

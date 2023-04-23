@@ -1,0 +1,3 @@
+remote_storage_config:
+  key: storage-admin@tfl-prod-ea3b.iam.gserviceaccount.com
+  secret: "env:TFL_STORAGE_ADMIN_SECRET"

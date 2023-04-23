@@ -1,0 +1,10 @@
+data: data
+
+remote_storage_config:
+  key: tfl-training-participant@tfl-prod-ea3b.iam.gserviceaccount.com
+  secret: "env:PARTICIPANT_BUCKET_READ_SECRET"
+  bucket: tfl_trainings
+  base_path: anomaly_detection
+  provider: google_storage
+
+housing_data: "data/first_nb/housing.csv"

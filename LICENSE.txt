@@ -1,0 +1,75 @@
+End-User License Agreement (EULA)
+
+This End-User License Agreement ("EULA") is a legal agreement between you and
+appliedAI.
+
+This EULA agreement governs your acquisition and use of our Tfl training
+Practical Anomaly Detectiont ("Content") directly from appliedAI or indirectly
+through a appliedAI authorized reseller or distributor (a "Reseller").
+
+Please read this EULA agreement carefully before completing the installation
+process and using the Tfl training Practical Anomaly Detectiont. It provides a
+license to use the Tfl training Practical Anomaly Detectiont and contains
+warranty information and liability disclaimers.
+
+By using the Tfl training Practical Anomaly Detectiont, you are confirming your
+acceptance of the content and agreeing to become bound by the terms of this EULA
+agreement.
+
+If you are entering into this EULA agreement on behalf of a company or other
+legal entity, you represent that you have the authority to bind such entity and
+its affiliates to these terms and conditions. If you do not have such authority
+or if you do not agree with the terms and conditions of this EULA agreement, do
+not install or use the Content, and you must not accept this EULA agreement.
+
+This EULA agreement shall apply only to the Content supplied by appliedAI
+herewith regardless of whether other Content is referred to or described herein.
+The terms also apply to any appliedAI updates, supplements, Internet-based
+services, and support services for the Content, unless other terms accompany
+those items on delivery. If so, those terms apply. License Grant
+
+appliedAI hereby grants you a personal, non-transferable, non-exclusive licence
+to use the Tfl training Practical Anomaly Detectiont on your devices in
+accordance with the terms of this EULA agreement.
+
+You are permitted to load the Tfl training Practical Anomaly Detectiont (for
+example a PC, laptop, mobile or tablet) under your control. You are responsible
+for ensuring your device meets the minimum requirements of the Tfl training
+Practical Anomaly Detectiont.
+
+You are not permitted to:
+
+    Edit, alter, modify, adapt, translate or otherwise change the whole or any part
+    of the Content nor permit the whole or any part of the Content to be combined
+    with or become incorporated in any other Content, nor decompile, disassemble or
+    reverse engineer the Content or attempt to do any such things Reproduce, copy,
+    distribute, resell or otherwise use the Content for any commercial purpose Allow
+    any third party to use the Content on behalf of or for the benefit of any third
+    party Use the Content in any way which breaches any applicable local, national
+    or international law use the Content for any purpose that appliedAI considers is
+    a breach of this EULA agreement
+
+Intellectual Property and Ownership
+
+appliedAI shall at all times retain ownership of the Content as originally
+downloaded by you and all subsequent downloads of the Content by you. The
+Content (and the copyright, and other intellectual property rights of whatever
+nature in the Content, including any modifications made thereto) are and shall
+remain the property of appliedAI.
+
+appliedAI reserves the right to grant licences to use the Content to third
+parties. Termination
+
+This EULA agreement is effective from the date you first use the Content and
+shall continue until terminated. You may terminate it at any time upon written
+notice to appliedAI.
+
+It will also terminate immediately if you fail to comply with any term of this
+EULA agreement. Upon such termination, the licenses granted by this EULA
+agreement will immediately terminate and you agree to stop all access and use of
+the Content. The provisions that by their nature continue and survive will
+survive any termination of this EULA agreement. Governing Law
+
+This EULA agreement, and any dispute arising out of or in connection with this
+EULA agreement, shall be governed by and construed in accordance with the laws
+of de.
