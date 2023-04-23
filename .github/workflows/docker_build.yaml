@@ -50,7 +50,7 @@ jobs:
         with:
           flavor: |
             latest=true
-          images: europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection:latest
+          images: europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection
           tags: |
             type=sha
       - name: Build and push
@@ -62,5 +62,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args:
             PARTICIPANT_BUCKET_READ_SECRET=${{ secrets.PARTICIPANT_BUCKET_READ_SECRET }}
-          cache-from: type=registry,ref=europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection:latest
+          cache-from: type=registry,ref=europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection
           cache-to: type=inline
