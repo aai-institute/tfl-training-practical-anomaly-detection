@@ -1,4 +1,4 @@
-# thesan_output - developing the training
+# Practical Anomaly Detection - developing the training
 
 This repository was created from an aAI internal
 [template](https://github.com/appliedAI-Initiative/thesan)
@@ -22,62 +22,6 @@ They are also rendered to a jupyter-book. The rendering happens as part of the
 `build_scripts/build_docs.sh` script.
 6. Data is downloaded with accsr and stored in the `data` directory. This
 happens on demand locally, and as part of the entrypoint in the docker container.
-
-## Setup
-
-### Accessing and pushing data
-
-The configuration is already set up to work out of the box, you
-just need to set the env var `TFL_STORAGE_ADMIN_SECRET`. You can upload
-data by calling `python scripts/upload_data.py`.
-
-### Virtual environment based
-
-Some requirements don't work well with pip, so you will need conda.
-Create a new `conda` environment, activate it and install dependencies with
-
-```shell 
-bash build_scripts/install_presentation_requirements.sh 
-pip install -e ".[test]"  
-```
-
-NOTE: Anecdotal evidence suggests that `pip` might actually work
-or that the conda-based installation can fail on some MacOS versions.
-If you run into issues, feel free to resolve them on the template repository.
-
-### Docker based
-
-As the docker image is being created automatically and contains all
-requirements, you can simply use it for local development (e.g. using a docker
-interpreter in your IDE).
-
-In summary, to get a running container you could do something like 
-```shell
-docker pull europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/thesan_output
-docker run -it -p 8888:8888 --entrypoint bash \ 
--v $(pwd):/home/jovyan/thesan_output \
-docker.aai.sh/tl/trainings/thesan_output  
-``` 
-
-**NOTE**: You will need to authenticate into the docker registry before pulling.
-This can be done with
-```shell 
-docker login -u _json_key -p "$(cat <credentials>.json)" https://europe-west3-docker.pkg.dev 
-``` 
-Ask somebody for the credentials.
-
-You can also build the image locally. Set the `PARTICIPANT_BUCKET_READ_SECRET`
-environment variable and run
-
-```shell
-docker build --build-arg PARTICIPANT_BUCKET_READ_SECRET=$PARTICIPANT_BUCKET_READ_SECRET -t thesan_output .
-```
-
-### For participants
-
-Participants will start a jhub server based on the docker image built from the
-master branch. For them, everything should work out of the box.
-
 
 ## Writing new content
 
@@ -107,19 +51,20 @@ hint-loading cells.
 Notebooks are a bit tricky. We don't want to execute them in CI, because that
 would take too long. We also don't want to commit the output, because it would
 make the repository too big. So we have to render them locally and commit the
-rendered html.
+rendered html. On top of that, dynamically loading code cells with the `%load`
+magic command makes things even more complicated.
 
 To render the notebooks, you can use 
 `build_scripts/build_docs.sh --execute`.
 It will create files in `docs/_build/html` (with sphinx)
 as well as in `notebooks/_build/html` (with jupyter-book).
 
-**IMPORTANT**: With the `--execute` option, the above script will also create 
+**IMPORTANT 1**: With the `--execute` option, the above script will also create 
 files inside `docs/_static`. These files have to be **committed!** Don't worry
 about them blowing up the repository, they are stored in git lfs.
 
-**DEPRECATED**: . If you are using the `%load` magic command for, 
-this will collide with rendering.
+**IMPORTANT 2**: We use the `%load` magic command for loading code
+cells dynamically. Unfortunately, this collides with rendering.
 The current workaround is to first execute the cell containing `%load`
 before rendering the notebook. Note however, that the 
 executed cells should **not be committed!** This means, for rendering
@@ -131,10 +76,9 @@ the docker image is built, so you will get an error if you forget to do this.
 ## Before the training
 
 Make sure everything is committed as described above
-and pushed to the remote repository. Have a look at the GitHub pages:
-do the exercises pages and the jupyter-book look good?
-Ask the operations team to create a jupyterhub server and to include 
-the docker image that was built in CI into the list.
+and pushed to the remote repository. Ask the operations team to
+create a jupyterhub server and to include the docker image that was
+built in CI into the list.
 
 Start an instance and check whether:
 
@@ -193,6 +137,57 @@ and reference that one in the Dockerfile instead of the full `requirements.txt`.
 The participants will need to perform a local installation of the package anyway
 and can then install the heavier requirements into the container, without
 needing to build an image. It is not a great solution, but it is enough for now.
+
+## Setup
+
+### Accessing and pushing data
+
+The configuration is already set up to work out of the box, you
+just need to set the env var `TFL_STORAGE_ADMIN_SECRET`. You can upload
+data by calling `python scripts/upload_data.py`.
+
+### Virtual environment based
+
+Some requirements don't work well with pip, so you will need conda. Create a new
+`conda` environment, activate it and install dependencies with
+
+```shell 
+bash build_scripts/install_presentation_requirements.sh 
+pip install -e ".[test]"  
+```
+
+### Docker based
+
+As the docker image is being created automatically and contains all
+requirements, you can simply use it for local development (e.g. using a docker
+interpreter in your IDE).
+
+In summary, to get a running container you could do something like 
+```shell
+docker pull europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/thesan_output
+docker run -it -p 8888:8888 --entrypoint bash \ 
+-v $(pwd):/home/jovyan/thesan_output \
+docker.aai.sh/tl/trainings/thesan_output  
+``` 
+
+**NOTE**: You will need to authenticate into the docker registry before pulling.
+This can be done with
+```shell 
+docker login -u _json_key -p "$(cat <credentials>.json)" https://europe-west3-docker.pkg.dev 
+``` 
+Ask somebody for the credentials.
+
+You can also build the image locally. Set the `PARTICIPANT_BUCKET_READ_SECRET`
+environment variable and run
+
+```shell
+docker build --build-arg PARTICIPANT_BUCKET_READ_SECRET=$PARTICIPANT_BUCKET_READ_SECRET -t thesan_output .
+```
+
+### For participants
+
+Participants will start a jhub server based on the docker image built from the
+master branch. For them, everything should work out of the box.
 
 ## Structuring the code and testing
 
