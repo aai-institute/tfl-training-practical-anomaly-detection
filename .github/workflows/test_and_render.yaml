@@ -34,13 +34,13 @@ jobs:
         run: pytest
       - name: Build docs
 #       NOTE: feel free to delete the if-else and just keep the else line. It's simply a special case to make the
-#       automatically generated thesan_output fully representative. In normal cases, the notebooks are rendered
+#       automatically generated tfl_training_anomaly_detection fully representative. In normal cases, the notebooks are rendered
 #       locally and html is committed
         run: |
           if [ $(basename "$PWD") = "thesan_output" ]; then 
-            bash build_scripts/build_docs.sh --execute --skip-nb-validation
+            bash build_scripts/build_docs.sh --execute
           else
-            bash build_scripts/build_docs.sh --skip-nbconvert --skip-jupyter-book 
+            bash build_scripts/build_docs.sh --skip-nbconvert --skip-jupyter-book
           fi
       - name: Prepare Pages
         if: github.ref == 'refs/heads/master'
