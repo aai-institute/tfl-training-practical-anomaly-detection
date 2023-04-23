@@ -10,7 +10,7 @@ jobs:
   test_and_render:
     runs-on: ubuntu-latest
     container:
-      image: europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl-training-anomaly-detection:latest
+      image: europe-west3-docker.pkg.dev/tfl-prod-ea3b/tfl-docker/tfl_training_anomaly_detection:latest
       options: --user root
       credentials:
         username: _json_key
