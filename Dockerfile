@@ -1,13 +1,43 @@
 FROM jupyter/minimal-notebook:python-3.9.7
 
-USER root
-RUN apt-get update -yq && apt-get -yq install ffmpeg
+# keep env var name in sync with config_local.yml
+ARG PARTICIPANT_BUCKET_READ_SECRET
+ENV PARTICIPANT_BUCKET_READ_SECRET=${PARTICIPANT_BUCKET_READ_SECRET}
 
-# pandoc needed for docu, see https://nbsphinx.readthedocs.io/en/0.7.1/installation.html?highlight=pandoc#pandoc
+RUN if [ -z "$PARTICIPANT_BUCKET_READ_SECRET" ]; \
+      then echo "The build arg PARTICIPANT_BUCKET_READ_SECRET must be set to non-zero, e.g. \
+by passing the flag --build-arg PARTICIPANT_BUCKET_READ_SECRET=$PARTICIPANT_BUCKET_READ_SECRET. " &&\
+      echo "If running in CI, this variable should have been included as GH secret in the repository settings." &&\
+      echo "If you are building locally and the env var is not set,  \
+you might find the corresponding value inside config.yml under the 'secret' key." &&\
+      exit 1; \
+    fi
+
+USER root
+RUN apt-get update && apt-get upgrade -y
+
+# pandoc needed for docs, see https://nbsphinx.readthedocs.io/en/0.7.1/installation.html?highlight=pandoc#pandoc
 # gh-pages action uses rsync
 RUN apt-get -y install pandoc git-lfs rsync
 
 USER ${NB_UID}
+
+WORKDIR /tmp
+COPY build_scripts build_scripts
+RUN bash build_scripts/install_presentation_requirements.sh
+
+COPY requirements-test.txt .
+RUN pip install -r requirements-test.txt
+
+
+# NOTE: this breaks down when requirements contain pytorch (file system too large to fit in RAM, even with 16GB)
+# NOTE: this might break down when requirements contain pytorch (file system too large to fit in RAM, even with 16GB)
+# If pytorch is a requirement, the suggested solution is to keep a requirements-docker.txt and only install
+# the lighter requirements. The install of the remaining requirements then has to happen at runtime
+# instead of build time (usually as part of the entrypoint)
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 
 # Start of HACK: the home directory is overwritten by a mount when a jhub server is started off this image
 # Thus, we create a jovyan-owned directory to which we copy the code and then move it to the home dir as part
@@ -18,29 +48,12 @@ RUN mkdir $CODE_DIR
 
 COPY --chown=${NB_UID}:${NB_GID} entrypoint.sh $CODE_DIR
 
-RUN chmod +x /tmp/code/entrypoint.sh
+RUN chmod +x "${CODE_DIR}/"entrypoint.sh
+# Unfortunately, we cannot use ${CODE_DIR} in the ENTRYPOINT directive, so we have to hardcode it
+# Keep in sync with the value of CODE_DIR above
 ENTRYPOINT ["/tmp/code/entrypoint.sh"]
 
 # End of HACK
-
-COPY requirements-test.txt .
-RUN pip install -r requirements-test.txt
-
-WORKDIR /tmp
-COPY build_scripts build_scripts
-RUN bash build_scripts/install-presentation-requirements.sh
-
-
-
-# NOTE: this breaks down when requirements contain pytorch (file system too large to fit in RAM, even with 16GB)
-# If pytorch is a requirement, the suggested solution is to keep a requirements-docker.txt and only install
-# the lighter requirements. The install of the remaining requirements then has to happen at runtime
-# instead of build time...
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# ffmpeg does not seem to get installed with apg-get install. Forcing it through conda
-RUN conda install -c conda-forge ffmpeg
 
 WORKDIR "${HOME}"
 
