@@ -15,7 +15,7 @@ Here the Agenda for the next days:
 | 1| -| Lunch Break | 60 min   |   12:30 - 13:30|
 | 1| 3| Anomaly detection via isolation |   105 min    |   13:30 - 15:15|
 | 1| -| Coffee Break |  15 min |   15:15 - 15:30|
-| 1| 4| Anomaly detection via reconstruction error | 105 min  |    15:15 - 17:00|
+| 1| 4| Anomaly detection via reconstruction error | 90 min  |    15:30 - 17:00|
 
 ## Schedule day 2
 
