@@ -25,7 +25,7 @@ Here the Agenda for the next days:
 | 2| -| Coffee Break |  15 min |   10:30 - 10:45|
 | 2| 5| Anomaly detection on time series 2|   75 min  |    10:45 - 12:00 |
 | 2| -| Lunch Break | 60 min   |   12:00 - 13:00|
-| 2| 6| Extreme value theory for anomaly detection | 120 min  |    13:00 - 15:00 |
+| 2| 6| Extreme value theory for anomaly detection 1| 120 min  |    13:00 - 15:00 |
 | 2| -| Coffee Break |  15 min |   15:00 - 15:15|
-| 2| 6| Extreme value theory for anomaly detection |  90 min  |    15:15 - 16:45 |
+| 2| 6| Extreme value theory for anomaly detection 2|  90 min  |    15:15 - 16:45 |
 | 2| -| Discussion and concluding remarks |  15 min  |    16:45 - 17:00 |
