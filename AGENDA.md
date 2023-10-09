@@ -8,7 +8,7 @@ Here the Agenda for the next days:
 
 |Day No.|Notebook No. | Title |Duration|Schedule|
 |:------:|:------:|-----|:------:|:------:|
-| 1| -| Greeting - Welcome and Setup| 30 min|09:00 - 9:15|
+| 1| -| Greeting - Welcome and Setup| 30 min|09:00 - 9:30|
 | 1| 1| Introduction to anomaly detection |  60 min |   9:30 - 10:30|
 | 1| -| Coffee Break |  15 min |   10:30 - 10:45|
 | 1| 2| Anomaly detection via density estimation |  105 min |   10:45 - 12:30|
