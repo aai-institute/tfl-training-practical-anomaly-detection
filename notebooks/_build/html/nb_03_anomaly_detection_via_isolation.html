@@ -1,0 +1,1847 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Anomaly Detection via Isolation &#8212; Practical Anomaly Detection</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/configmacros"]}, "tex": {"packages": {"[+]": ["configmacros"]}, "macros": {"vect": ["{\\mathbf{\\boldsymbol{#1}} }", 1], "E": "{\\mathbb{E}}", "P": "{\\mathbb{P}}", "R": "{\\mathbb{R}}", "abs": ["{\\left| #1 \\right|}", 1], "simpl": ["{\\Delta^{#1} }", 1], "amax": "{\\text{argmax}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nb_03_anomaly_detection_via_isolation';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Anomaly Detection via Reconstruction Error" href="nb_04_anomaly_detection_via_reconstruction.html" />
+    <link rel="prev" title="Anomaly Detection via Density Estimation" href="nb_02_anomaly_detection_via_density_estimation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/transferlab-logo.svg" class="logo__image only-light" alt="Practical Anomaly Detection - Home"/>
+    <script>document.write(`<img src="_static/transferlab-logo.svg" class="logo__image only-dark" alt="Practical Anomaly Detection - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    practical anomaly detection - Notebook Pages
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_01_0_intro_anomaly_detection.html">Introduction to Anomaly Detection</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_01_1_intro_and_ad_taxonomy.html">Taxonomy of Anomaly Detection Approaches</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="nb_02_anomaly_detection_via_density_estimation.html">Anomaly Detection via Density Estimation</a></li>
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Anomaly Detection via Isolation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_04_anomaly_detection_via_reconstruction.html">Anomaly Detection via Reconstruction Error</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_05_anomaly_detection_on_time_series.html">Anomaly Detection on Time Series</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_06_extreme_value_theory_for_anomaly_detection.html">Extreme Value Theory and Anomaly Detection</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nb_03_anomaly_detection_via_isolation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Anomaly Detection via Isolation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Anomaly Detection via Isolation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Anomaly Detection via Isolation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolation-tree">Isolation Tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolation-depth">Isolation Depth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolation-forest">Isolation Forest</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#variants-of-isolation-forest">Variants of Isolation Forest</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variant-random-robust-cut-forest">Variant: Random Robust Cut Forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variant-extended-isolation-forest">Variant: Extended Isolation Forest</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-network-security">Exercise: Network Security</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#briefing">Briefing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-data">The Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kddcup-99-data-set">Kddcup 99 Data Set</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#explore-data">Explore Data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-algorithm">Choose Algorithm</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-solution">Evaluate Solution</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementations">Implementations</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_remove-input tag_remove-input-nbconv docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html"><style>/*
+This file is mainly copy-pasta from rise's examples
+https://github.com/damianavila/RISE/blob/master/examples/rise.css
+that was further customized for appliedAI purposes
+*/
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
+
+
+body {
+    font-family: 'Work Sans', sans-serif !important;
+    text-transform: initial !important;
+    letter-spacing: initial !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    text-size-adjust: 100% !important;
+    ‑webkit‑text‑size‑adjust: 100% !important;
+}
+
+
+.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
+    font-size: 1.5rem !important;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #00747b !important;
+}
+
+.filename {
+    font-size: 2.4rem !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.reveal, .md-slide {
+    color: white !important;
+}
+
+h1, h2 {
+    color: #00747b !important;
+}
+
+h3, h4, h5, h6 {
+    color: #808080 !important;
+}
+
+.reveal p, .reveal ol, .reveal dl, .reveal ul,
+div.text_cell_render {
+    color: #212529 !important;
+}
+
+/*copied from stackoverflow, better spacing between list items*/
+li + li {
+  margin-top: 0.2em;
+}
+
+body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
+    margin-left: 0.1em;
+    margin-top: 0.2em;
+}
+
+.reveal .rendered_html h1:first-child,
+.reveal .rendered_html h2:first-child,
+.reveal .rendered_html h3:first-child,
+.reveal .rendered_html h4:first-child,
+.reveal .rendered_html h5:first-child {
+    margin-top: 0.2em;
+}
+
+.CodeMirror-lines, .output_text {
+    font-size: 1.5rem !important;
+}
+
+
+h1.plan, h2.plan, h3.plan {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+ul.plan>li>span.plan-bold {
+    font-size: 110%;
+    padding: 4px;
+    font-weight: bold;
+    background-color: #eee;
+}
+
+ul.plan>li>ul.subplan>li>span.plan-bold {
+    font-weight: bold;
+}
+
+.plan-strike {
+    opacity: 0.4;
+/*    text-decoration: line-through; */
+}
+
+div.plan-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+/*
+ * this is to void xarray's html output to show the fallback textual representation
+ * see also
+   * xarray.md and
+   * https://github.com/damianavila/RISE/issues/594
+ */
+.reveal pre.xr-text-repr-fallback {
+    display: none;
+}
+
+#toc-header, .toc-item li {
+    margin: auto !important;
+    color: #808080 !important;
+}
+
+#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
+    margin: auto !important;
+    color: #00747b !important;
+}
+
+#toc-wrapper {
+    top: auto !important;
+    bottom: auto !important;
+    margin-top: 2rem !important;
+    color: #00747b !important;
+}
+
+
+#rise-header {
+    margin: 10px;
+    left: 5%;
+}
+
+#rise-footer {
+    margin: 10px;
+    right: 5%;
+}
+
+#rise-backimage {
+    opacity: 0.70;
+}
+
+.reveal img {
+    max-width: 100%;
+}
+
+
+.md-slide.title {
+  position: relative;
+  top: -50%;
+  margin-left: 5%;
+}</style></div></div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="anomaly-detection-via-isolation">
+<h1>Anomaly Detection via Isolation<a class="headerlink" href="#anomaly-detection-via-isolation" title="Permalink to this heading">#</a></h1>
+<img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;"><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">average_precision_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelBinarizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">IsolationForest</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KernelDensity</span>
+<span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">tfl_training_anomaly_detection.exercise_tools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">evaluate</span><span class="p">,</span> 
+    <span class="n">get_kdd_data</span><span class="p">,</span> 
+    <span class="n">get_house_prices_data</span><span class="p">,</span> 
+    <span class="n">create_distributions</span><span class="p">,</span> 
+    <span class="n">contamination</span><span class="p">,</span> 
+    <span class="n">perform_rkde_experiment</span><span class="p">,</span> 
+    <span class="n">get_mnist_data</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tfl_training_anomaly_detection.vae</span> <span class="kn">import</span> <span class="n">VAE</span><span class="p">,</span> <span class="n">build_decoder_mnist</span><span class="p">,</span> <span class="n">build_encoder_minst</span><span class="p">,</span> <span class="n">build_contaminated_minst</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>Anomaly Detection via Isolation<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<p><strong>Idea:</strong> An anomaly should allow  “simple” descriptions that distinguish it from the rest of the data.</p>
+<ul class="simple">
+<li><p>Descriptions: Conjunction of single attribute tests, i.e.
+<span class="math notranslate nohighlight">\(X_i \leq c\)</span> or <span class="math notranslate nohighlight">\(X_i &gt; c\)</span>.</p></li>
+<li><p>Example: <span class="math notranslate nohighlight">\(X_1 \leq 1.2 \text{ and } X_5 &gt; -3.4 \text{ and }	X_7 \leq 5.6\)</span>.</p></li>
+<li><p>Complexity of description: Number of conjunctions.</p></li>
+</ul>
+<p>Moreover, we assume that a short random descriptions will have a significantly larger chance of isolating an anomaly
+than isolating any nominal point.</p>
+<ul class="simple">
+<li><p>Choose random isolating descriptions and compute anomaly score from average complexity.</p></li>
+</ul>
+<section id="isolation-tree">
+<h2>Isolation Tree<a class="headerlink" href="#isolation-tree" title="Permalink to this heading">#</a></h2>
+<p>Isolation Forest (iForest) implements this idea by generating an ensemble of random decision trees.
+Each tree is built as follows:</p>
+<p><strong>Input:</strong> Data set (subsample) <span class="math notranslate nohighlight">\(X\)</span>, maximal height <span class="math notranslate nohighlight">\(h\)</span></p>
+<ul class="simple">
+<li><p>Randomly choose feature <span class="math notranslate nohighlight">\(i\)</span> and split value <span class="math notranslate nohighlight">\(s\)</span> (in range of data)</p></li>
+<li><p>Recursively build subtrees on <span class="math notranslate nohighlight">\(X_L = \{x\in X\mid x_i \leq s\}\)</span> and <span class="math notranslate nohighlight">\(X_R = X\setminus X_L\)</span></p></li>
+<li><p>Stop if remaining data set <span class="math notranslate nohighlight">\( \leq 1\)</span> or maximal height reached</p></li>
+<li><p>Store test <span class="math notranslate nohighlight">\(x_i\leq s\)</span> for inner nodes and <span class="math notranslate nohighlight">\(|X|\)</span> for leaf nodes</p></li>
+</ul>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading">#</a></h2>
+<center>
+<img src="_static/images/partition.png" align="center" width="400">
+    Isolation Tree as Partition Diagram
+</center></section>
+<section id="isolation-depth">
+<h2>Isolation Depth<a class="headerlink" href="#isolation-depth" title="Permalink to this heading">#</a></h2>
+<p>Depth of an observation <span class="math notranslate nohighlight">\(x\)</span> in an isolation tree is defined as the expected number of tests needed to isolate <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p><strong>Input:</strong> Observation <span class="math notranslate nohighlight">\(x\)</span></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\({\ell} = \)</span> length of path from root to leaf according to tests</p></li>
+<li><p><span class="math notranslate nohighlight">\({n} = \)</span> size of remaining data set in leaf node</p></li>
+<li><p><span class="math notranslate nohighlight">\({c(n)} =\)</span> expected length of a path in a BST with <span class="math notranslate nohighlight">\(n\)</span> nodes <span class="math notranslate nohighlight">\(={O}(\log n)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\({h(x)} = \ell + c(n)\)</span></p></li>
+</ul>
+<table>
+    <tr>
+        <td style="background-color:#FFFFFF;"><img src="_static/images/blob.png" width="300"></td>
+        <td style="background-color:#FFFFFF;"><img src="_static/images/tree.png"  width="300"></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="background-color:#FFFFFF;"><center>Isolation Depth of Outlier (red) and nominal (blue)</center></td>
+    </tr>
+</table>
+</section>
+<section id="isolation-forest">
+<h2>Isolation Forest<a class="headerlink" href="#isolation-forest" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Train <span class="math notranslate nohighlight">\(k\)</span> isolation trees on subsamples of size <span class="math notranslate nohighlight">\(N\)</span></p></li>
+</ul>
+<table>
+    <tr>
+        <td style="background-color:#FFFFFF;"><img src="_static/images/inrad.png" width="400"></td>
+        <td style="background-color:#FFFFFF;"><img src="_static/images/outrad.png"  width="400"></td>
+    </tr>
+    <tr>
+        <td colspan="2"><center>Isolation depth of nominal point (left) and outlier (right)</center></td>
+    </tr>
+</table></section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="variants-of-isolation-forest">
+<h1>Variants of Isolation Forest<a class="headerlink" href="#variants-of-isolation-forest" title="Permalink to this heading">#</a></h1>
+<section id="variant-random-robust-cut-forest">
+<h2>Variant: Random Robust Cut Forest<a class="headerlink" href="#variant-random-robust-cut-forest" title="Permalink to this heading">#</a></h2>
+<p><strong>New Rule to Choose Split Test:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\ell_i\)</span>: length of the <span class="math notranslate nohighlight">\(i\)</span>th component of the bounding box around current data set</p></li>
+<li><p>Choose dimension <span class="math notranslate nohighlight">\(i\)</span> with probability <span class="math notranslate nohighlight">\(\frac{\ell_i}{\sum_j \ell_j}\)</span></p></li>
+<li><p>More robust against “noise dimensions”</p></li>
+</ul>
+<center>
+<img src="_static/images/partition2.png" align="center" width="400" caption="Comparisson IForest and RRCF">
+</center></section>
+<section id="variant-extended-isolation-forest">
+<h2>Variant: Extended Isolation Forest<a class="headerlink" href="#variant-extended-isolation-forest" title="Permalink to this heading">#</a></h2>
+<p><strong>New split criterion:</strong></p>
+<ul class="simple">
+<li><p>Uniformly choose a normal and an orthogonal hyperplane through the data</p></li>
+<li><p>Removes a bias that was empirically observed when plotting the outlier score of iForest on low dimensional data sets</p></li>
+</ul>
+<center>
+<img src="_static/images/extended.png" align="center" width="80%">
+</center></section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="exercise-network-security">
+<h1>Exercise: Network Security<a class="headerlink" href="#exercise-network-security" title="Permalink to this heading">#</a></h1>
+<p>In the final exercise of today you will have to develop an anomaly detection system for network traffic.</p>
+<section id="briefing">
+<h2>Briefing<a class="headerlink" href="#briefing" title="Permalink to this heading">#</a></h2>
+<p>A large e-commerce company <strong>A</strong> is experiencing downtime due to attacks on their infrastructure.
+You were instructed to develop a system that can detect malicious connections to the infrastructure.
+It is planned that suspicious clients will be banned.</p>
+<p>Another data science team already prepared the connection data of the last year for you. They also separated a test set and manually identified and labeled attacks in that data.</p>
+</section>
+<section id="the-data">
+<h2>The Data<a class="headerlink" href="#the-data" title="Permalink to this heading">#</a></h2>
+<p>We will work on a version of the classic KDD99 data set.</p>
+<section id="kddcup-99-data-set">
+<h3>Kddcup 99 Data Set<a class="headerlink" href="#kddcup-99-data-set" title="Permalink to this heading">#</a></h3>
+<p>======================</p>
+<p>The KDD Cup ‘99 dataset was created by processing the tcp dump portions
+of the 1998 DARPA Intrusion Detection System (IDS) Evaluation dataset,
+created by MIT Lincoln Lab [1]. The artificial data (described on the <code class="docutils literal notranslate"><span class="pre">dataset's</span> <span class="pre">homepage</span> <span class="pre">&lt;https://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html&gt;</span></code>_) was
+generated using a closed network and hand-injected attacks to produce a
+large number of different types of attack with normal activity in the
+background.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>=========================   ====================================================
+Samples total               976158
+Dimensionality              41
+Features                    string (str), discrete (int), continuous (float)
+Targets                     str, &#39;normal.&#39; or name of the anomaly type
+Proportion of Anomalies     1%
+=========================   ====================================================
+</pre></div>
+</div>
+</section>
+</section>
+<section id="task">
+<h2>Task<a class="headerlink" href="#task" title="Permalink to this heading">#</a></h2>
+<p>You will have to develop the system on your own. In particular, you will have to</p>
+<ul class="simple">
+<li><p>Explore the data.</p></li>
+<li><p>Choose an algorithm.</p></li>
+<li><p>Find a good detection threshold.</p></li>
+<li><p>Evaluate and summarize your results.</p></li>
+<li><p>Estimate how much <strong>A</strong> could save through the use of your system.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">get_kdd_data</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="explore-data">
+<h1>Explore Data<a class="headerlink" href="#explore-data" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># Add your exploration code</span>
+<span class="c1">#</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get description</span>
+<span class="n">X_train</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>...</th>
+      <th>31</th>
+      <th>32</th>
+      <th>33</th>
+      <th>34</th>
+      <th>35</th>
+      <th>36</th>
+      <th>37</th>
+      <th>38</th>
+      <th>39</th>
+      <th>40</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>...</td>
+      <td>80524</td>
+      <td>80524</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+      <td>80524.0</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>2025</td>
+      <td>3</td>
+      <td>52</td>
+      <td>9</td>
+      <td>3026</td>
+      <td>9749</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>19</td>
+      <td>...</td>
+      <td>256</td>
+      <td>256</td>
+      <td>101.0</td>
+      <td>96.0</td>
+      <td>101.0</td>
+      <td>53.0</td>
+      <td>89.0</td>
+      <td>50.0</td>
+      <td>101.0</td>
+      <td>101.0</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>0</td>
+      <td>b'tcp'</td>
+      <td>b'http'</td>
+      <td>b'SF'</td>
+      <td>105</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>255</td>
+      <td>255</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>71099</td>
+      <td>62167</td>
+      <td>49443</td>
+      <td>75341</td>
+      <td>5928</td>
+      <td>13968</td>
+      <td>80522</td>
+      <td>80524</td>
+      <td>80523</td>
+      <td>80067</td>
+      <td>...</td>
+      <td>34715</td>
+      <td>45937</td>
+      <td>52113.0</td>
+      <td>51478.0</td>
+      <td>27073.0</td>
+      <td>40645.0</td>
+      <td>75976.0</td>
+      <td>75534.0</td>
+      <td>72976.0</td>
+      <td>73043.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 41 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get better description</span>
+<span class="n">X_train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+      <th>...</th>
+      <th>31</th>
+      <th>32</th>
+      <th>33</th>
+      <th>34</th>
+      <th>35</th>
+      <th>36</th>
+      <th>37</th>
+      <th>38</th>
+      <th>39</th>
+      <th>40</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>80524.000000</td>
+      <td>8.052400e+04</td>
+      <td>8.052400e+04</td>
+      <td>80524.000000</td>
+      <td>80524.0</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>...</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+      <td>80524.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>212.520826</td>
+      <td>1.132199e+03</td>
+      <td>3.334559e+03</td>
+      <td>0.000025</td>
+      <td>0.0</td>
+      <td>0.000037</td>
+      <td>0.045092</td>
+      <td>0.000224</td>
+      <td>0.694675</td>
+      <td>0.034362</td>
+      <td>...</td>
+      <td>152.229584</td>
+      <td>201.268951</td>
+      <td>0.840326</td>
+      <td>0.056082</td>
+      <td>0.154018</td>
+      <td>0.023329</td>
+      <td>0.010110</td>
+      <td>0.009103</td>
+      <td>0.056911</td>
+      <td>0.055090</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1335.658133</td>
+      <td>3.327535e+04</td>
+      <td>3.920496e+04</td>
+      <td>0.004984</td>
+      <td>0.0</td>
+      <td>0.010572</td>
+      <td>0.865373</td>
+      <td>0.022837</td>
+      <td>0.460548</td>
+      <td>4.447863</td>
+      <td>...</td>
+      <td>103.504684</td>
+      <td>88.080978</td>
+      <td>0.311756</td>
+      <td>0.179046</td>
+      <td>0.307295</td>
+      <td>0.049320</td>
+      <td>0.093601</td>
+      <td>0.090608</td>
+      <td>0.223601</td>
+      <td>0.217788</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000</td>
+      <td>0.000000e+00</td>
+      <td>0.000000e+00</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.000000</td>
+      <td>1.460000e+02</td>
+      <td>1.050000e+02</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>40.000000</td>
+      <td>168.000000</td>
+      <td>0.910000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.000000</td>
+      <td>2.320000e+02</td>
+      <td>3.920000e+02</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>175.000000</td>
+      <td>255.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.010000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.000000</td>
+      <td>3.170000e+02</td>
+      <td>2.012000e+03</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>255.000000</td>
+      <td>255.000000</td>
+      <td>1.000000</td>
+      <td>0.010000</td>
+      <td>0.090000</td>
+      <td>0.030000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>30190.000000</td>
+      <td>2.194619e+06</td>
+      <td>5.134218e+06</td>
+      <td>1.000000</td>
+      <td>0.0</td>
+      <td>3.000000</td>
+      <td>30.000000</td>
+      <td>4.000000</td>
+      <td>1.000000</td>
+      <td>884.000000</td>
+      <td>...</td>
+      <td>255.000000</td>
+      <td>255.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 38 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check for NaNs</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of NaNs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of NaNs: 0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># Add your preperation code here</span>
+<span class="c1">#</span>
+
+<span class="c1"># Encode string features</span>
+<span class="n">binarizer</span> <span class="o">=</span> <span class="n">LabelBinarizer</span><span class="p">()</span>
+<span class="n">one_hots</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">one_hots_test</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+    <span class="n">binarizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">one_hots</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">one_hots</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+        <span class="n">one_hots_test</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">one_hots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">one_hots</span><span class="p">,</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">one_hots_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">one_hots_test</span><span class="p">,</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_train_onehot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_train</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">one_hots</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">X_test</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_test_onehot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_test</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">one_hots_test</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Encode y</span>
+<span class="n">y_test_bin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_test</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;normal.&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove suspicious data</span>
+<span class="c1"># This step is not strictly neccessary but can improve performance</span>
+<span class="n">suspicious</span> <span class="o">=</span> <span class="n">X_train_onehot</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="p">(</span><span class="n">col</span> <span class="o">-</span> <span class="n">col</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">col</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">suspicious</span> <span class="o">=</span> <span class="n">suspicious</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="c1"># 4 sigma rule</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;filtering </span><span class="si">{}</span><span class="s1"> suspicious data points&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suspicious</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+<span class="n">X_train_clean</span> <span class="o">=</span> <span class="n">X_train_onehot</span><span class="p">[</span><span class="o">~</span><span class="n">suspicious</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>filtering 2932 suspicious data points
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="choose-algorithm">
+<h1>Choose Algorithm<a class="headerlink" href="#choose-algorithm" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: implement proper model selection</span>
+<span class="n">iforest</span> <span class="o">=</span> <span class="n">IsolationForest</span><span class="p">()</span>
+<span class="n">iforest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_clean</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style>#sk-container-id-1 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-1 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 pre {
+  padding: 0;
+}
+
+#sk-container-id-1 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-1 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-1 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-1 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-1 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-1 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-1 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-1 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-1 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-1 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-1 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-1 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>IsolationForest()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;IsolationForest<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.4/modules/generated/sklearn.ensemble.IsolationForest.html">?<span>Documentation for IsolationForest</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>IsolationForest()</pre></div> </div></div></div></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># find best threshold</span>
+<span class="n">X_test_onehot</span><span class="p">,</span> <span class="n">X_val_onehot</span><span class="p">,</span> <span class="n">y_test_bin</span><span class="p">,</span> <span class="n">y_val_bin</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_test_onehot</span><span class="p">,</span> <span class="n">y_test_bin</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">y_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">iforest</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">X_val_onehot</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="evaluate-solution">
+<h1>Evaluate Solution<a class="headerlink" href="#evaluate-solution" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># Insert evaluation code</span>
+<span class="c1">#</span>
+
+<span class="c1"># calculate scores if any anomaly is present</span>
+<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">y_val_bin</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">eval</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">y_val_bin</span><span class="p">,</span> <span class="n">y_score</span><span class="p">)</span>
+    <span class="n">prec</span><span class="p">,</span> <span class="n">rec</span><span class="p">,</span> <span class="n">thr</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">[</span><span class="s1">&#39;PR&#39;</span><span class="p">]</span>
+    <span class="n">f1s</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">prec</span> <span class="o">*</span> <span class="n">rec</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">prec</span> <span class="o">+</span> <span class="n">rec</span><span class="p">)</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">thr</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f1s</span><span class="p">)]</span>
+
+    <span class="n">y_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">iforest</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">X_test_onehot</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_score</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Precision: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_test_bin</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recall: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_test_bin</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;F1: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_test_bin</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a6aa58ac3c37f7b0d0dc0771d4e593ba652e2626b8dbbd1ee661f76062de84e8.png" src="_images/a6aa58ac3c37f7b0d0dc0771d4e593ba652e2626b8dbbd1ee661f76062de84e8.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Precision: 0.9413489736070382
+Recall: 0.9846625766871165
+F1: 0.9625187406296851
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="summary">
+<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Isolation Forest empirically shows very good performance up to relatively high dimensions</p></li>
+<li><p>It is relatively robust against contamination</p></li>
+<li><p>Usually little need for hyperparameter tuning</p></li>
+</ul>
+<section id="implementations">
+<h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Sklearn: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html">sklearn.ensemble.IsolationForest</a></p></li>
+<li><p>Extended Isolation Forest: <a class="reference external" href="https://github.com/sahandha/eif">variant</a></p></li>
+<li><p>Random Robust Cut Forest: <a class="reference external" href="https://github.com/kLabUM/rrcf">variant</a></p></li>
+</ul>
+<img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;"></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nb_02_anomaly_detection_via_density_estimation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Anomaly Detection via Density Estimation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nb_04_anomaly_detection_via_reconstruction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Anomaly Detection via Reconstruction Error</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Anomaly Detection via Isolation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Anomaly Detection via Isolation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolation-tree">Isolation Tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolation-depth">Isolation Depth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolation-forest">Isolation Forest</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#variants-of-isolation-forest">Variants of Isolation Forest</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variant-random-robust-cut-forest">Variant: Random Robust Cut Forest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variant-extended-isolation-forest">Variant: Extended Isolation Forest</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-network-security">Exercise: Network Security</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#briefing">Briefing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-data">The Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kddcup-99-data-set">Kddcup 99 Data Set</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#explore-data">Explore Data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-algorithm">Choose Algorithm</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-solution">Evaluate Solution</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementations">Implementations</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By appliedAI TransferLab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
