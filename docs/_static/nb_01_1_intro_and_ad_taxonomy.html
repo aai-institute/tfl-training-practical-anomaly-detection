@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>nb_01_1_intro_and_ad_taxonomy</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
-
+<html lang="en">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>nb_01_1_intro_and_ad_taxonomy</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script><script type="module">
+  import mermaid from 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.7.0/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
+</script>
 <style type="text/css">
   pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -25,6 +27,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
 .highlight .gd { color: #A00000 } /* Generic.Deleted */
 .highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
 .highlight .gr { color: #E40000 } /* Generic.Error */
 .highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
 .highlight .gi { color: #008400 } /* Generic.Inserted */
@@ -81,9 +84,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
   </style>
-
-
-
 <style type="text/css">
 /*!
 *
@@ -13051,9 +13051,9 @@ div#notebook {
 }
 </style>
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"> </script>
-    <!-- MathJax configuration -->
-    <script type="text/x-mathjax-config">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"> </script>
+<!-- MathJax configuration -->
+<script type="text/x-mathjax-config">
     init_mathjax = function() {
         if (window.MathJax) {
         // MathJax loaded
@@ -13083,222 +13083,38 @@ div#notebook {
     }
     init_mathjax();
     </script>
-    <!-- End of mathjax configuration --></head>
+<!-- End of mathjax configuration --></head>
 <body>
-  <div tabindex="-1" id="notebook" class="border-box-sizing">
-    <div class="container" id="notebook-container">
-
+<main>
+<div class="border-box-sizing" id="notebook" tabindex="-1">
+<div class="container" id="notebook-container">
 <div class="cell border-box-sizing code_cell rendered celltag_remove-input celltag_remove-output celltag_remove-input-nbconv celltag_remove-output-nbconv">
-
 </div>
 <div class="cell border-box-sizing code_cell rendered celltag_remove-input celltag_remove-input-nbconv">
-
 <div class="output_wrapper">
 <div class="output">
-
 <div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result"><style>/*
-This file is mainly copy-pasta from rise's examples
-https://github.com/damianavila/RISE/blob/master/examples/rise.css
-that was further customized for appliedAI purposes
-*/
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
-
-
-body {
-    font-family: 'Work Sans', sans-serif !important;
-    text-transform: initial !important;
-    letter-spacing: initial !important;
-    font-weight: 400 !important;
-    line-height: 1.5 !important;
-    text-size-adjust: 100% !important;
-    ‑webkit‑text‑size‑adjust: 100% !important;
-}
-
-
-.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
-    font-size: 1.5rem !important;
-}
-
-.navbar-default .navbar-nav > li > a {
-    color: #00747b !important;
-}
-
-.filename {
-    font-size: 2.4rem !important;
-    color: #212529 !important;
-    font-weight: 600 !important;
-}
-
-.reveal, .md-slide {
-    color: white !important;
-}
-
-h1, h2 {
-    color: #00747b !important;
-}
-
-h3, h4, h5, h6 {
-    color: #808080 !important;
-}
-
-.reveal p, .reveal ol, .reveal dl, .reveal ul,
-div.text_cell_render {
-    color: #212529 !important;
-}
-
-/*copied from stackoverflow, better spacing between list items*/
-li + li {
-  margin-top: 0.2em;
-}
-
-body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
-    margin-left: 0.1em;
-    margin-top: 0.2em;
-}
-
-.reveal .rendered_html h1:first-child,
-.reveal .rendered_html h2:first-child,
-.reveal .rendered_html h3:first-child,
-.reveal .rendered_html h4:first-child,
-.reveal .rendered_html h5:first-child {
-    margin-top: 0.2em;
-}
-
-.CodeMirror-lines, .output_text {
-    font-size: 1.5rem !important;
-}
-
-
-h1.plan, h2.plan, h3.plan {
-    text-align: center;
-    padding-bottom: 30px;
-}
-
-ul.plan>li>span.plan-bold {
-    font-size: 110%;
-    padding: 4px;
-    font-weight: bold;
-    background-color: #eee;
-}
-
-ul.plan>li>ul.subplan>li>span.plan-bold {
-    font-weight: bold;
-}
-
-.plan-strike {
-    opacity: 0.4;
-/*    text-decoration: line-through; */
-}
-
-div.plan-container {
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
-
-/*
- * this is to void xarray's html output to show the fallback textual representation
- * see also
-   * xarray.md and
-   * https://github.com/damianavila/RISE/issues/594
- */
-.reveal pre.xr-text-repr-fallback {
-    display: none;
-}
-
-#toc-header, .toc-item li {
-    margin: auto !important;
-    color: #808080 !important;
-}
-
-#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
-    margin: auto !important;
-    color: #00747b !important;
-}
-
-#toc-wrapper {
-    top: auto !important;
-    bottom: auto !important;
-    margin-top: 2rem !important;
-    color: #00747b !important;
-}
-
-
-#rise-header {
-    margin: 10px;
-    left: 5%;
-}
-
-#rise-footer {
-    margin: 10px;
-    right: 5%;
-}
-
-#rise-backimage {
-    opacity: 0.70;
-}
-
-.reveal img {
-    max-width: 100%;
-}
-
-
-.md-slide.title {
-  position: relative;
-  top: -50%;
-  margin-left: 5%;
-}</style></div>
-
-</div>
-
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>UsageError: Line magic function `%presentation_style` not found.
+</pre>
 </div>
 </div>
-
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered celltag_remove-input celltag_remove-output celltag_remove-input-nbconv celltag_remove-output-nbconv">
-
 </div>
 <div class="cell border-box-sizing code_cell rendered celltag_remove-input-nbconv celltag_remove-cell">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<p>$\newcommand{\vect}[1]{{\mathbf{\boldsymbol{#1}} }}$
-$\newcommand{\amax}{{\text{argmax}}}$
-$\newcommand{\P}{{\mathbb{P}}}$
-$\newcommand{\E}{{\mathbb{E}}}$
-$\newcommand{\R}{{\mathbb{R}}}$
-$\newcommand{\Z}{{\mathbb{Z}}}$
-$\newcommand{\N}{{\mathbb{N}}}$
-$\newcommand{\C}{{\mathbb{C}}}$
-$\newcommand{\abs}[1]{{ \left| #1 \right| }}$
-$\newcommand{\simpl}[1]{{\Delta^{#1} }}$</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Taxonomy-of-Anomaly-Detection-Approaches">Taxonomy of Anomaly Detection Approaches<a class="anchor-link" href="#Taxonomy-of-Anomaly-Detection-Approaches">&#182;</a></h1><p><img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;"></p>
-
+<h1 id="Taxonomy-of-Anomaly-Detection-Approaches">Taxonomy of Anomaly Detection Approaches<a class="anchor-link" href="#Taxonomy-of-Anomaly-Detection-Approaches">¶</a></h1><img alt="Snow" src="_static/images/aai_presentation_first_slide.svg" style="width:100%;"/>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Overview-of-approaches-to-AD">Overview of approaches to AD<a class="anchor-link" href="#Overview-of-approaches-to-AD">&#182;</a></h1>
+<h1 id="Overview-of-approaches-to-AD">Overview of approaches to AD<a class="anchor-link" href="#Overview-of-approaches-to-AD">¶</a></h1>
 </div>
 </div>
 </div>
@@ -13306,7 +13122,6 @@ $\newcommand{\simpl}[1]{{\Delta^{#1} }}$</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Anomaly detection as a whole does not really have a common foundation.</p>
 <p>Rather, there are loosely related approaches to it and methods from those approaches.</p>
-
 </div>
 </div>
 </div>
@@ -13314,7 +13129,6 @@ $\newcommand{\simpl}[1]{{\Delta^{#1} }}$</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>For actual applications of anomaly detection the structure of the data and the problem
 at hand are of extreme importance for choosing the right method.</p>
-
 </div>
 </div>
 </div>
@@ -13322,141 +13136,126 @@ at hand are of extreme importance for choosing the right method.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Sometimes, hand designed rules might work better than fancy algorithms! Generally, a thorough
 statistical analysis of the data should be performed before using "heavier machinery".</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Below we present a small of taxonomy of different approaches to AD with some representative methods. However, the lines between these approaches can become quite blurry at times.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Distance-based-methods">Distance based methods<a class="anchor-link" href="#Distance-based-methods">&#182;</a></h2>
+<h2 id="Distance-based-methods">Distance based methods<a class="anchor-link" href="#Distance-based-methods">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Philosophy</strong>: a point is an outlier if it has few neighbors.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Distance to $k$-th nearest neighbor ($k$ needs to be determined), clustering (together Mahalanobis distance), local outlier factor (LOF), the matrix-profile for time series etc.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Probabilistic-methods">Probabilistic methods<a class="anchor-link" href="#Probabilistic-methods">&#182;</a></h2>
+<h2 id="Probabilistic-methods">Probabilistic methods<a class="anchor-link" href="#Probabilistic-methods">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Philosophy</strong>: since most data points are normal, we can fit a probabilistic model to "normality". A point is an outlier if it has low probability under the fitted model.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Kernel density estimation, gaussian mixtures, extreme value theory, GAN-based anomaly detection, time series forecasting etc.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We already see blurry lines - gaussian mixtures could be considered a distance based method for clustering.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Subspace-based-methods">Subspace based methods<a class="anchor-link" href="#Subspace-based-methods">&#182;</a></h2>
+<h2 id="Subspace-based-methods">Subspace based methods<a class="anchor-link" href="#Subspace-based-methods">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Philosophy</strong>: The space where data lives can be partitioned into a normal region and an abnormal one. This partitioning might happen in a lower dimensional subspace.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Isolation trees/forests, one class SVM, genetic algorithms, etc.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Reconstruction-based-methods">Reconstruction based methods<a class="anchor-link" href="#Reconstruction-based-methods">&#182;</a></h2>
+<h2 id="Reconstruction-based-methods">Reconstruction based methods<a class="anchor-link" href="#Reconstruction-based-methods">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Philosophy</strong>: We learn an encoding (or projection) to a low dimensional space and a corresponding decoding of our data. Since we mostly have normal data points, it will be more efficient for them than for the anomalies. Thus, anomalies will have higher reconstruction error.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Autoencoder, variational autoencoder, assotiative memory models (Hopfield networks) etc, subspace methods, etc.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Again blurry lines: is PCA reconstruction based or probabilistic? The variational autoencoder also gives a probabilistic model for data as a byproduct.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Supervised-methods">Supervised methods<a class="anchor-link" href="#Supervised-methods">&#182;</a></h2>
+<h2 id="Supervised-methods">Supervised methods<a class="anchor-link" href="#Supervised-methods">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Philosophy</strong>: We can just train a classifier to predict a binary (or more complex) label. The downside here is that this requires labeled data.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The typical classifiers with tricks for dealing with unbalanced classes.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Other-approaches-and-conclusion">Other approaches and conclusion<a class="anchor-link" href="#Other-approaches-and-conclusion">&#182;</a></h2>
+<h2 id="Other-approaches-and-conclusion">Other approaches and conclusion<a class="anchor-link" href="#Other-approaches-and-conclusion">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Information based (removing anomalies should drastically decrease information content of the data set), domain specific, combination of different methods etc.</p>
-
 </div>
 </div>
 </div>
@@ -13464,25 +13263,17 @@ statistical analysis of the data should be performed before using "heavier machi
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We cannot possibly try to cover all the approaches above. Instead, we will demonstrate a few techniques that often work well in practice and then dive deeper into two general topics: <em>time series</em> and <em>extreme value theory</em>.</p>
 <p>The topics covered there will be useful in a variety of situations.</p>
-
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;"></p>
-
+<img alt="Snow" src="_static/images/aai_presentation_last_slide.svg" style="width:100%;"/>
 </div>
 </div>
 </div>
-    </div>
-  </div>
+</div>
+</div>
+</main>
 </body>
-
-
-
-
-
-
-
 </html>
