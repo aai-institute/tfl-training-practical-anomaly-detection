@@ -33,9 +33,8 @@ WORKDIR /tmp
 COPY build_scripts build_scripts
 RUN bash build_scripts/install_presentation_requirements.sh
 
-# COPY requirements-test.txt .
-# RUN pip install -r requirements-test.txt
-
+COPY requirements-test.txt .
+RUN pip install -r requirements-test.txt
 
 # NOTE: this breaks down when requirements contain pytorch (file system too large to fit in RAM, even with 16GB)
 # NOTE: this might break down when requirements contain pytorch (file system too large to fit in RAM, even with 16GB)
