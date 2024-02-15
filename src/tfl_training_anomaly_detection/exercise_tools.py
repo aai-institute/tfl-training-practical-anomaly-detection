@@ -27,6 +27,7 @@ from libs import data, kde_lib
 from libs.exp_lib import Density_model
 
 tfd = tfp.distributions
+tf.experimental.numpy.experimental_enable_numpy_behavior()
 
 from matplotlib import pyplot as plt
 from matplotlib.patches import Ellipse
@@ -318,18 +319,14 @@ def create_distributions(dim=2, dim_irrelevant=0):
         :param x: point description
         :param epsilon: noise to be added
         """
-        res = np.array(
-            tf.concat(
+        res = tf.concat(
                 [
-                    tf.reshape(x + epsilon[:, :-1], (len(x), -1)),
-                    tf.reshape(
-                        2 * np.cos(np.linalg.norm(x, axis=1)) + epsilon[:, -1],
-                        (len(x), -1),
-                    ),
+                    x.reshape((-1, x.shape[-1])),
+                    (2 * tf.math.cos(tf.norm(x.reshape((-1, x.shape[-1] )), axis=-1))).reshape(-1, 1) + epsilon.reshape((-1, 1))
                 ],
                 axis=1,
             )
-        )
+        
         return res
 
     if dim_irrelevant > 0:
@@ -339,7 +336,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
                     tfd.Uniform(low=[low] * (dim - 1), high=[high] * (dim - 1))
                 ),
                 tfd.MultivariateNormalDiag(
-                    loc=[0.0] * dim, scale_diag=[thickness_sinusoidal] * dim
+                    loc=[0.0] , scale_diag=[thickness_sinusoidal] 
                 ),
                 lambda n, u: tfd.Deterministic(create_point(u, n)),
                 tfd.MultivariateNormalDiag(
@@ -356,7 +353,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
                     tfd.Uniform(low=[low] * (dim - 1), high=[high] * (dim - 1))
                 ),
                 tfd.MultivariateNormalDiag(
-                    loc=[0.0] * dim, scale_diag=[thickness_sinusoidal] * dim
+                    loc=[0.0], scale_diag=[thickness_sinusoidal] 
                 ),
                 lambda n, u: tfd.Deterministic(create_point(u, n)),
             ]
