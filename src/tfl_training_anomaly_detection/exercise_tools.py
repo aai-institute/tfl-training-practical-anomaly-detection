@@ -320,13 +320,16 @@ def create_distributions(dim=2, dim_irrelevant=0):
         :param epsilon: noise to be added
         """
         res = tf.concat(
-                [
-                    x.reshape((-1, x.shape[-1])),
-                    (2 * tf.math.cos(tf.norm(x.reshape((-1, x.shape[-1] )), axis=-1))).reshape(-1, 1) + epsilon.reshape((-1, 1))
-                ],
-                axis=1,
-            )
-        
+            [
+                x.reshape((-1, x.shape[-1])),
+                (
+                    2 * tf.math.cos(tf.norm(x.reshape((-1, x.shape[-1])), axis=-1))
+                ).reshape(-1, 1)
+                + epsilon.reshape((-1, 1)),
+            ],
+            axis=1,
+        )
+
         return res
 
     if dim_irrelevant > 0:
@@ -336,7 +339,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
                     tfd.Uniform(low=[low] * (dim - 1), high=[high] * (dim - 1))
                 ),
                 tfd.MultivariateNormalDiag(
-                    loc=[0.0] , scale_diag=[thickness_sinusoidal] 
+                    loc=[0.0], scale_diag=[thickness_sinusoidal]
                 ),
                 lambda n, u: tfd.Deterministic(create_point(u, n)),
                 tfd.MultivariateNormalDiag(
@@ -353,7 +356,7 @@ def create_distributions(dim=2, dim_irrelevant=0):
                     tfd.Uniform(low=[low] * (dim - 1), high=[high] * (dim - 1))
                 ),
                 tfd.MultivariateNormalDiag(
-                    loc=[0.0], scale_diag=[thickness_sinusoidal] 
+                    loc=[0.0], scale_diag=[thickness_sinusoidal]
                 ),
                 lambda n, u: tfd.Deterministic(create_point(u, n)),
             ]
@@ -702,7 +705,7 @@ def perform_rkde_experiment(
                 if epsilon != 0:
                     model.compute_anomaly_roc(y)
                 new_scores = model.get_score()
-                total_scores = total_scores.append(new_scores, ignore_index=True)
+                total_scores = total_scores._append(new_scores, ignore_index=True)
     return total_scores
 
 
