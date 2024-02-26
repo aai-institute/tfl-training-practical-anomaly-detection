@@ -58,8 +58,7 @@ jupyter serverextension enable --py hide_code
 
 Finally, clone repository, change into the directory of the cloned repository and type
 ```bash
-pip install -r requirements.txt
-pip install -e src
+pip install -e .
 ```
 
 ## References
