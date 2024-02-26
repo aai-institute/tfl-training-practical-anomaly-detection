@@ -1,0 +1,1797 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Anomaly Detection on Time Series &#8212; Practical Anomaly Detection</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/configmacros"]}, "tex": {"packages": {"[+]": ["configmacros"]}, "macros": {"vect": ["{\\mathbf{\\boldsymbol{#1}} }", 1], "E": "{\\mathbb{E}}", "P": "{\\mathbb{P}}", "R": "{\\mathbb{R}}", "abs": ["{\\left| #1 \\right|}", 1], "simpl": ["{\\Delta^{#1} }", 1], "amax": "{\\text{argmax}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nb_05_anomaly_detection_on_time_series';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Extreme Value Theory and Anomaly Detection" href="nb_06_extreme_value_theory_for_anomaly_detection.html" />
+    <link rel="prev" title="Anomaly Detection via Reconstruction Error" href="nb_04_anomaly_detection_via_reconstruction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/transferlab-logo.svg" class="logo__image only-light" alt="Practical Anomaly Detection - Home"/>
+    <script>document.write(`<img src="_static/transferlab-logo.svg" class="logo__image only-dark" alt="Practical Anomaly Detection - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    practical anomaly detection - Notebook Pages
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_01_0_intro_anomaly_detection.html">Introduction to Anomaly Detection</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_01_1_intro_and_ad_taxonomy.html">Taxonomy of Anomaly Detection Approaches</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="nb_02_anomaly_detection_via_density_estimation.html">Anomaly Detection via Density Estimation</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_03_anomaly_detection_via_isolation.html">Anomaly Detection via Isolation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_04_anomaly_detection_via_reconstruction.html">Anomaly Detection via Reconstruction Error</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Anomaly Detection on Time Series</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_06_extreme_value_theory_for_anomaly_detection.html">Extreme Value Theory and Anomaly Detection</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nb_05_anomaly_detection_on_time_series.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Anomaly Detection on Time Series</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Anomaly Detection on Time Series</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-time-series-analysis">Introduction to Time Series Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#why-are-time-series-different">Why are Time Series Different?</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-anomalies">Types of Anomalies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#point-anomalies">Point Anomalies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#context-anomalies-and-change-points">Context Anomalies and Change Points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-anomalies">Pattern Anomalies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-as-stochastic-processes">Time Series as Stochastic Processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stationarity">Stationarity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-stationarity">Why Stationarity?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-vs-non-stationary-time-series">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trends">Trends</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-trends">Removing Trends</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Removing Trends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonalities">Seasonalities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-seasonalities">Removing Seasonalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Removing Seasonalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Removing Seasonalities</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forecasting">Forecasting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-sarima-model">The SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ar-model">The AR Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ma-model">The MA Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-arma-model">The ARMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-arima-model">The ARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-of-seasonal-influences">Modeling of Seasonal influences</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-sarima-model">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partial-autocorrelation-function">Partial Autocorrelation Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Fitting a SARIMA Model</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Summary</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementations">Implementations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-time-series-analysis-packages">Other Time Series Analysis Packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_remove-input tag_remove-input-nbconv docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html"><style>/*
+This file is mainly copy-pasta from rise's examples
+https://github.com/damianavila/RISE/blob/master/examples/rise.css
+that was further customized for appliedAI purposes
+*/
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
+
+
+body {
+    font-family: 'Work Sans', sans-serif !important;
+    text-transform: initial !important;
+    letter-spacing: initial !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    text-size-adjust: 100% !important;
+    ‑webkit‑text‑size‑adjust: 100% !important;
+}
+
+
+.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
+    font-size: 1.5rem !important;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #00747b !important;
+}
+
+.filename {
+    font-size: 2.4rem !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.reveal, .md-slide {
+    color: white !important;
+}
+
+h1, h2 {
+    color: #00747b !important;
+}
+
+h3, h4, h5, h6 {
+    color: #808080 !important;
+}
+
+.reveal p, .reveal ol, .reveal dl, .reveal ul,
+div.text_cell_render {
+    color: #212529 !important;
+}
+
+/*copied from stackoverflow, better spacing between list items*/
+li + li {
+  margin-top: 0.2em;
+}
+
+body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
+    margin-left: 0.1em;
+    margin-top: 0.2em;
+}
+
+.reveal .rendered_html h1:first-child,
+.reveal .rendered_html h2:first-child,
+.reveal .rendered_html h3:first-child,
+.reveal .rendered_html h4:first-child,
+.reveal .rendered_html h5:first-child {
+    margin-top: 0.2em;
+}
+
+.CodeMirror-lines, .output_text {
+    font-size: 1.5rem !important;
+}
+
+
+h1.plan, h2.plan, h3.plan {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+ul.plan>li>span.plan-bold {
+    font-size: 110%;
+    padding: 4px;
+    font-weight: bold;
+    background-color: #eee;
+}
+
+ul.plan>li>ul.subplan>li>span.plan-bold {
+    font-weight: bold;
+}
+
+.plan-strike {
+    opacity: 0.4;
+/*    text-decoration: line-through; */
+}
+
+div.plan-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+/*
+ * this is to void xarray's html output to show the fallback textual representation
+ * see also
+   * xarray.md and
+   * https://github.com/damianavila/RISE/issues/594
+ */
+.reveal pre.xr-text-repr-fallback {
+    display: none;
+}
+
+#toc-header, .toc-item li {
+    margin: auto !important;
+    color: #808080 !important;
+}
+
+#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
+    margin: auto !important;
+    color: #00747b !important;
+}
+
+#toc-wrapper {
+    top: auto !important;
+    bottom: auto !important;
+    margin-top: 2rem !important;
+    color: #00747b !important;
+}
+
+
+#rise-header {
+    margin: 10px;
+    left: 5%;
+}
+
+#rise-footer {
+    margin: 10px;
+    right: 5%;
+}
+
+#rise-backimage {
+    opacity: 0.70;
+}
+
+.reveal img {
+    max-width: 100%;
+}
+
+
+.md-slide.title {
+  position: relative;
+  top: -50%;
+  margin-left: 5%;
+}</style></div></div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="anomaly-detection-on-time-series">
+<h1>Anomaly Detection on Time Series<a class="headerlink" href="#anomaly-detection-on-time-series" title="Permalink to this heading">#</a></h1>
+<img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;">
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics</span> <span class="kn">import</span> <span class="n">tsaplots</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="introduction-to-time-series-analysis">
+<h2>Introduction to Time Series Analysis<a class="headerlink" href="#introduction-to-time-series-analysis" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<p><strong>Definition:</strong>
+A time series is a series of data points indexed by time. Most often
+the series contains points successively and equally spaced in time, e.g. every day, every month etc.</p>
+<hr class="docutils" />
+<p><strong>Example:</strong> Monthly beer production in Austria</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">beer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/time_series/monthly-beer-production-in-austr.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Month&#39;</span><span class="p">)</span>
+
+<span class="n">beer</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3683dc3fc6cfc282565a0af35f617b311bea4d0b726f26dd850a67d6f4b2de14.png" src="_images/3683dc3fc6cfc282565a0af35f617b311bea4d0b726f26dd850a67d6f4b2de14.png" />
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="why-are-time-series-different">
+<h1>Why are Time Series Different?<a class="headerlink" href="#why-are-time-series-different" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Random events that occur over time highly influence the future behavior of most time series <span class="math notranslate nohighlight">\(\Rightarrow\)</span> time series
+can only be predicted to a limited extent.</p></li>
+<li><p>Spacial data is usually drawn independently, but the readings of a time series are correlated over time
+(autocorrelation).</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reg_forecast</span><span class="p">():</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+    <span class="n">ax_reg</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">axes_tmsrs</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Regression</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
+
+    <span class="n">ax_reg</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
+
+    <span class="n">n_sample</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_sample</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="n">n_sample</span><span class="p">)</span> <span class="c1"># Noisy measurements</span>
+    <span class="n">ax_reg</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+
+    <span class="n">lin</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">lin</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">X_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">]])</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">lin</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_pred</span><span class="p">)</span>
+
+    <span class="n">ax_reg</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_pred</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="s1">&#39;r--&#39;</span><span class="p">)</span>
+    <span class="n">ax_reg</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Regression&#39;</span><span class="p">)</span>
+    <span class="n">ax_reg</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;True Function&#39;</span><span class="p">,</span> <span class="s1">&#39;Estimated Function&#39;</span><span class="p">,</span> <span class="s1">&#39;Noisy Measurements&#39;</span><span class="p">])</span>
+    <span class="c1"># Time Series Forecasting</span>
+    <span class="n">n_sample</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">autoreg</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.7</span><span class="p">,</span> <span class="mf">.1</span><span class="p">])</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">series</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sample</span><span class="o">-</span><span class="mi">9</span><span class="p">):</span>
+        <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">autoreg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">series</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">series</span><span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">],</span> <span class="n">series</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">series</span><span class="p">[</span><span class="o">-</span><span class="mi">9</span><span class="p">]]))</span> <span class="o">+</span> <span class="n">series</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span>
+
+    <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2018-01-01&quot;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">))</span>
+    <span class="n">series</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes_tmsrs</span><span class="p">)</span>
+    <span class="n">sarima</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">sarima</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;2018-01-31&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2018-02-28&#39;</span><span class="p">)</span> <span class="c1">#, dynamic=&#39;2018-02-01&#39;)</span>
+    <span class="n">pred</span><span class="o">.</span><span class="n">predicted_mean</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes_tmsrs</span><span class="p">)</span>
+    <span class="n">conf_int</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
+    <span class="n">axes_tmsrs</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">conf_int</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">conf_int</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">conf_int</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
+    <span class="n">axes_tmsrs</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Time Series Forecasting&#39;</span><span class="p">)</span>
+    <span class="n">axes_tmsrs</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Past Readings&#39;</span><span class="p">,</span> <span class="s1">&#39;Forecast Mean&#39;</span><span class="p">,</span> <span class="s1">&#39;Forecast Confidence Interval&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reg_forecast</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine precision = 2.220D-16
+ N =            3     M =           10
+
+At X0         0 variables are exactly at the bounds
+
+At iterate    0    f=  1.63123D+00    |proj g|=  3.17091D-02
+
+At iterate    5    f=  1.62921D+00    |proj g|=  5.40420D-05
+
+           * * *
+
+Tit   = total number of iterations
+Tnf   = total number of function evaluations
+Tnint = total number of segments explored during Cauchy searches
+Skip  = number of BFGS updates skipped
+Nact  = number of active bounds at final generalized Cauchy point
+Projg = norm of the final projected gradient
+F     = final function value
+
+           * * *
+
+   N    Tit     Tnf  Tnint  Skip  Nact     Projg        F
+    3      6      8      1     0     0   1.938D-06   1.629D+00
+  F =   1.6292063031503661     
+
+CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_&lt;=_PGTOL            
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> This problem is unconstrained.
+</pre></div>
+</div>
+<img alt="_images/0f29822e1098cc6d20c906773bd5225622ba7d063cb9ade7cd7c0e1a38910023.png" src="_images/0f29822e1098cc6d20c906773bd5225622ba7d063cb9ade7cd7c0e1a38910023.png" />
+</div>
+</div>
+<section id="types-of-anomalies">
+<h2>Types of Anomalies<a class="headerlink" href="#types-of-anomalies" title="Permalink to this heading">#</a></h2>
+<p>Because of the special nature of time series, we need to distinguish different types of anomalies:</p>
+<ul class="simple">
+<li><p>Point anomalies</p></li>
+<li><p>Context anomalies + change points</p></li>
+<li><p>Pattern anomalies</p></li>
+</ul>
+</section>
+<section id="point-anomalies">
+<h2>Point Anomalies<a class="headerlink" href="#point-anomalies" title="Permalink to this heading">#</a></h2>
+<p>If a point differs substantially from the rest of the data, we speak of a point anomaly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">circ</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Point Anomaly&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/9715a35b72853a1a097aa2be859e7c3c85ab4664e3ccd12ed8efa0678a7771d2.png" src="_images/9715a35b72853a1a097aa2be859e7c3c85ab4664e3ccd12ed8efa0678a7771d2.png" />
+</div>
+</div>
+</section>
+<section id="context-anomalies-and-change-points">
+<h2>Context Anomalies and Change Points<a class="headerlink" href="#context-anomalies-and-change-points" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Context anomalies appear abnormal in their context but could be normal readings in a different context.</p></li>
+<li><p>Change points mark regime shifts in the underlying data generation process.
+Time series with regime shifts are one example where context anomalies can appear, but they can also be found when the time series
+shows for instance a seasonal pattern.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">sample</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)])</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">sample</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)])</span>
+<span class="n">sample</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">circ_anml</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ_anml</span><span class="p">)</span>
+<span class="n">circ_chngpnt</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">((</span><span class="mf">29.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ_chngpnt</span><span class="p">)</span>
+<span class="n">circ_chngpnt</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">((</span><span class="mf">59.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ_chngpnt</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">circ_anml</span><span class="p">,</span> <span class="n">circ_chngpnt</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Context Anomaly&#39;</span><span class="p">,</span> <span class="s1">&#39;Changepoint&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ede9d428cccfce95488c7407663a89e285afe562ade49a0f4c5c1cdfeacf9f99.png" src="_images/ede9d428cccfce95488c7407663a89e285afe562ade49a0f4c5c1cdfeacf9f99.png" />
+</div>
+</div>
+</section>
+<section id="pattern-anomalies">
+<h2>Pattern Anomalies<a class="headerlink" href="#pattern-anomalies" title="Permalink to this heading">#</a></h2>
+<p>Also, a pattern formed by several points might be anomalous while the individual points don’t show abnormal readings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">sample</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">sample</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">45</span><span class="p">)])</span>
+<span class="n">sample</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">circ</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">49</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">circ</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Pattern Anomaly&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/483bce9357849e6defda6739a17c8974d9cbf8ac0d3b2e7bae7d0381666de7bc.png" src="_images/483bce9357849e6defda6739a17c8974d9cbf8ac0d3b2e7bae7d0381666de7bc.png" />
+</div>
+</div>
+</section>
+<section id="time-series-as-stochastic-processes">
+<h2>Time Series as Stochastic Processes<a class="headerlink" href="#time-series-as-stochastic-processes" title="Permalink to this heading">#</a></h2>
+<p>A time series can often be seen as a realization of a stochastic process where each observation is a realization of a
+random variable <span class="math notranslate nohighlight">\((X_t)_{t\in \mathbb{N}}\)</span>.
+Important properties:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(E[X_t]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathrm{Var}[X_t] = E[(X_t - E[X_t])^2]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathrm{Cov}[X_t, X_{t'}] = E[(X_t - E[X_t])(X_{t'} - E[X_{t'}])]\)</span></p></li>
+</ul>
+</section>
+<section id="stationarity">
+<h2>Stationarity<a class="headerlink" href="#stationarity" title="Permalink to this heading">#</a></h2>
+<p>A central property in time series analysis is <em>stationarity</em>.</p>
+<hr class="docutils" />
+<p><strong>Definition:</strong> A time series is (covariance) stationary if the following three conditions are fulfilled:</p>
+<ul class="simple">
+<li><p>Constant Mean: <span class="math notranslate nohighlight">\(E[X_t] = \mu\)</span> <span class="math notranslate nohighlight">\(\forall t\in \mathbb{N}\)</span></p></li>
+<li><p>Constant variance: <span class="math notranslate nohighlight">\(\mathrm{Var}[X_t] = \sigma^2 \)</span> <span class="math notranslate nohighlight">\(\forall t\in \mathbb{N}\)</span></p></li>
+<li><p>Time invariant covariance: <span class="math notranslate nohighlight">\(\mathrm{Cov}[X_t, X_{t+k}] = \lambda_k\)</span> <span class="math notranslate nohighlight">\(\forall t,k\in \mathbb{N}\)</span></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="why-stationarity">
+<h2>Why Stationarity?<a class="headerlink" href="#why-stationarity" title="Permalink to this heading">#</a></h2>
+<p><strong>Example</strong>: Simple autoregressive Processes (AR(1))
+The difference between stationary and non-stationary processes can be understood by
+considering processes of the form <span class="math notranslate nohighlight">\(X_t = \phi X_{t-1} + \epsilon_{t}\)</span> where the <span class="math notranslate nohighlight">\(\epsilon_t\)</span> are
+normally distributed i.i.d. variables.
+Depending on the value of <span class="math notranslate nohighlight">\(\phi\)</span> we get very different behaviors:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(|\phi| &gt; 1\)</span>: explosive process (non-stationary but rarely observed in practice)</p></li>
+<li><p><span class="math notranslate nohighlight">\(|\phi| = 1\)</span>: random walk (non-stationary)</p></li>
+<li><p><span class="math notranslate nohighlight">\(|\phi| &lt; 1\)</span>: stationary process</p></li>
+</ul>
+</section>
+<section id="stationary-vs-non-stationary-time-series">
+<h2>Stationary vs Non-Stationary Time Series<a class="headerlink" href="#stationary-vs-non-stationary-time-series" title="Permalink to this heading">#</a></h2>
+<p>The latter two cases are the relevant ones in practice. Let us have a look at the following processes:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X_t = X_{t-1} + \epsilon_t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Y_t = \frac{4}{5} Y_{t-1} + \epsilon'_t\)</span></p></li>
+</ul>
+<p>where <span class="math notranslate nohighlight">\(\epsilon_t, \epsilon'_t\sim \mathcal{N}(0, 1)\)</span> are independent white noise processes.
+We simulate both processes several times with the same initial condition <span class="math notranslate nohighlight">\(X_0=Y_0=25\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="c1"># random walk</span>
+    <span class="n">walk</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="n">walk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># stationary time series</span>
+    <span class="n">series</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">4</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="n">series</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">walk</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Random walk (non-stationary)&#39;</span><span class="p">,</span> <span class="s2">&quot;Stationary autoregressive process&quot;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/160f42a6f4087234bd7c887364cb5d0640a50251877a167747e669246e19a834.png" src="_images/160f42a6f4087234bd7c887364cb5d0640a50251877a167747e669246e19a834.png" />
+</div>
+</div>
+</section>
+<section id="id1">
+<h2>Stationary vs Non-Stationary Time Series<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>While a stationary process always reverts to its mean (<span class="math notranslate nohighlight">\(0\)</span> for <span class="math notranslate nohighlight">\(Y_t\)</span>), the non-stationary random walk can move
+unpredictably in any direction. This is because the random events of past do not wear off over time in a random walk.
+Hence, the variance increases over time which makes it hard to define anomalous behavior.
+Indeed,</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(E[X_{t+k} \mid X_t] = X_t\)</span> but</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lim_{k\to\infty}E[Y_{t+k} \mid Y_t] = 0\)</span>.</p></li>
+</ul>
+<p><strong>Question:</strong> Can you explain why the expectations behave that way?</p>
+</section>
+<section id="id2">
+<h2>Stationary vs Non-Stationary Time Series<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>In these situations it is often a better idea to analyze the white noise process <span class="math notranslate nohighlight">\(\epsilon_t\)</span>.
+In our example we can rearrange the definition of <span class="math notranslate nohighlight">\(X_t\)</span> to get</p>
+<center>
+<p><span class="math notranslate nohighlight">\(\epsilon_t = X_t - X_{t-1}\)</span></p>
+</center>
+<p>The <em>lag</em> operator is defined as <span class="math notranslate nohighlight">\(L(X_t) = X_{t-1}\)</span>. Using the lag operator we can write the above equation as</p>
+<center>
+<p><span class="math notranslate nohighlight">\(\epsilon_t = (1-L)X_t\)</span></p>
+</center>
+<p>We will see that this operation plays a special role in time series analysis. First let us see what this does to our
+random walk.</p>
+</section>
+<section id="id3">
+<h2>Stationary vs Non-Stationary Time Series<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">walk</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">walk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Differenced Series&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/34e0ed46e865403b7f93ce8a006c456d90b7449ea8959a86c9f3239bdb55f8f1.png" src="_images/34e0ed46e865403b7f93ce8a006c456d90b7449ea8959a86c9f3239bdb55f8f1.png" />
+</div>
+</div>
+<p>We see a pure white noise process with a well defined behavior.</p>
+<p>Although many algorithms assume stationarity of the time series, in practice it is more common to find non-stationary
+time series. Probably the most common cause for non-stationarity are trends and seasonality. In the following we will
+discuss methods to identify and remove them from a time series.</p>
+</section>
+<section id="trends">
+<h2>Trends<a class="headerlink" href="#trends" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<p><strong>Definition</strong>
+A trend in a time series is a tendency to move to relatively higher (or lower) values that is observed over a
+long period of time.</p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shampoo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/time_series/sales-of-shampoo-over-a-three-ye.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Month&#39;</span><span class="p">)</span>
+
+<span class="n">shampoo</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bae8dfe177a9bdc33028d3085bb03194a27d9342032c31179ed833b227275062.png" src="_images/bae8dfe177a9bdc33028d3085bb03194a27d9342032c31179ed833b227275062.png" />
+</div>
+</div>
+<section id="removing-trends">
+<h3>Removing Trends<a class="headerlink" href="#removing-trends" title="Permalink to this heading">#</a></h3>
+<p>The trend at time <span class="math notranslate nohighlight">\(t\)</span> can be estimated by a moving average.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shampoo_mvgavg</span> <span class="o">=</span> <span class="n">shampoo</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">shampoo_mvgavg</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mvg avg of shampoo sales&#39;</span><span class="p">]</span>
+<span class="n">shampoo_mvgavg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7ad64e5f2626526af91b29ff13b31035e88d209e61acf5ec30dc287f35c36cc3.png" src="_images/7ad64e5f2626526af91b29ff13b31035e88d209e61acf5ec30dc287f35c36cc3.png" />
+</div>
+</div>
+<p><strong>Question:</strong> How would you describe the trend? How would you approach removing it?</p>
+</section>
+</section>
+<section id="id4">
+<h2>Removing Trends<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>We can remove trends from a time series through differencing. The differencing operator <span class="math notranslate nohighlight">\(\nabla\)</span> is defined as</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+  \nabla(X_t) &amp;= (1 - L)X_t \\
+              &amp;= X_t - L(X_t) \\
+              &amp;= X_t - X_{t-1}
+\end{align*}\]</div>
+<p><span class="math notranslate nohighlight">\(L(X_t) = X_{t-1}\)</span> is the <em>lag operator</em>. The <span class="math notranslate nohighlight">\(k\)</span>th order differenced time series is hence:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+  \nabla^k(X_t) &amp;= (1 - L)^kX_t \\
+              &amp;= \sum_{i=0}^k (-1)^i{k \choose i} L^iX_t
+\end{align*}\]</div>
+<ul class="simple">
+<li><p>If a time series has a linear trend then the differenced time series will have no trend.</p></li>
+<li><p>More generally, if a time series has a kth order polynomial trend the k-fold differenced time series will have no trend.</p></li>
+</ul>
+<p>We take our shampoo sales example and apply the differencing operator</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shampoo_dif</span> <span class="o">=</span> <span class="n">shampoo</span> <span class="o">-</span> <span class="n">shampoo</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># shift(k) ~ L^k</span>
+
+<span class="c1"># Estimate trend</span>
+<span class="n">shampoo_dif</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b8f56c2d73a2c848172fba8966f5a23c3f03cab322e27fba1fb5b4294a0d9430.png" src="_images/b8f56c2d73a2c848172fba8966f5a23c3f03cab322e27fba1fb5b4294a0d9430.png" />
+</div>
+</div>
+<p>We can see that there is still a linear trend in the series. Therefore, we apply the 2nd order differencing operator.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shampoo_dif</span> <span class="o">=</span> <span class="n">shampoo</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">shampoo</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">shampoo</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># (1-L)^2 = 1 - 2*L + L^2</span>
+
+<span class="c1"># Estimate trend</span>
+<span class="n">shampoo_dif</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/de0ce9c82edb75c96c5f7d0a55152b90fc83277df8c724d7cce75d600a06dc50.png" src="_images/de0ce9c82edb75c96c5f7d0a55152b90fc83277df8c724d7cce75d600a06dc50.png" />
+</div>
+</div>
+<p>Now there is no trend apparent anymore. This is consistent with our initial inspection of the data</p>
+</section>
+<section id="seasonalities">
+<h2>Seasonalities<a class="headerlink" href="#seasonalities" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<p><strong>Definition:</strong>
+A seasonality is a cyclic behavior with a fixed interval length, e.g. a year, a month, etc.</p>
+<hr class="docutils" />
+<p><strong>Example:</strong> Minimum daily temperature in Melbourne, Australia</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">temperatures</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/time_series/daily-minimum-temperatures-in-me.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">temperatures</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">temperatures</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="n">temperatures</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/beb67c2412717745334996a42090fd2693cbf1fc4a2fa115d65fdca9ff84363d.png" src="_images/beb67c2412717745334996a42090fd2693cbf1fc4a2fa115d65fdca9ff84363d.png" />
+</div>
+</div>
+<p>The time series has a clear 12-month seasonality.</p>
+<section id="removing-seasonalities">
+<h3>Removing Seasonalities<a class="headerlink" href="#removing-seasonalities" title="Permalink to this heading">#</a></h3>
+<p>Seasonalities can be identified using the <em>autocorrelation function (acf)</em>. The acf describes the
+correlation between a variable and lagged version of itself, that is for stationary process
+with constant mean <span class="math notranslate nohighlight">\(\mu\)</span> and constant variance <span class="math notranslate nohighlight">\(\sigma^2\)</span></p>
+<p><span class="math notranslate nohighlight">\(\mathrm{acf}_X(k) = Corr(X_t, X_{t+k}) = \frac{E[(X_t - \mu)(X_{t+k} -\mu)]}{\sigma^2}\)</span></p>
+<p>We take a look at the acf of our temperatures dataset. Before we apply the acf, we remove leap days so that every
+year has 365 days.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">temperatures_noleap</span> <span class="o">=</span> <span class="n">temperatures</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="p">((</span><span class="n">temperatures</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">temperatures</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="mi">29</span><span class="p">))]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">temperatures_noleap</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="mi">365</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/153acd8ca395e59946494198592c517524cf1498e0960898290f6f204b398ad7.png" src="_images/153acd8ca395e59946494198592c517524cf1498e0960898290f6f204b398ad7.png" />
+</div>
+</div>
+</section>
+<section id="id5">
+<h3>Removing Seasonalities<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<p>In the acf we can clearly see the annual periodicity. We can remove the annual periodicity through lag-k differencing.
+$<span class="math notranslate nohighlight">\(\nabla_kX_t = (1 - L^k)X_{t}\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">temperatures_dif</span> <span class="o">=</span> <span class="n">temperatures_noleap</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">365</span><span class="p">)</span>
+<span class="c1">#temperatures_dif.columns = [&#39;Adjusted temperatures&#39;]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax0</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">axes</span>
+
+<span class="n">temperatures_dif</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax0</span><span class="p">)</span>
+<span class="n">temperatures_dif</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c5394571e8f234fc3d7867c2d53eaa48b8107a09aeeab7ad87b729929c643ae0.png" src="_images/c5394571e8f234fc3d7867c2d53eaa48b8107a09aeeab7ad87b729929c643ae0.png" />
+</div>
+</div>
+</section>
+<section id="id6">
+<h3>Removing Seasonalities<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<p>After differencing of the time series, it looks approximately like a white noise process (i.e., all samples are drawn
+independently of a fixed Gaussian distribution).
+Computing the acf for the adjusted time series should show no significant auto correlation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">temperatures_dif</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="mi">365</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/336fdf0aa5e45f2116a7f0f7e84669d701a6897c0f1111e3d1089f7d34dd8269.png" src="_images/336fdf0aa5e45f2116a7f0f7e84669d701a6897c0f1111e3d1089f7d34dd8269.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Time series data differs from point data in the sense that the readings are in general not independent of each other.</p></li>
+<li><p>Stationarity is a central concept in time series analysis.</p></li>
+<li><p>A time series can contain trends and seasonalities which demand special attention when one tries to identify anomalies.</p></li>
+<li><p>Differencing is one class of time series transformations which allows eliminating trends and seasonalities.</p></li>
+</ul>
+</section>
+<section id="forecasting">
+<h2>Forecasting<a class="headerlink" href="#forecasting" title="Permalink to this heading">#</a></h2>
+<p>A very common approach for anomaly detection on time series is based on forecasting.
+The idea is that a good forecasting model should be able to predict the next reading rather accurately
+if no anomaly appears. An anomaly, however, should not be predicted accurately. Therefore, we can use the prediction
+error as an anomaly score.</p>
+</section>
+<section id="the-sarima-model">
+<h2>The SARIMA Model<a class="headerlink" href="#the-sarima-model" title="Permalink to this heading">#</a></h2>
+<p>The SARIMA model is a very popular and well researched method for time series forecasting. The name SARIMA can be
+decomposed as follows:</p>
+<ul class="simple">
+<li><p>S: Seasonal</p></li>
+<li><p>AR: Autoregressive</p></li>
+<li><p>I: Integrated</p></li>
+<li><p>MA: Moving Average</p></li>
+</ul>
+</section>
+<section id="the-ar-model">
+<h2>The AR Model<a class="headerlink" href="#the-ar-model" title="Permalink to this heading">#</a></h2>
+<p>A purely autoregressive model represents the current reading as a linear combination of past readings and a
+non deterministic error. It is specified as <span class="math notranslate nohighlight">\(\mathrm{AR}(k)\)</span> where k denotes the number of past readings to consider.
+Hence, the representation of the <span class="math notranslate nohighlight">\(\mathrm{AR}(1)\)</span> model that we have seen previously:</p>
+<p><span class="math notranslate nohighlight">\(X_t - \phi_1X_{t-1} = \epsilon_t\)</span> (or equivalently <span class="math notranslate nohighlight">\((1- \phi_1L)X_t = \epsilon_t\)</span>)</p>
+<p>is a special case of the <span class="math notranslate nohighlight">\(\mathrm{AR}(k)\)</span> representation:</p>
+<div class="math notranslate nohighlight">
+\[ \left(1 - \sum_{i=1}^{k}\phi_iL^i\right)X_t = \epsilon_t \]</div>
+<p><strong>Stationarity:</strong>
+An <span class="math notranslate nohighlight">\(\mathrm{AR}\)</span> process <span class="math notranslate nohighlight">\((1 - \sum_{i=1}^{k}\phi_iL^i)X_t = \epsilon_t\)</span> is stationary if all roots of the
+characteristic polynomial <span class="math notranslate nohighlight">\((1 - \sum_{i=1}^{k}\phi_iz^i)\)</span> over the complex numbers lie outside the unit circle.</p>
+</section>
+<section id="the-ma-model">
+<h2>The MA Model<a class="headerlink" href="#the-ma-model" title="Permalink to this heading">#</a></h2>
+<p>The moving average model expresses the reading at time <span class="math notranslate nohighlight">\(t\)</span> as a weighted average of past error terms.
+Hence, <span class="math notranslate nohighlight">\(\mathrm{MA}(1)\)</span> is written as</p>
+<div class="math notranslate nohighlight">
+\[ X_t = \epsilon_t + \psi_1 \epsilon_{t-1} \]</div>
+<p>and in general <span class="math notranslate nohighlight">\(\mathrm{MA}(k)\)</span></p>
+<div class="math notranslate nohighlight">
+\[ X_t = \left(1 + \sum_{i=1}^k \psi_iL^i\right)\epsilon_t \]</div>
+<p><strong>Stationarity:</strong>
+<span class="math notranslate nohighlight">\(\mathrm{MA}\)</span> models are always stationary.</p>
+<p><strong>Question:</strong> Do you see why?</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h3>
+<p>Consider the hypothetical sales of earthquake survival kits. After an earthquake sales increase, the effect lasts off
+over time.</p>
+<p>Say the strength of the strongest earthquake in the region over a year has a binomial distribution, and the sales
+motivated by this year’s earthquake season are proportional to the strength. We might model the situation as follows:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon_t \sim 1000 \cdot \textrm{Binomial}(.5)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(X_t = \epsilon_t + \sum_{i=1}^5 .9^i\epsilon_{t-i}\)</span></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shocks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sum</span><span class="p">([</span><span class="n">shocks</span><span class="p">[</span><span class="n">t</span><span class="o">-</span><span class="n">lag</span><span class="p">]</span><span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="mf">.999</span><span class="o">**</span><span class="n">lag</span><span class="p">)</span> <span class="k">for</span> <span class="n">lag</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)])</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">shocks</span><span class="p">))]</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">shocks</span><span class="p">)),</span> <span class="n">sales</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Kit sales&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Earthquakes&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shocks</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/46c7ea326fb9c222219b87a5b4da31e9df3fde73345dd1f5055ff3082a5f0969.png" src="_images/46c7ea326fb9c222219b87a5b4da31e9df3fde73345dd1f5055ff3082a5f0969.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="the-arma-model">
+<h2>The ARMA Model<a class="headerlink" href="#the-arma-model" title="Permalink to this heading">#</a></h2>
+<p>Both models can be combined building the <span class="math notranslate nohighlight">\(\mathrm{ARMA}(p, q)\)</span> model:</p>
+<div class="math notranslate nohighlight">
+\[ \left(1 - \sum_{i=1}^p\phi_i L^i\right)X_t = \left(1 + \sum_{j=1}^q \psi_j L^j\right)\epsilon_t \]</div>
+<p><strong>Idea:</strong> Correct the autoregressive model using past prediction errors. For instance a local tendency to predict too
+low values can be corrected by adding an average of the last few prediction errors</p>
+</section>
+<section id="the-arima-model">
+<h2>The ARIMA Model<a class="headerlink" href="#the-arima-model" title="Permalink to this heading">#</a></h2>
+<p>It is advisable to apply ARMA models only to stationary time series. In fact most implementations enforce by default the
+model to be stationary. In case of a non-stationary time series
+we need the extensions to the ARIMA model.
+First, the <span class="math notranslate nohighlight">\(\mathrm{ARIMA}(p, d, q)\)</span> model applies d-th order differencing before applying <span class="math notranslate nohighlight">\(\mathrm{ARMA}(p, q)\)</span>
+to remove trends from the time series</p>
+<div class="math notranslate nohighlight">
+\[ \left(1 - \sum_{i=1}^p\phi_iL^i\right)(1-L)^dX_t = \left(1 + \sum_{j=1}^q \psi_jL^j\right)\epsilon_t \]</div>
+</section>
+<section id="modeling-of-seasonal-influences">
+<h2>Modeling of Seasonal influences<a class="headerlink" href="#modeling-of-seasonal-influences" title="Permalink to this heading">#</a></h2>
+<p>Seasonal ARIMA further extends the model by seasonal term and is specified as <span class="math notranslate nohighlight">\(\mathrm{SARIMA}(p, d, q)(P, D, Q)_m\)</span>.
+The parameters <span class="math notranslate nohighlight">\(p\)</span>, <span class="math notranslate nohighlight">\(d\)</span>, and <span class="math notranslate nohighlight">\(q\)</span> have the same meaning as in <span class="math notranslate nohighlight">\(\mathrm{ARIMA}(p, d, q)\)</span> and <span class="math notranslate nohighlight">\(P\)</span>, <span class="math notranslate nohighlight">\(D\)</span>, and <span class="math notranslate nohighlight">\(Q\)</span> are their
+seasonal counterparts. Explicitly</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(P\)</span> is the number of seasonal lags in the autoregressive part.</p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span> is the order of seasonal differencing that is applied.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span> is the number of seasonally lagged error terms for the moving average part.</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span> is the period of the seasonality.</p></li>
+</ul>
+<p>To obtain the full model the seasonal terms are simply multiplied by the non-seasonal terms. That means
+<span class="math notranslate nohighlight">\(\mathrm{SARIMA}(p, d, q)(P, D, Q)_m\)</span> can be written as</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+  &amp;\phantom{=..} \left(1 - \sum_{i=1}^p\phi_iL^i\right)\left(1 - \sum_{i=1}^P\Phi_iL^{im}\right)(1-L)^d(1-L^m)^DX_t \\
+  &amp;= \left(1 + \sum_{j=1}^q \psi_jL^j\right)\left(1 + \sum_{j=1}^Q \Psi_jL^{jm}\right)\epsilon_t
+\end{align*}\]</div>
+</section>
+<section id="fitting-a-sarima-model">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#fitting-a-sarima-model" title="Permalink to this heading">#</a></h2>
+<p>Finding the right SARIMA model for a given time series requires a bit of experience. In the following we are going to
+review some available techniques on NYC taxi passengers data set. This data set contains the number of taxi
+passengers in New York City in 30 minute time intervals.</p>
+<p>There are at least five known anomalies in the data set. These are:</p>
+<ul class="simple">
+<li><p>NYC Marathon - 2014-11-02</p></li>
+<li><p>Thanksgiving - 2014-11-27</p></li>
+<li><p>Christmas - 2014-12-25</p></li>
+<li><p>New Years - 2015-01-01</p></li>
+<li><p>Snow Blizzard - 2015-01-26 and 2015-01-27</p></li>
+</ul>
+<p>First, we inspect the data visually.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s1">&#39;../data/nyc_taxi/nyc_taxi.csv&#39;</span><span class="p">,</span>
+    <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id7">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">7</span><span class="o">*</span><span class="mi">48</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f077786ed17a9e7453a4ef1571590162c7c7976015155d087d103e7a382153d4.png" src="_images/f077786ed17a9e7453a4ef1571590162c7c7976015155d087d103e7a382153d4.png" />
+</div>
+</div>
+</section>
+<section id="id8">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
+<p>Since our anomalies are specified on day level, we resample our dataset to a one-day resolution</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;1D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f5e5dd66ced5ac9cee2093dd4cae93b469f1363554f93208acc51e5b024d5907.png" src="_images/f5e5dd66ced5ac9cee2093dd4cae93b469f1363554f93208acc51e5b024d5907.png" />
+</div>
+</div>
+</section>
+<section id="id9">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
+<p>There is no obvious trend in the data, but we can observe a seasonal pattern. Next, we try to determine good values for
+<span class="math notranslate nohighlight">\(p, q, P, Q\)</span> and <span class="math notranslate nohighlight">\(m\)</span> using the ACF and PACF plots. Some useful rules of thumb are:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(q\)</span>: Take the first point where the ACF plot meets the significance threshold.</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: Take the point where the PACF plot first meets the significance threshold.</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span>: Take the point with the highest value in the ACF plot.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P\)</span>: Take <span class="math notranslate nohighlight">\(P \geq 1\)</span> if the ACF at <span class="math notranslate nohighlight">\(m\)</span> is positive else <span class="math notranslate nohighlight">\(0\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span>: Take <span class="math notranslate nohighlight">\(Q\geq 1\)</span> if the ACF at <span class="math notranslate nohighlight">\(m\)</span> is negative else <span class="math notranslate nohighlight">\(0\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span>: Choose <span class="math notranslate nohighlight">\(D=1\)</span> if the seasonal pattern (if present) is stable over time and else <span class="math notranslate nohighlight">\(D=0\)</span>.</p></li>
+<li><p>Usually <span class="math notranslate nohighlight">\(d+D \leq 2\)</span> and <span class="math notranslate nohighlight">\(P+Q\leq 2\)</span>.</p></li>
+</ul>
+<p><em>Note</em>: If we would observe a trend in the data then we would first difference the series until the trend disappears
+before we compute the ACF and PACF plots. The order of differencing equals the <span class="math notranslate nohighlight">\(d\)</span> value in our SARIMA model.</p>
+</section>
+<section id="id10">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>We have already observed a stable seasonal pattern <span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(D=1\)</span></p></li>
+<li><p>We plot the ACF:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f12257d70f4333c6fb7718540fff6a92d48d5c9d4d4d6aed406b6a46a03a25dd.png" src="_images/f12257d70f4333c6fb7718540fff6a92d48d5c9d4d4d6aed406b6a46a03a25dd.png" />
+</div>
+</div>
+<p><strong>Question:</strong> Try to determine the period of the seasonal pattern</p>
+<ul class="simple">
+<li><p>In the first plot we observe that the highest correlation is at a lag of <span class="math notranslate nohighlight">\(7\)</span> days <span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(m=7\)</span>.</p></li>
+<li><p>The correlation at <span class="math notranslate nohighlight">\(m\)</span> is positive hence we assume <span class="math notranslate nohighlight">\(P \geq 1\)</span> and <span class="math notranslate nohighlight">\(Q=0\)</span>.</p></li>
+</ul>
+</section>
+<section id="id11">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h2>
+<p>We apply seasonal differencing to find a value for <span class="math notranslate nohighlight">\(q\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7ae3ffdf6d457769845542d21d9d7156fcb7c7d92f61c1d714587233f310dbfa.png" src="_images/7ae3ffdf6d457769845542d21d9d7156fcb7c7d92f61c1d714587233f310dbfa.png" />
+</div>
+</div>
+<p><strong>Question:</strong> Try to determine the order of the moving average.</p>
+<ul class="simple">
+<li><p>We see in the second plot that the autocorrelation meets the significance threshold at a lag of <span class="math notranslate nohighlight">\(3\)</span> <span class="math notranslate nohighlight">\(\Rightarrow\)</span>
+<span class="math notranslate nohighlight">\(q=3\)</span>.</p></li>
+</ul>
+</section>
+<section id="partial-autocorrelation-function">
+<h2>Partial Autocorrelation Function<a class="headerlink" href="#partial-autocorrelation-function" title="Permalink to this heading">#</a></h2>
+<p>A related and also important function is the <em>partial autocorrelation function (pacf)</em>. The pacf measures the
+conditional correlation between a variable, and the lagged versions of itself given that we know the values of all lagged
+versions in between. For stationary SARIMA processes:</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{pacf}(k) = \frac{\mathrm{Cov}(X_t, X_{t+k} \mid X_{t+1}, \ldots, X_{t+k-1})}{\sqrt{\mathrm{Var}(X_t\mid X_{t+1},
+    \ldots, X_{t+k-1})\mathrm{Var}(X_{t+k}\mid X_{t+1}, \ldots, X_{t+k-1})}}\)</span></p>
+<p>The pacf is better suited to choose values for <span class="math notranslate nohighlight">\(p\)</span> since a purely autoregressive process of order <span class="math notranslate nohighlight">\(k\)</span> has
+<span class="math notranslate nohighlight">\(\mathrm{pacf}(\ell) = 0\)</span> for all <span class="math notranslate nohighlight">\(\ell &gt; k\)</span>.</p>
+<p>Next, we plot the PACF for our series.</p>
+</section>
+<section id="id12">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2f44e365baacc053ff566ccb3eb5fab9b39782cebd710715d22bb097cd58801e.png" src="_images/2f44e365baacc053ff566ccb3eb5fab9b39782cebd710715d22bb097cd58801e.png" />
+</div>
+</div>
+<p><strong>Question:</strong> Try to determine the order of the autoregressive part.</p>
+<ul class="simple">
+<li><p>The PACF plot falls below the significance threshold after lag <span class="math notranslate nohighlight">\(1\)</span> <span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(p=1\)</span></p></li>
+</ul>
+<p>We conclude that <span class="math notranslate nohighlight">\(\mathrm{SARIMA}(1,0,3)(1,1,0)_{7}\)</span> might be a good model for our time series.</p>
+</section>
+<section id="id13">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h2>
+<p>Finally, we fit the model on our data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>                <td>value</td>             <th>  No. Observations:  </th>    <td>215</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 0, 3)x(1, 1, [], 7)</td> <th>  Log Likelihood     </th> <td>-1784.299</td>
+</tr>
+<tr>
+  <th>Date:</th>                   <td>Tue, 06 Feb 2024</td>        <th>  AIC                </th> <td>3580.597</td> 
+</tr>
+<tr>
+  <th>Time:</th>                       <td>09:02:12</td>            <th>  BIC                </th> <td>3600.622</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                    <td>07-01-2014</td>           <th>  HQIC               </th> <td>3588.694</td> 
+</tr>
+<tr>
+  <th></th>                          <td>- 01-31-2015</td>          <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>               <td>opg</td>              <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+     <td></td>        <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>ar.L1</th>   <td>    0.3844</td> <td>    0.184</td> <td>    2.094</td> <td> 0.036</td> <td>    0.025</td> <td>    0.744</td>
+</tr>
+<tr>
+  <th>ma.L1</th>   <td>    0.3443</td> <td>    0.195</td> <td>    1.768</td> <td> 0.077</td> <td>   -0.037</td> <td>    0.726</td>
+</tr>
+<tr>
+  <th>ma.L2</th>   <td>    0.3175</td> <td>    0.144</td> <td>    2.202</td> <td> 0.028</td> <td>    0.035</td> <td>    0.600</td>
+</tr>
+<tr>
+  <th>ma.L3</th>   <td>    0.0983</td> <td>    0.102</td> <td>    0.960</td> <td> 0.337</td> <td>   -0.102</td> <td>    0.299</td>
+</tr>
+<tr>
+  <th>ar.S.L7</th> <td>   -0.2448</td> <td>    0.033</td> <td>   -7.353</td> <td> 0.000</td> <td>   -0.310</td> <td>   -0.180</td>
+</tr>
+<tr>
+  <th>sigma2</th>  <td> 1.549e+06</td> <td> 7.03e+04</td> <td>   22.039</td> <td> 0.000</td> <td> 1.41e+06</td> <td> 1.69e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.93</td> <th>  Jarque-Bera (JB):  </th> <td>533.67</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.33</td> <th>  Prob(JB):          </th>  <td>0.00</td> 
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>2.52</td> <th>  Skew:              </th>  <td>-0.88</td>
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.00</td> <th>  Kurtosis:          </th>  <td>10.65</td>
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).</div></div>
+</div>
+</section>
+<section id="id14">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h2>
+<p>We can use one step ahead prediction on our time series to perform anomaly detection.
+Statsmodels provides a confidence interval with the prediction based on the estimated variance of the error terms.
+We mark a point as anomaly if the true value falls outside the confidence interval of the prediction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;2014-07-14&#39;</span><span class="p">)</span>
+<span class="n">prediction_mean</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">predicted_mean</span>
+<span class="n">prediction_ci</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">prediction_mean</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;g--&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">prediction_ci</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">prediction_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">prediction_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="n">prediction_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">prediction_mean</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">prediction_mean</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">14</span><span class="p">:])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+<span class="n">outlier</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">14</span><span class="p">:][</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">outlier</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">outlier</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/6x/yjqm1szs7f98bfmhnyrvk_hw0000gn/T/ipykernel_61129/883649573.py:8: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  outlier = df.iloc[14:][mask]
+</pre></div>
+</div>
+<img alt="_images/e0e7431c54a7649915d1f5d39ffbb37951a73c4a7cf1cf5cbf224d5cf3d0a03f.png" src="_images/e0e7431c54a7649915d1f5d39ffbb37951a73c4a7cf1cf5cbf224d5cf3d0a03f.png" />
+</div>
+</div>
+</section>
+<section id="id15">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h2>
+<p>We compare the list of known anomalies with our detection</p>
+<ul class="simple">
+<li><p>NYC Marathon - 2014-11-02</p></li>
+<li><p>Thanksgiving - 2014-11-27</p></li>
+<li><p>Christmas - 2014-12-25</p></li>
+<li><p>New Years - 2015-01-01</p></li>
+<li><p>Snow Blizzard - 2015-01-26</p></li>
+<li><p>Snow Blizzard - 2015-01-27</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outlier</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+    <tr>
+      <th>timestamp</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2014-11-27</th>
+      <td>10899.666667</td>
+    </tr>
+    <tr>
+      <th>2014-12-04</th>
+      <td>15795.895833</td>
+    </tr>
+    <tr>
+      <th>2014-12-25</th>
+      <td>7902.125000</td>
+    </tr>
+    <tr>
+      <th>2015-01-01</th>
+      <td>14383.479167</td>
+    </tr>
+    <tr>
+      <th>2015-01-02</th>
+      <td>12639.916667</td>
+    </tr>
+    <tr>
+      <th>2015-01-26</th>
+      <td>7818.979167</td>
+    </tr>
+    <tr>
+      <th>2015-01-27</th>
+      <td>4834.541667</td>
+    </tr>
+    <tr>
+      <th>2015-01-28</th>
+      <td>12947.562500</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Question:</strong> Compare our result and the known anomalies. Do you spot anything notable?</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id16">
+<h1>Summary<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h1>
+<p>We have learned a simple way of choosing a SARIMA model for a given time series:</p>
+<ul class="simple">
+<li><p>Determine the period of possible seasonality.</p></li>
+<li><p>Find the order of (seasonal) differencing that is necessary to make the time series stationary.</p></li>
+<li><p>Determine candidates for <span class="math notranslate nohighlight">\(q, P, Q\)</span> from the acf plot.</p></li>
+<li><p>Determine candidates for <span class="math notranslate nohighlight">\(p\)</span> from the pacf plot</p></li>
+</ul>
+<section id="implementations">
+<h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Statsmodels: <a class="reference external" href="https://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html">statsmodels.tsa.statespace.sarimax.SARIMAX</a></p></li>
+</ul>
+<section id="other-time-series-analysis-packages">
+<h3>Other Time Series Analysis Packages<a class="headerlink" href="#other-time-series-analysis-packages" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Prophet: <a class="reference external" href="https://facebook.github.io/prophet/">time series forecasting</a></p></li>
+<li><p>Orbit: <a class="reference external" href="https://github.com/uber/orbit">Bayesian time series forecasting</a></p></li>
+</ul>
+<img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;">
+<div class="md-slide title">Thank you for the attention, this concludes the A.D. training. </div>
+<div class="md-slide title">We will be happy to see you in another Transferlab training soon!</div></section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nb_04_anomaly_detection_via_reconstruction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Anomaly Detection via Reconstruction Error</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nb_06_extreme_value_theory_for_anomaly_detection.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Extreme Value Theory and Anomaly Detection</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Anomaly Detection on Time Series</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-time-series-analysis">Introduction to Time Series Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#why-are-time-series-different">Why are Time Series Different?</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-anomalies">Types of Anomalies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#point-anomalies">Point Anomalies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#context-anomalies-and-change-points">Context Anomalies and Change Points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-anomalies">Pattern Anomalies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-as-stochastic-processes">Time Series as Stochastic Processes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stationarity">Stationarity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-stationarity">Why Stationarity?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stationary-vs-non-stationary-time-series">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Stationary vs Non-Stationary Time Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trends">Trends</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-trends">Removing Trends</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Removing Trends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonalities">Seasonalities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-seasonalities">Removing Seasonalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Removing Seasonalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Removing Seasonalities</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forecasting">Forecasting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-sarima-model">The SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ar-model">The AR Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ma-model">The MA Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-arma-model">The ARMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-arima-model">The ARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-of-seasonal-influences">Modeling of Seasonal influences</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-sarima-model">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partial-autocorrelation-function">Partial Autocorrelation Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Fitting a SARIMA Model</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Summary</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementations">Implementations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-time-series-analysis-packages">Other Time Series Analysis Packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By appliedAI TransferLab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
