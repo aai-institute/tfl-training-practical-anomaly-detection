@@ -1,0 +1,77 @@
+So far we have only used the first theorem of EVT. As you might have noticed
+above, it can be somehow wasteful when it comes to data efficiency. Since the
+GEV is fitted on block-maxima, a huge number of data points remain unused for
+parameter estimation. The second theorem of EVT gives rise to a more efficient
+approach
+
+The above equation can be used to estimate the entire tail of the cdf $F$ of $X$
+from a sample of size $N$ obtained by sampling repeatedly from $F$. First note
+that for a single $u$ we can approximate the cdf through the sample statistics
+as:
+
+
+\begin{equation}
+1-F(u) = P(X>u) \approx \frac{N_u}{N}
+\end{equation}
+
+
+where $N_u$ is the number of samples with values above $u$. Interpreting $u$ as
+a threshold, we will call those samples \textit{peaks over threshold} (PoT) and
+$N_u$ is simply their count.
+
+\hrulefill\\*
+
+\textbf{Q:} What should $u$ and the data set fulfill in order for the above
+approximation to be accurate?
+
+\textbf{A:} It should be small enough such that many data points are larger than it.
+Then the approximation in $P(X>u) \approx \frac{N_u}{N}$ holds (the estimator is
+not too biased). 
+
+\hrulefill\\*
+
+Now we can perform a series of approximations for $z>u$ to get to the
+tail-distribution. First using $P(X>u) \approx \frac{N_u}{N}$ we get
+
+
+\begin{align}
+    \begin{split}
+        P(X>z) &= P(X>z \cap X>u)  \\
+        &= P(X>z \mid X>u) P(X>u)  \\
+        &\approx \frac{N_u}{N} P(X>z \mid X>u).   
+    \end{split}
+\end{align}
+
+
+Now we use the GDP theorem to approximate
+
+
+\begin{align}
+    \begin{split}
+        P(X>z \mid X>u) &= P(X-u > z -u \mid X>u)  \\ 
+        &\approx \left( 1 + \frac{\xi (z-u)}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}.
+    \end{split}
+\end{align}
+
+
+Putting everything together gives
+
+
+\begin{equation}
+    P(X>z) \approx \frac{N_u}{N}  \left( 1 + \frac{\xi (z-u)}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}.
+\end{equation}
+
+
+\hrulefill\\*
+
+\textbf{Q:} Intuitively, what does $u$ need to fulfill for both approximations to
+hold?
+
+\textbf{A:} $u$ should be small enough such that the approximation $P(X>u) \approx
+\frac{N_u}{N}$ holds and sufficiently large such that the generalized pareto
+distribution is a good estimate of the tail of the distribution for values
+larger than $u$. Intuitively, it should be at the *beginning of the tail*, where
+for values larger than $u$ only the tail behavior plays a role - i.e. no more
+local extrema or other specifics of the underlying distribution of the data.
+
+\hrulefill\\*
