@@ -2,7 +2,15 @@ So far we have only used the first theorem of EVT. As you might have noticed
 above, it can be somehow wasteful when it comes to data efficiency. Since the
 GEV is fitted on block-maxima, a huge number of data points remain unused for
 parameter estimation. The second theorem of EVT gives rise to a more efficient
-approach
+approach. A reminder of the theorem:
+
+Under the same convergence conditions as in the first theorem of EVT, and
+for the threshold $u$ large enough (going to), the distribution of the excesses $X-u$ over
+the threshold $u$ converges to a Generalized Pareto Distribution (GPD):
+
+\begin{equation}
+    P(X-u < y \mid X > u) \approx 1 - \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}
+\end{equation}
 
 The above equation can be used to estimate the entire tail of the cdf $F$ of $X$
 from a sample of size $N$ obtained by sampling repeatedly from $F$. First note
