@@ -466,14 +466,14 @@ $<span class="math notranslate nohighlight">\(
 P\left(\frac{M_n-b_n}{a_n}&lt;z \right)
 \)</span><span class="math notranslate nohighlight">\(
 converge to a _non-degenerate_ distribution \)</span>G(z)<span class="math notranslate nohighlight">\(, then \)</span>G(z)$ must be of the following form:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-fb08d243-0d23-4dae-9b94-8898beb725d6">
-<span class="eqno">(1)<a class="headerlink" href="#equation-fb08d243-0d23-4dae-9b94-8898beb725d6" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-b7da7bed-42a6-4657-81a5-5c57a1a489f1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-b7da7bed-42a6-4657-81a5-5c57a1a489f1" title="Permalink to this equation">#</a></span>\[\begin{equation}
  P\left(\frac{M_n-b_n}{a_n}&lt;z \right) \xrightarrow[n\rightarrow \infty]{} G(z; \xi, \mu, \sigma) = \exp \left\{ -\left( 1 + \xi \left( \frac{z - \mu}{\sigma} \right) \right)^{- \frac{1}{\xi} } \right\} 
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\xi, \mu \in \mathbb{R}\)</span> and <span class="math notranslate nohighlight">\(\sigma &gt;0\)</span>. This function family is called the <em>Generalized Extreme Value distributions</em> (GEV).</p>
 <p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Pickands%E2%80%93Balkema%E2%80%93De_Haan_theorem">Pickands–Balkema–De Haan theorem</a> states that under the same conditions as above and for a threshold <span class="math notranslate nohighlight">\(u \in \mathbb{R}\)</span> going to infinity, the distribution of <em>excesses over the threshold <span class="math notranslate nohighlight">\(u\)</span></em> converges to a <em>Generalized Pareto Distribution</em> (GPD), i.e.</p>
-<div class="amsmath math notranslate nohighlight" id="equation-84dfded5-24a6-41c3-8e07-540a9105494c">
-<span class="eqno">(2)<a class="headerlink" href="#equation-84dfded5-24a6-41c3-8e07-540a9105494c" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-35fe7491-3bc4-47fc-a6c3-1965ae0c62d6">
+<span class="eqno">(2)<a class="headerlink" href="#equation-35fe7491-3bc4-47fc-a6c3-1965ae0c62d6" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P(X-u &lt; y \mid X &gt; u) \xrightarrow[u \rightarrow \infty]{} H(y; \xi, \tilde{\sigma})=1 - \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}} \ 
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(y&gt;0\)</span> and <span class="math notranslate nohighlight">\(1 + \frac{\xi \ y}{\tilde{\sigma}} &gt;0\)</span>. The parameter <span class="math notranslate nohighlight">\(\xi\)</span> takes the same value as for the GEV.</p>
@@ -1771,19 +1771,19 @@ Biaily stddevs:
 <section id="exercise-6-theoretical-bonus-deriving-the-second-theorem-of-evt">
 <h2>Exercise 6 (theoretical, bonus): deriving the second theorem of EVT<a class="headerlink" href="#exercise-6-theoretical-bonus-deriving-the-second-theorem-of-evt" title="Permalink to this heading">#</a></h2>
 <p>Use the approximation <span class="math notranslate nohighlight">\(\ln(1+x) \approx 1 + x\)</span> for <span class="math notranslate nohighlight">\(|x| \ll 1\)</span> and <span class="math notranslate nohighlight">\(F(z) \approx 1\)</span> for large enough <span class="math notranslate nohighlight">\(z\)</span> to derive.</p>
-<div class="amsmath math notranslate nohighlight" id="equation-410a21ea-6679-42af-abaa-784c969cd178">
-<span class="eqno">(3)<a class="headerlink" href="#equation-410a21ea-6679-42af-abaa-784c969cd178" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-3bbcdc82-631e-4753-9b40-f78ab03f8cb2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-3bbcdc82-631e-4753-9b40-f78ab03f8cb2" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P(X-u &lt; y \mid X &gt; u) \approx 1 - \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}} \label{GPD-approx-original}
 \end{equation}\]</div>
 <p>for large enough <span class="math notranslate nohighlight">\(u\)</span> (this is a slightly less formal derivation of Pickards’ et. al. theorem). One could equivalently write</p>
-<div class="amsmath math notranslate nohighlight" id="equation-16df1590-3566-40c3-996b-2d66d1156c52">
-<span class="eqno">(4)<a class="headerlink" href="#equation-16df1590-3566-40c3-996b-2d66d1156c52" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-5621a9cf-77b7-4bbd-937a-8fd81247a4f7">
+<span class="eqno">(4)<a class="headerlink" href="#equation-5621a9cf-77b7-4bbd-937a-8fd81247a4f7" title="Permalink to this equation">#</a></span>\[\begin{equation}
 P(X-u &gt; y \mid X &gt; u) \approx \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}
 \end{equation}\]</div>
 <p>What is the relation between <span class="math notranslate nohighlight">\(\tilde{\sigma}\)</span> and the normalizing coefficients of the first theorem of EVT?</p>
 <p>The above equation can be used to estimate the entire tail of the cdf <span class="math notranslate nohighlight">\(F\)</span> of <span class="math notranslate nohighlight">\(X\)</span> from a sample of size <span class="math notranslate nohighlight">\(N\)</span> obtained by sampling repeatedly from <span class="math notranslate nohighlight">\(F\)</span>. First note that for a single <span class="math notranslate nohighlight">\(u\)</span> we can approximate the cdf through the sample statistics as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-d421c162-088d-4e2d-9ce0-f4646236b5e9">
-<span class="eqno">(5)<a class="headerlink" href="#equation-d421c162-088d-4e2d-9ce0-f4646236b5e9" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-2b1ef38c-9ccd-4b41-8494-22c376d435cb">
+<span class="eqno">(5)<a class="headerlink" href="#equation-2b1ef38c-9ccd-4b41-8494-22c376d435cb" title="Permalink to this equation">#</a></span>\[\begin{equation}
 1-F(u) = P(X&gt;u) \approx \frac{N_u}{N}
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(N_u\)</span> is the number of samples with values above <span class="math notranslate nohighlight">\(u\)</span>. Interpreting <span class="math notranslate nohighlight">\(u\)</span> as a threshold, we will call those samples <em>peaks over threshold</em> (PoT) and <span class="math notranslate nohighlight">\(N_u\)</span> is simply their count.</p>

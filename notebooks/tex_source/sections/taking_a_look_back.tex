@@ -1,0 +1,123 @@
+So, what have we really done and why does it make sense to use the GEV for such
+problems? What kind of guarantees does the Fisher-Tipett-Gnedenko theorem give
+us about the quality of the fit?
+
+
+Well, the truth is, not too many.  
+
+Remember that the block-maximum is defined as
+
+\begin{equation}
+  M_n \coloneqq \max\{ X_1, X_2, \dots, X_n \}
+\end{equation}
+
+First notice the following exact equality:
+
+
+\begin{equation}
+    P(M_n < z) = P(X_1< z \text{ and } X_2 < z ... \text{ and  } X_n < z) = F^n(z)
+\end{equation}
+
+
+So, if we know the cumulative distribution, there is no need to resort to the
+GEV. Typically, of course, we do not know it. The above equality implies:
+
+
+\begin{equation}
+    \lim P(M_n < z) =     
+        \begin{cases}
+          0 & \text{if}\ F(z) < 1 \\
+          1 & \text{otherwise}
+        \end{cases}
+\end{equation}
+
+
+We actually always know the exact limit of the distribution of the block-maxima!
+It is degenerate (either a step function of identical zero). In fact, this
+degenerate distribution can be seen as a limit of the GEV. It would correspond
+to normalizing constants $a_n=1, \ b_n=0$.
+
+While this observation is very simple and the difference between the cdf of
+block maxima $P(M_n < z)$ and its degenerate limit does decrease as $n$
+increases, this limiting distribution is unexpressive and fitting it to data
+does not provide probabilistic insight.
+
+\hrulefill\\*
+
+\textbf{Q:} How many parameters does the exact limit of $F^n$ have? What would we get if we fit it to data?
+
+\textbf{A:}
+
+\hrulefill\\*
+
+Introducing the normalizing constants $a_n$ and $b_n$ \textit{might} allow the
+distribution of renormalized block maxima to converge to something non-trivial.
+It also might not.
+
+In applications we usually care about modeling $M_n$ for a \textit{fixed $n_0$} (or
+maybe for a few selected $n_i$). An arbitrary series of $a_n$ and $b_n$ that at
+some point helps convergence does not directly address our needs. In fact, this
+is also not what we do \textemdash\ by fitting the GEV parameters to data for our selected
+$n_0$ we automatically find the \textit{best} $a_{n_0}$ and $b_{n_0}$ that minimize the
+difference between $F^{n_0}(z)$ and $G(z)$.
+
+Clearly $G(z)$ is much more expressive than the degenerate exact limit and could
+potentially provide a good fit. So, the convergence that we really care about is
+to answer the question:
+
+How well do the best fits of $G(z)$ for fixed $n$ \textemdash\ let us call them
+$G_n(z)$ \textemdash\ approximate the distributions $F^n(z)$ as $n$ increases?
+One could e.g. be interested in the infinity norm
+
+\begin{equation}
+  \Delta_n := \sup_z | F^n(z) - G_n(z) |
+\end{equation}
+
+
+This is not the same as asking how well $G(z)$ approximates some rescaled
+variant of $F^n(z)$ with $n$-dependent normalization constants! That would be
+
+
+\begin{equation}
+  \tilde{\Delta}_n(a_n, b_n) := \sup_z |F^n(a_n z + b_n) - G(z) |
+\end{equation}
+
+
+In the latter question, the choice of normalization constants matters, in the
+former it does not \textemdash\ they are implicitly determined by the best fit for each
+$n$. Since for $\Delta_n$ the $a_n, b_n$ have been optimized, one could
+reasonably expect a relation of the type
+
+
+\begin{equation}
+  \Delta_n \approx \min_{a_n, b_n} \tilde{\Delta}_n(a_n, b_n)
+\end{equation}
+
+
+to hold.
+
+It is easy to see that given some normalizing sequences $a_n, b_n$, the
+convergence to a GEV is possible, than with other sequences $\tilde{a}_n,
+\tilde{b}_n$ with some $a>0, b$ such that
+
+
+\begin{equation}
+  \lim_{n\rightarrow \infty} \frac{\tilde{a}_n}{a_n} = a \quad,\quad \lim_{n \rightarrow \infty} \frac{b_n-\tilde{b}_n}{a_n} = b
+\end{equation}
+
+
+the rescaled $\frac{M_n-\tilde{b}_n}{\tilde{a_n}}$ also converges to a GEV of
+the same type (with the same $\xi$). This is often formulated that a
+distribution $F$ has \textit{a fixed domain of attraction}. However, the error rates
+$\tilde{\Delta}_n(\tilde{a}_n, \tilde{b}_n)$ would be different from those
+associated to $a_n, b_n$.
+
+Unfortunately, theoretical bounds for the quantity of interest $\Delta_n$ are
+hard to come by \textemdash\ we are not aware of any. They also highly depend on the
+fitting procedure, which is non-trivial, as we have seen above. There are some
+bounds for quantities of the type $\tilde{\Delta}_n(\tilde{a}_n, \tilde{b}_n)$
+(see the annotated literature reference) but they are rather loose and not
+really helpful in practice. Therefore, the EVT theorems are more of a motivation
+for selecting distribution families for fitting than a rigorous approach with
+guarantees. In practice the convergence and fit tend to work pretty well,
+though.
