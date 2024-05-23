@@ -19,7 +19,7 @@ jobs:
       - name: Build and push image to ghcr
         run: |
           docker login --username ${{github.actor}} --password ${{github.token}} ghcr.io
-          docker build ./.devcontainer/Dockerfile -t ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
+          docker build ./.devcontainer -t ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
           docker push ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
         env:
           PARTICIPANT_BUCKET_READ_SECRET: "test-secret"
