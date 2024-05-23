@@ -91,7 +91,8 @@ RUN apt update -y && \
     gobjc gfortran gnat python-dev pandoc \
     git-lfs rsync libblas-dev liblapack-dev
 
-COPY .. /tmp
+COPY . /tmp
+RUN ls -la
 
 WORKDIR /tmp
 
