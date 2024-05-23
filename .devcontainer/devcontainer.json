@@ -1,8 +1,7 @@
 {
 	"name": "Dev Container for the TfL Training Practical Anomaly Detection",
 
-	// todo: adapt base image to use
-	"image": "ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest",
+	"image": "ghcr.io/aai-institute/tfl-training-practical-anomaly-detection/base-image-devcontainer:latest",
 
 	"features": {
 	    "ghcr.io/devcontainers/features/common-utils:2": {
