@@ -92,7 +92,6 @@ RUN apt update -y && \
 COPY . /tmp
 
 WORKDIR /tmp
-RUN ls -la
 
 RUN pip install -r requirements.txt && \
     pip install click cryptography 
