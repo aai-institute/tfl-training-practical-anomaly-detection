@@ -21,6 +21,7 @@ jobs:
           docker login --username ${{github.actor}} --password ${{github.token}} ghcr.io
           docker build ./.devcontainer -t ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
           docker push ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
-        env:
-          PARTICIPANT_BUCKET_READ_SECRET: "test-secret"
+        with:
+          build_args:
+            PARTICIPANT_BUCKET_READ_SECRET=${{ secrets.PARTICIPANT_BUCKET_READ_SECRET }}
   
