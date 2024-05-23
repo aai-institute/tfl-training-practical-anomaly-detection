@@ -22,8 +22,6 @@ jobs:
           docker build . -t ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
           docker push
           ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
-        # uses: docker/build-push-action@v4
-        with:
-          build-args:
-            PARTICIPANT_BUCKET_READ_SECRET=${{ secrets.PARTICIPANT_BUCKET_READ_SECRET }}
+        env:
+          PARTICIPANT_BUCKET_READ_SECRET: ${{ secrets.PARTICIPANT_BUCKET_READ_SECRET }}
   
