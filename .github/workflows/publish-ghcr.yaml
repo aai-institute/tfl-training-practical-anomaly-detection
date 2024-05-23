@@ -1,0 +1,24 @@
+name: Docker Image for TfL Training on Anomaly Detection
+
+on:
+  push:
+    branches:
+      - main
+      - adding-devcontainer
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and push image to ghcr
+        run: |
+          docker login --username ${{github.actor}} --password ${{github.token}} ghcr.io
+          docker build . -t ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
+          docker push
+          ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
+      - uses: actions/checkout@v3
+      - uses: docker/build-push-action@v4
+        with:
+          build-args:
+            PARTICIPANT_BUCKET_READ_SECRET=${{ secrets.PARTICIPANT_BUCKET_READ_SECRET }}
+  
