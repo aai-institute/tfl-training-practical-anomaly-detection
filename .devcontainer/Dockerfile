@@ -92,9 +92,9 @@ RUN apt update -y && \
     git-lfs rsync libblas-dev liblapack-dev
 
 COPY . /tmp
-RUN ls -la
 
 WORKDIR /tmp
+RUN ls -la
 
 RUN pip install -r requirements.txt && \
     pip install click cryptography 
