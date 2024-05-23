@@ -7,7 +7,7 @@ on:
       - adding-devcontainer
 
 jobs:
-  build_and_publish:
+  build_and_publish_devcontainer:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
