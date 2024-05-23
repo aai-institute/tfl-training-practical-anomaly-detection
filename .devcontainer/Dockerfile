@@ -74,16 +74,14 @@ LABEL org.opencontainers.image.source="https://github.com/aai-institute/tfl-trai
 ARG PARTICIPANT_BUCKET_READ_SECRET
 ENV PARTICIPANT_BUCKET_READ_SECRET=${PARTICIPANT_BUCKET_READ_SECRET}
 
-# RUN if [ -z "$PARTICIPANT_BUCKET_READ_SECRET" ]; \
-#       then echo "The build arg PARTICIPANT_BUCKET_READ_SECRET must be set to non-zero, e.g. \
-#       by passing the flag --build-arg PARTICIPANT_BUCKET_READ_SECRET=$PARTICIPANT_BUCKET_READ_SECRET. " &&\
-#       echo "If running in CI, this variable should have been included as GH secret in the repository settings." &&\
-#       echo "If you are building locally and the env var is not set,  \
-#       you might find the corresponding value inside config.yml under the 'secret' key." &&\
-#       exit 1; \
-#       fi
-
-RUN echo "PARTICIPANT_BUCKET_READ_SECRET: $PARTICIPANT_BUCKET_READ_SECRET"
+RUN if [ -z "$PARTICIPANT_BUCKET_READ_SECRET" ]; \
+      then echo "The build arg PARTICIPANT_BUCKET_READ_SECRET must be set to non-zero, e.g. \
+      by passing the flag --build-arg PARTICIPANT_BUCKET_READ_SECRET=$PARTICIPANT_BUCKET_READ_SECRET. " &&\
+      echo "If running in CI, this variable should have been included as GH secret in the repository settings." &&\
+      echo "If you are building locally and the env var is not set,  \
+      you might find the corresponding value inside config.yml under the 'secret' key." &&\
+      exit 1; \
+      fi
 
 RUN apt update -y && \ 
     apt install -y \
