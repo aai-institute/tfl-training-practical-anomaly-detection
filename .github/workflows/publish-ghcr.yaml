@@ -7,22 +7,29 @@ on:
       - adding-devcontainer
 
 jobs:
-  build_and_publish_devcontainer:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          fetch-depth: 0
-          lfs: true
-          persist-credentials: false
-      - name: Build and push image to ghcr
-        run: |
-          docker login --username ${{github.actor}} --password ${{github.token}} ghcr.io
-          docker build ./.devcontainer -t ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
-          docker push ghcr.io/aai-institute/tfl-training-practical-anomaly-detection:latest
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
         with:
           context: .
-          build_args:
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/base-image-devcontainer:latest
+          build-args: |
             PARTICIPANT_BUCKET_READ_SECRET=${{ secrets.PARTICIPANT_BUCKET_READ_SECRET }}
-  
