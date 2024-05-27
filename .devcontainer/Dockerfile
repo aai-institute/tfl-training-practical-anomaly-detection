@@ -95,3 +95,5 @@ WORKDIR /tmp
 
 RUN pip install -r requirements.txt && \
     pip install click cryptography 
+
+RUN bash ./build_scripts/install_presentation_requirements.sh
