@@ -89,9 +89,9 @@ RUN apt update -y && \
     gobjc gfortran gnat python-dev pandoc \
     git-lfs rsync libblas-dev liblapack-dev
 
-COPY . /tmp
+COPY . ${HOME}
 
-WORKDIR /tmp
+WORKDIR ${HOME}
 
 RUN pip install -r requirements.txt && \
     pip install click cryptography 
