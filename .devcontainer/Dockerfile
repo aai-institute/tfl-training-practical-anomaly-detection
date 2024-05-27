@@ -27,6 +27,7 @@ COPY . ${HOME}
 WORKDIR ${HOME}
 
 RUN pip install -r requirements.txt && \
+    pip install -e . && \
     pip install click cryptography 
 
 RUN bash ./build_scripts/install_presentation_requirements.sh
