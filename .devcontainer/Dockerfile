@@ -1,5 +1,7 @@
 FROM python:3.10-slim-bullseye
 LABEL org.opencontainers.image.source="https://github.com/aai-institute/tfl-training-practical-anomaly-detection"
+LABEL org.opencontainers.image.description="Image for a Docker Devcontainer for the TFL Training Practical Anomaly Detection course."
+LABEL org.opencontainers.image.licenses="CC-BY-SA-4.0"
 
 # keep env var name in sync with config_local.yml
 ARG PARTICIPANT_BUCKET_READ_SECRET
