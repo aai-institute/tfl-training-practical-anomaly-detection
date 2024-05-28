@@ -31,6 +31,14 @@ learning stack are however highly recommended.
 
 ## Setup
 
+Besides setting up the environment yourself, we provide a devcontainer that can
+either be used locally or inside a GitHub Codespace. TO quickly spin up an
+instance, holding the training's content and the necessary environment, click
+the green button "Code" in the top right corner of the repository and select
+"Codespaces" rather than local development.
+
+If you prefer to work locally, you can set up the environment as follows:
+
 We recommend to install rise with conda (installation with pip may cause problems). We also use the
 [spellchecker](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/spellchecker/README.html)
 and [equation-numbering](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/equation-numbering/readme.html)
