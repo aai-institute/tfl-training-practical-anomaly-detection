@@ -60,6 +60,3 @@ Finally, clone repository, change into the directory of the cloned repository an
 ```bash
 pip install -e .
 ```
-
-## References
-You can find the main references for the workshop [here](docs/references.md).
