@@ -702,7 +702,7 @@ def perform_rkde_experiment(
                 if epsilon != 0:
                     model.compute_anomaly_roc(y)
                 new_scores = model.get_score()
-                total_scores = total_scores.append(new_scores, ignore_index=True)
+                total_scores = total_scores._append(new_scores, ignore_index=True)
     return total_scores
 
 
