@@ -1,6 +1,5 @@
 #
 .idea
-.devcontainer/
 config_local.json
 temp
 *.DS_Store
