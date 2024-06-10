@@ -69,9 +69,6 @@ Finally, clone repository, change into the directory of the cloned repository an
 pip install -e .
 ```
 
-## References
-You can find the main references for the workshop [here](docs/references.md).
-
 ## License
 
 This work is licensed under a
