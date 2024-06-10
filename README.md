@@ -32,7 +32,7 @@ learning stack are however highly recommended.
 ## Setup
 
 Besides setting up the environment yourself, we provide a devcontainer that can
-either be used locally or inside a GitHub Codespace. TO quickly spin up an
+either be used locally or inside a GitHub Codespace. To quickly spin up an
 instance, holding the training's content and the necessary environment, click
 the green button "Code" in the top right corner of the repository and select
 "Codespaces" rather than local development.
