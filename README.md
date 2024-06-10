@@ -2,7 +2,7 @@
 
 [![youtube][youtube]][youtube]
 
-[youtube]: https://www.youtube.com/watch?v=sEoMIDARpJ0&list=PLz6xKPm1Bnd6cDDgct3MDhNWJuPXzsmyW
+[youtube]: https://custom-icon-badges.demolab.com/badge/youtube-red.svg?logo=youtube&logoSource=feather
 
 
 ## Target Audience
