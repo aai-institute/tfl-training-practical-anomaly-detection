@@ -1,6 +1,8 @@
 # Workshop: Practical Anomaly Detection
 
-[![youtube][youtube]][youtube](https://www.youtube.com/watch?v=sEoMIDARpJ0&list=PLz6xKPm1Bnd6cDDgct3MDhNWJuPXzsmyW)
+[![youtube][youtube]][youtube]
+
+[youtube]: https://www.youtube.com/watch?v=sEoMIDARpJ0&list=PLz6xKPm1Bnd6cDDgct3MDhNWJuPXzsmyW
 
 
 ## Target Audience
