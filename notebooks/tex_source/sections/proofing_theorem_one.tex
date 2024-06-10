@@ -1,0 +1,30 @@
+One may wonder how the statement of the Fisher-Gnedenko-Tripet theorem is
+obtained without providing bounds on convergence. The reason is that the
+limiting distribution of (renormalized) maxima must have a very special property
+\textemdash\ it must be max-stable. It is instructive to go through a part of the proof to
+get a feeling for the EVT theorems. We will do so in this exercise.
+
+
+\begin{definition} 
+    A cumulative distribution function $D(z)$ is called \textit{max-stable}
+    iff for all $n\in\mathbb{N} \ \exists \ \alpha_n>0, \beta_n \in  \mathbb{R}$
+    such that 
+
+    \begin{equation}
+        D^n(z) = D(\alpha_n z + \beta_n).    
+    \end{equation}
+
+\end{definition}
+
+\medskip
+
+Prove that from $\lim_{n\rightarrow \infty} P\left( \frac{M_n - b_n}{a_n} < z
+\right) = G(z)$ follows that $G(z)$ is max-stable.
+
+\medskip
+
+This goes a long way towards proving the first EVT theorem. One can easily
+compute that the GEV distribution is max-stable and with more effort one can
+also prove that any max-stable distribution belongs to the GEV family. Thus, the
+proof of the theorem is very implicit and does not involve any convergence rates
+or bounds.
