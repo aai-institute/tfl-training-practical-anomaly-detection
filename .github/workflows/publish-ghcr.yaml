@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - adding-devcontainer
 
 jobs:
   build_devcontainer_base:
