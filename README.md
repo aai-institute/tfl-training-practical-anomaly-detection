@@ -1,5 +1,7 @@
 # Workshop: Practical Anomaly Detection
 
+[![youtube][youtube]][youtube](https://www.youtube.com/watch?v=sEoMIDARpJ0&list=PLz6xKPm1Bnd6cDDgct3MDhNWJuPXzsmyW)
+
 
 ## Target Audience
 Entry to mid-level data scientists / machine learning engineers / ...
