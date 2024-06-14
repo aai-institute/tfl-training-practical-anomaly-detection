@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Taxonomy of Anomaly Detection Approaches &#8212; Practical Anomaly Detection</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/configmacros"]}, "tex": {"packages": {"[+]": ["configmacros"]}, "macros": {"vect": ["{\\mathbf{\\boldsymbol{#1}} }", 1], "E": "{\\mathbb{E}}", "P": "{\\mathbb{P}}", "R": "{\\mathbb{R}}", "abs": ["{\\left| #1 \\right|}", 1], "simpl": ["{\\Delta^{#1} }", 1], "amax": "{\\text{argmax}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nb_01_1_intro_and_ad_taxonomy';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Anomaly Detection via Density Estimation" href="nb_02_anomaly_detection_via_density_estimation.html" />
+    <link rel="prev" title="Introduction to Anomaly Detection" href="nb_01_0_intro_anomaly_detection.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/transferlab-logo.svg" class="logo__image only-light" alt="Practical Anomaly Detection - Home"/>
+    <script>document.write(`<img src="_static/transferlab-logo.svg" class="logo__image only-dark" alt="Practical Anomaly Detection - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    practical anomaly detection - Notebook Pages
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_01_0_intro_anomaly_detection.html">Introduction to Anomaly Detection</a></li>
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Taxonomy of Anomaly Detection Approaches</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="nb_02_anomaly_detection_via_density_estimation.html">Anomaly Detection via Density Estimation</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_03_anomaly_detection_via_isolation.html">Anomaly Detection via Isolation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_04_anomaly_detection_via_reconstruction.html">Anomaly Detection via Reconstruction Error</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_05_anomaly_detection_on_time_series.html">Anomaly Detection on Time Series</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_06_extreme_value_theory_for_anomaly_detection.html">Extreme Value Theory and Anomaly Detection</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nb_01_1_intro_and_ad_taxonomy.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Taxonomy of Anomaly Detection Approaches</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Taxonomy of Anomaly Detection Approaches</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-approaches-to-ad">Overview of approaches to AD</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distance-based-methods">Distance based methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-methods">Probabilistic methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subspace-based-methods">Subspace based methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction-based-methods">Reconstruction based methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-methods">Supervised methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-approaches-and-conclusion">Other approaches and conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_remove-input tag_remove-input-nbconv docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html"><style>/*
+This file is mainly copy-pasta from rise's examples
+https://github.com/damianavila/RISE/blob/master/examples/rise.css
+that was further customized for appliedAI purposes
+*/
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
+
+
+body {
+    font-family: 'Work Sans', sans-serif !important;
+    text-transform: initial !important;
+    letter-spacing: initial !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    text-size-adjust: 100% !important;
+    ‑webkit‑text‑size‑adjust: 100% !important;
+}
+
+
+.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
+    font-size: 1.5rem !important;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #00747b !important;
+}
+
+.filename {
+    font-size: 2.4rem !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.reveal, .md-slide {
+    color: white !important;
+}
+
+h1, h2 {
+    color: #00747b !important;
+}
+
+h3, h4, h5, h6 {
+    color: #808080 !important;
+}
+
+.reveal p, .reveal ol, .reveal dl, .reveal ul,
+div.text_cell_render {
+    color: #212529 !important;
+}
+
+/*copied from stackoverflow, better spacing between list items*/
+li + li {
+  margin-top: 0.2em;
+}
+
+body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
+    margin-left: 0.1em;
+    margin-top: 0.2em;
+}
+
+.reveal .rendered_html h1:first-child,
+.reveal .rendered_html h2:first-child,
+.reveal .rendered_html h3:first-child,
+.reveal .rendered_html h4:first-child,
+.reveal .rendered_html h5:first-child {
+    margin-top: 0.2em;
+}
+
+.CodeMirror-lines, .output_text {
+    font-size: 1.5rem !important;
+}
+
+
+h1.plan, h2.plan, h3.plan {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+ul.plan>li>span.plan-bold {
+    font-size: 110%;
+    padding: 4px;
+    font-weight: bold;
+    background-color: #eee;
+}
+
+ul.plan>li>ul.subplan>li>span.plan-bold {
+    font-weight: bold;
+}
+
+.plan-strike {
+    opacity: 0.4;
+/*    text-decoration: line-through; */
+}
+
+div.plan-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+/*
+ * this is to void xarray's html output to show the fallback textual representation
+ * see also
+   * xarray.md and
+   * https://github.com/damianavila/RISE/issues/594
+ */
+.reveal pre.xr-text-repr-fallback {
+    display: none;
+}
+
+#toc-header, .toc-item li {
+    margin: auto !important;
+    color: #808080 !important;
+}
+
+#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
+    margin: auto !important;
+    color: #00747b !important;
+}
+
+#toc-wrapper {
+    top: auto !important;
+    bottom: auto !important;
+    margin-top: 2rem !important;
+    color: #00747b !important;
+}
+
+
+#rise-header {
+    margin: 10px;
+    left: 5%;
+}
+
+#rise-footer {
+    margin: 10px;
+    right: 5%;
+}
+
+#rise-backimage {
+    opacity: 0.70;
+}
+
+.reveal img {
+    max-width: 100%;
+}
+
+
+.md-slide.title {
+  position: relative;
+  top: -50%;
+  margin-left: 5%;
+}</style></div></div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="taxonomy-of-anomaly-detection-approaches">
+<h1>Taxonomy of Anomaly Detection Approaches<a class="headerlink" href="#taxonomy-of-anomaly-detection-approaches" title="Permalink to this heading">#</a></h1>
+<img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="overview-of-approaches-to-ad">
+<h1>Overview of approaches to AD<a class="headerlink" href="#overview-of-approaches-to-ad" title="Permalink to this heading">#</a></h1>
+<p>Anomaly detection as a whole does not really have a common foundation.</p>
+<p>Rather, there are loosely related approaches to it and methods from those approaches.</p>
+<p>For actual applications of anomaly detection the structure of the data and the problem
+at hand are of extreme importance for choosing the right method.</p>
+<p>Sometimes, hand designed rules might work better than fancy algorithms! Generally, a thorough
+statistical analysis of the data should be performed before using “heavier machinery”.</p>
+<p>Below we present a small of taxonomy of different approaches to AD with some representative methods. However, the lines between these approaches can become quite blurry at times.</p>
+<section id="distance-based-methods">
+<h2>Distance based methods<a class="headerlink" href="#distance-based-methods" title="Permalink to this heading">#</a></h2>
+<p><strong>Philosophy</strong>: a point is an outlier if it has few neighbors.</p>
+<p>Distance to <span class="math notranslate nohighlight">\(k\)</span>-th nearest neighbor (<span class="math notranslate nohighlight">\(k\)</span> needs to be determined), clustering (together Mahalanobis distance), local outlier factor (LOF), the matrix-profile for time series etc.</p>
+</section>
+<section id="probabilistic-methods">
+<h2>Probabilistic methods<a class="headerlink" href="#probabilistic-methods" title="Permalink to this heading">#</a></h2>
+<p><strong>Philosophy</strong>: since most data points are normal, we can fit a probabilistic model to “normality”. A point is an outlier if it has low probability under the fitted model.</p>
+<p>Kernel density estimation, gaussian mixtures, extreme value theory, GAN-based anomaly detection, time series forecasting etc.</p>
+<p>We already see blurry lines - gaussian mixtures could be considered a distance based method for clustering.</p>
+</section>
+<section id="subspace-based-methods">
+<h2>Subspace based methods<a class="headerlink" href="#subspace-based-methods" title="Permalink to this heading">#</a></h2>
+<p><strong>Philosophy</strong>: The space where data lives can be partitioned into a normal region and an abnormal one. This partitioning might happen in a lower dimensional subspace.</p>
+<p>Isolation trees/forests, one class SVM, genetic algorithms, etc.</p>
+</section>
+<section id="reconstruction-based-methods">
+<h2>Reconstruction based methods<a class="headerlink" href="#reconstruction-based-methods" title="Permalink to this heading">#</a></h2>
+<p><strong>Philosophy</strong>: We learn an encoding (or projection) to a low dimensional space and a corresponding decoding of our data. Since we mostly have normal data points, it will be more efficient for them than for the anomalies. Thus, anomalies will have higher reconstruction error.</p>
+<p>Autoencoder, variational autoencoder, assotiative memory models (Hopfield networks) etc, subspace methods, etc.</p>
+<p>Again blurry lines: is PCA reconstruction based or probabilistic? The variational autoencoder also gives a probabilistic model for data as a byproduct.</p>
+</section>
+<section id="supervised-methods">
+<h2>Supervised methods<a class="headerlink" href="#supervised-methods" title="Permalink to this heading">#</a></h2>
+<p><strong>Philosophy</strong>: We can just train a classifier to predict a binary (or more complex) label. The downside here is that this requires labeled data.</p>
+<p>The typical classifiers with tricks for dealing with unbalanced classes.</p>
+</section>
+<section id="other-approaches-and-conclusion">
+<h2>Other approaches and conclusion<a class="headerlink" href="#other-approaches-and-conclusion" title="Permalink to this heading">#</a></h2>
+<p>Information based (removing anomalies should drastically decrease information content of the data set), domain specific, combination of different methods etc.</p>
+<p>We cannot possibly try to cover all the approaches above. Instead, we will demonstrate a few techniques that often work well in practice and then dive deeper into two general topics: <em>time series</em> and <em>extreme value theory</em>.</p>
+<p>The topics covered there will be useful in a variety of situations.</p>
+<img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;"></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nb_01_0_intro_anomaly_detection.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introduction to Anomaly Detection</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nb_02_anomaly_detection_via_density_estimation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Anomaly Detection via Density Estimation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Taxonomy of Anomaly Detection Approaches</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-approaches-to-ad">Overview of approaches to AD</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distance-based-methods">Distance based methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probabilistic-methods">Probabilistic methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subspace-based-methods">Subspace based methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruction-based-methods">Reconstruction based methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-methods">Supervised methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-approaches-and-conclusion">Other approaches and conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By appliedAI TransferLab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

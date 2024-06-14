@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>exercise_tools &mdash; tfl_training_anomaly_detection 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nb_utils" href="nb_utils.html" />
+    <link rel="prev" title="constants" href="constants.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tfl_training_anomaly_detection
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">About this documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exercises.html">Exercises</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">tfl_training_anomaly_detection</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#tfl_training_anomaly_detection.load_ipython_extension"><code class="docutils literal notranslate"><span class="pre">load_ipython_extension()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants.html">constants</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">exercise_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.check_is_testing_pipeline"><code class="docutils literal notranslate"><span class="pre">check_is_testing_pipeline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.visualize_kde"><code class="docutils literal notranslate"><span class="pre">visualize_kde()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.visualize_mahalanobis"><code class="docutils literal notranslate"><span class="pre">visualize_mahalanobis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.get_kdd_data"><code class="docutils literal notranslate"><span class="pre">get_kdd_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.create_distributions"><code class="docutils literal notranslate"><span class="pre">create_distributions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.contamination"><code class="docutils literal notranslate"><span class="pre">contamination()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.get_house_prices_data"><code class="docutils literal notranslate"><span class="pre">get_house_prices_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.get_mnist_data"><code class="docutils literal notranslate"><span class="pre">get_mnist_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.benchmark_algorithms"><code class="docutils literal notranslate"><span class="pre">benchmark_algorithms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.anomaly_from_classification"><code class="docutils literal notranslate"><span class="pre">anomaly_from_classification()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.load_contaminated_data"><code class="docutils literal notranslate"><span class="pre">load_contaminated_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.perform_rkde_experiment"><code class="docutils literal notranslate"><span class="pre">perform_rkde_experiment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tfl_training_anomaly_detection.exercise_tools.set_datasetname"><code class="docutils literal notranslate"><span class="pre">set_datasetname()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nb_utils.html">nb_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vae.html">vae</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../libs/index.html">libs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tfl_training_anomaly_detection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">tfl_training_anomaly_detection</a></li>
+      <li class="breadcrumb-item active">exercise_tools</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tfl_training_anomaly_detection/exercise_tools.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tfl_training_anomaly_detection.exercise_tools">
+<span id="exercise-tools"></span><h1>exercise_tools<a class="headerlink" href="#module-tfl_training_anomaly_detection.exercise_tools" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.check_is_testing_pipeline">
+<span class="sig-name descname"><span class="pre">check_is_testing_pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.check_is_testing_pipeline" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.visualize_kde">
+<span class="sig-name descname"><span class="pre">visualize_kde</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.visualize_kde" title="Link to this definition"></a></dt>
+<dd><p>Visualize kde</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> – the kde kernel</p></li>
+<li><p><strong>bandwidth</strong> – the kde bandwidth</p></li>
+<li><p><strong>X_train</strong> – training data</p></li>
+<li><p><strong>y_train</strong> – training labels (0=nominal, 1=anomaly)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.visualize_mahalanobis">
+<span class="sig-name descname"><span class="pre">visualize_mahalanobis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma_diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thr</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L78"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.visualize_mahalanobis" title="Link to this definition"></a></dt>
+<dd><p>Visualizes the Mahalanobis distance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – the data set</p></li>
+<li><p><strong>y</strong> – labels (0=nominal, 1=anomaly)</p></li>
+<li><p><strong>mu</strong> – mean for the Mahalanobis distance</p></li>
+<li><p><strong>sigma_diag</strong> – diagonal vector of the covariance matrix</p></li>
+<li><p><strong>thr</strong> – the threshold to classify a point as anomaly</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.get_kdd_data">
+<span class="sig-name descname"><span class="pre">get_kdd_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L120"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.get_kdd_data" title="Link to this definition"></a></dt>
+<dd><p>Download KDD dataset. Provides labels only for the test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>X_train, X_test, y_test</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L148"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.evaluate" title="Link to this definition"></a></dt>
+<dd><p>Compute and display the ROC and PR curve as well as ROC AUC and AP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – Ground truth</p></li>
+<li><p><strong>y_pred</strong> – Predictions</p></li>
+<li><p><strong>save_as</strong> – Location for the figure to be saved. If save_as is None then the figure is not saved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.create_distributions">
+<span class="sig-name descname"><span class="pre">create_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_irrelevant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L185"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.create_distributions" title="Link to this definition"></a></dt>
+<dd><p>Create the base distributions for the exercise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> – Base Dimensionality</p></li>
+<li><p><strong>dim_irrelevant</strong> – Additional noise dimensions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of distributions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.contamination">
+<span class="sig-name descname"><span class="pre">contamination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nominal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anomaly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L404"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.contamination" title="Link to this definition"></a></dt>
+<dd><p>Build the mixture model (1-&#64;p)*&#64;nominal + &#64;p*&#64;anomaly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nominal</strong> – Nominal Distribution</p></li>
+<li><p><strong>anomaly</strong> – Anomaly Distribution</p></li>
+<li><p><strong>p</strong> – Probability of anomaly</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mixture model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.get_house_prices_data">
+<span class="sig-name descname"><span class="pre">get_house_prices_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CollgCr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anomaly_neighborhood</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NoRidge'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L427"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.get_house_prices_data" title="Link to this definition"></a></dt>
+<dd><p>Load house prices data for one neighborhood.
+The method returns also test data which are made of data from selected neighborhood plus data
+from another neighborhood, considered as anomaly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>neighborhood</strong> – str, key corresponding to neighborhood.</p></li>
+<li><p><strong>anomaly_neighborhood</strong> – neighborhood to use as anomaly. Must be different to neighborhood</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>train data, i.e. data only from selected neighborhood, test data, i.e. data with
+contamination, and test labels, i.e. a list of zeros and one corresponding to normal or
+anomalous data respectively.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.get_mnist_data">
+<span class="sig-name descname"><span class="pre">get_mnist_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L453"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.get_mnist_data" title="Link to this definition"></a></dt>
+<dd><p>Loads mnist data into pandas Dataframe with columns data and target.
+If dataset is not already cached, fetching it through openml could give some problems with the SSL Certificate.
+So, if SSLCertVerificationError is raised, run the following:</p>
+<p>import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+get_mnist_data()</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.benchmark_algorithms">
+<span class="sig-name descname"><span class="pre">benchmark_algorithms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L477"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.benchmark_algorithms" title="Link to this definition"></a></dt>
+<dd><p>Conduct a series of experiments with KDE and iForest and return result summary
+Experiment overview:
+- Nominal Distributions: Double Blob, Sphere, Sinusoidal, and Random Gaussian Mixture
+- Anomaly Disdributions: Uniform and Blob
+- Number of Base Dimensions: 2 - 20
+- Irrelevant Dimensions: Gaussian Noise (variance = 0.1)
+- Number of Irrelevant Dimansions: 0 - 10
+- Contamination level: 1% - 20%</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame with ROC AUC and AP for each experiment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.anomaly_from_classification">
+<span class="sig-name descname"><span class="pre">anomaly_from_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anomaly_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L584"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.anomaly_from_classification" title="Link to this definition"></a></dt>
+<dd><p>Build an anomaly detection data set from a classification data set. The new data set contains
+only binary labels where 0 denotes the nominal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data</p></li>
+<li><p><strong>target</strong> – Target</p></li>
+<li><p><strong>nominal_classes</strong> – List like, the nominal classes</p></li>
+<li><p><strong>anomaly_classes</strong> – List like, the anomaly classes</p></li>
+<li><p><strong>p</strong> – Fraction of anomalies</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>X, y; Subset X of data randomly chosen according to input parameters and binary target vector y (0=nominal)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.load_contaminated_data">
+<span class="sig-name descname"><span class="pre">load_contaminated_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_options</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L621"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.load_contaminated_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.perform_rkde_experiment">
+<span class="sig-name descname"><span class="pre">perform_rkde_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlierprop_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L640"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.perform_rkde_experiment" title="Link to this definition"></a></dt>
+<dd><p>Replicates the experiments from <a class="reference external" href="https://github.com/lminvielle/mom-kde">https://github.com/lminvielle/mom-kde</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tfl_training_anomaly_detection.exercise_tools.set_datasetname">
+<span class="sig-name descname"><span class="pre">set_datasetname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/appliedAI-Initiative/Example: tfl-training-anomaly-detection/blob/master/src/tfl_training_anomaly_detection/exercise_tools.py#L717"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tfl_training_anomaly_detection.exercise_tools.set_datasetname" title="Link to this definition"></a></dt>
+<dd><p>Set dataset name</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="constants.html" class="btn btn-neutral float-left" title="constants" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nb_utils.html" class="btn btn-neutral float-right" title="nb_utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

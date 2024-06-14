@@ -1,0 +1,1021 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Anomaly Detection on Time Series &#8212; Practical Anomaly Detection</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/configmacros"]}, "tex": {"packages": {"[+]": ["configmacros"]}, "macros": {"vect": ["{\\mathbf{\\boldsymbol{#1}} }", 1], "E": "{\\mathbb{E}}", "P": "{\\mathbb{P}}", "R": "{\\mathbb{R}}", "abs": ["{\\left| #1 \\right|}", 1], "simpl": ["{\\Delta^{#1} }", 1], "amax": "{\\text{argmax}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'exercise_only_nb_05_anomaly_detection_on_time_series';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/transferlab-logo.svg" class="logo__image only-light" alt="Practical Anomaly Detection - Home"/>
+    <script>document.write(`<img src="_static/transferlab-logo.svg" class="logo__image only-dark" alt="Practical Anomaly Detection - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    practical anomaly detection - Notebook Pages
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_01_0_intro_anomaly_detection.html">Introduction to Anomaly Detection</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_01_1_intro_and_ad_taxonomy.html">Taxonomy of Anomaly Detection Approaches</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="nb_02_anomaly_detection_via_density_estimation.html">Anomaly Detection via Density Estimation</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_03_anomaly_detection_via_isolation.html">Anomaly Detection via Isolation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_04_anomaly_detection_via_reconstruction.html">Anomaly Detection via Reconstruction Error</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_05_anomaly_detection_on_time_series.html">Anomaly Detection on Time Series</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_06_extreme_value_theory_for_anomaly_detection.html">Extreme Value Theory and Anomaly Detection</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/exercise_only_nb_05_anomaly_detection_on_time_series.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Anomaly Detection on Time Series</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-sarima-model">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partial-autocorrelation-function">Partial Autocorrelation Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Fitting a SARIMA Model</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_remove-input tag_remove-input-nbconv docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html"><style>/*
+This file is mainly copy-pasta from rise's examples
+https://github.com/damianavila/RISE/blob/master/examples/rise.css
+that was further customized for appliedAI purposes
+*/
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
+
+
+body {
+    font-family: 'Work Sans', sans-serif !important;
+    text-transform: initial !important;
+    letter-spacing: initial !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    text-size-adjust: 100% !important;
+    ‑webkit‑text‑size‑adjust: 100% !important;
+}
+
+
+.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
+    font-size: 1.5rem !important;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #00747b !important;
+}
+
+.filename {
+    font-size: 2.4rem !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.reveal, .md-slide {
+    color: white !important;
+}
+
+h1, h2 {
+    color: #00747b !important;
+}
+
+h3, h4, h5, h6 {
+    color: #808080 !important;
+}
+
+.reveal p, .reveal ol, .reveal dl, .reveal ul,
+div.text_cell_render {
+    color: #212529 !important;
+}
+
+/*copied from stackoverflow, better spacing between list items*/
+li + li {
+  margin-top: 0.2em;
+}
+
+body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
+    margin-left: 0.1em;
+    margin-top: 0.2em;
+}
+
+.reveal .rendered_html h1:first-child,
+.reveal .rendered_html h2:first-child,
+.reveal .rendered_html h3:first-child,
+.reveal .rendered_html h4:first-child,
+.reveal .rendered_html h5:first-child {
+    margin-top: 0.2em;
+}
+
+.CodeMirror-lines, .output_text {
+    font-size: 1.5rem !important;
+}
+
+
+h1.plan, h2.plan, h3.plan {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+ul.plan>li>span.plan-bold {
+    font-size: 110%;
+    padding: 4px;
+    font-weight: bold;
+    background-color: #eee;
+}
+
+ul.plan>li>ul.subplan>li>span.plan-bold {
+    font-weight: bold;
+}
+
+.plan-strike {
+    opacity: 0.4;
+/*    text-decoration: line-through; */
+}
+
+div.plan-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+/*
+ * this is to void xarray's html output to show the fallback textual representation
+ * see also
+   * xarray.md and
+   * https://github.com/damianavila/RISE/issues/594
+ */
+.reveal pre.xr-text-repr-fallback {
+    display: none;
+}
+
+#toc-header, .toc-item li {
+    margin: auto !important;
+    color: #808080 !important;
+}
+
+#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
+    margin: auto !important;
+    color: #00747b !important;
+}
+
+#toc-wrapper {
+    top: auto !important;
+    bottom: auto !important;
+    margin-top: 2rem !important;
+    color: #00747b !important;
+}
+
+
+#rise-header {
+    margin: 10px;
+    left: 5%;
+}
+
+#rise-footer {
+    margin: 10px;
+    right: 5%;
+}
+
+#rise-backimage {
+    opacity: 0.70;
+}
+
+.reveal img {
+    max-width: 100%;
+}
+
+
+.md-slide.title {
+  position: relative;
+  top: -50%;
+  margin-left: 5%;
+}</style></div></div>
+</div>
+<img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;">
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics</span> <span class="kn">import</span> <span class="n">tsaplots</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="anomaly-detection-on-time-series">
+<h1>Anomaly Detection on Time Series<a class="headerlink" href="#anomaly-detection-on-time-series" title="Permalink to this heading">#</a></h1>
+<section id="fitting-a-sarima-model">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#fitting-a-sarima-model" title="Permalink to this heading">#</a></h2>
+<p>Finding the right SARIMA model for a given time series requires a bit of experience. In the following we are going to
+review some available techniques on NYC taxi passengers data set. This data set contains the number of taxi
+passengers in New York City in 30 minute time intervals.</p>
+<p>There are at least five known anomalies in the data set. These are:</p>
+<ul class="simple">
+<li><p>NYC Marathon - 2014-11-02</p></li>
+<li><p>Thanksgiving - 2014-11-27</p></li>
+<li><p>Christmas - 2014-12-25</p></li>
+<li><p>New Years - 2015-01-01</p></li>
+<li><p>Snow Blizzard - 2015-01-26 and 2015-01-27</p></li>
+</ul>
+<p>First, we inspect the data visually.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s1">&#39;../data/nyc_taxi/nyc_taxi.csv&#39;</span><span class="p">,</span>
+    <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id1">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">7</span><span class="o">*</span><span class="mi">48</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f077786ed17a9e7453a4ef1571590162c7c7976015155d087d103e7a382153d4.png" src="_images/f077786ed17a9e7453a4ef1571590162c7c7976015155d087d103e7a382153d4.png" />
+</div>
+</div>
+</section>
+<section id="id2">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>Since our anomalies are specified on day level, we resample our dataset to a one-day resolution</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;1D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f5e5dd66ced5ac9cee2093dd4cae93b469f1363554f93208acc51e5b024d5907.png" src="_images/f5e5dd66ced5ac9cee2093dd4cae93b469f1363554f93208acc51e5b024d5907.png" />
+</div>
+</div>
+</section>
+<section id="id3">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>There is no obvious trend in the data, but we can observe a seasonal pattern. Next, we try to determine good values for
+<span class="math notranslate nohighlight">\(p, q, P, Q\)</span> and <span class="math notranslate nohighlight">\(m\)</span> using the ACF and PACF plots. Some useful rules of thumb are:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(q\)</span>: Take the first point where the ACF plot meets the significance threshold.</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span>: Take the point where the PACF plot first meets the significance threshold.</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span>: Take the point with the highest value in the ACF plot.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P\)</span>: Take <span class="math notranslate nohighlight">\(P \geq 1\)</span> if the ACF at <span class="math notranslate nohighlight">\(m\)</span> is positive else <span class="math notranslate nohighlight">\(0\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span>: Take <span class="math notranslate nohighlight">\(Q\geq 1\)</span> if the ACF at <span class="math notranslate nohighlight">\(m\)</span> is negative else <span class="math notranslate nohighlight">\(0\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span>: Choose <span class="math notranslate nohighlight">\(D=1\)</span> if the seasonal pattern (if present) is stable over time and else <span class="math notranslate nohighlight">\(D=0\)</span>.</p></li>
+<li><p>Usually <span class="math notranslate nohighlight">\(d+D \leq 2\)</span> and <span class="math notranslate nohighlight">\(P+Q\leq 2\)</span>.</p></li>
+</ul>
+<p><em>Note</em>: If we would observe a trend in the data then we would first difference the series until the trend disappears
+before we compute the ACF and PACF plots. The order of differencing equals the <span class="math notranslate nohighlight">\(d\)</span> value in our SARIMA model.</p>
+</section>
+<section id="id4">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>We have already observed a stable seasonal pattern <span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(D=1\)</span></p></li>
+<li><p>We plot the ACF:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f12257d70f4333c6fb7718540fff6a92d48d5c9d4d4d6aed406b6a46a03a25dd.png" src="_images/f12257d70f4333c6fb7718540fff6a92d48d5c9d4d4d6aed406b6a46a03a25dd.png" />
+</div>
+</div>
+<p><strong>Question:</strong> Try to determine the period of the seasonal pattern</p>
+<ul class="simple">
+<li><p>In the first plot we observe that the highest correlation is at a lag of <span class="math notranslate nohighlight">\(7\)</span> days <span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(m=7\)</span>.</p></li>
+<li><p>The correlation at <span class="math notranslate nohighlight">\(m\)</span> is positive hence we assume <span class="math notranslate nohighlight">\(P \geq 1\)</span> and <span class="math notranslate nohighlight">\(Q=0\)</span>.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>We apply seasonal differencing to find a value for <span class="math notranslate nohighlight">\(q\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7ae3ffdf6d457769845542d21d9d7156fcb7c7d92f61c1d714587233f310dbfa.png" src="_images/7ae3ffdf6d457769845542d21d9d7156fcb7c7d92f61c1d714587233f310dbfa.png" />
+</div>
+</div>
+<p><strong>Question:</strong> Try to determine the order of the moving average.</p>
+<ul class="simple">
+<li><p>We see in the second plot that the autocorrelation meets the significance threshold at a lag of <span class="math notranslate nohighlight">\(3\)</span> <span class="math notranslate nohighlight">\(\Rightarrow\)</span>
+<span class="math notranslate nohighlight">\(q=3\)</span>.</p></li>
+</ul>
+</section>
+<section id="partial-autocorrelation-function">
+<h2>Partial Autocorrelation Function<a class="headerlink" href="#partial-autocorrelation-function" title="Permalink to this heading">#</a></h2>
+<p>A related and also important function is the <em>partial autocorrelation function (pacf)</em>. The pacf measures the
+conditional correlation between a variable, and the lagged versions of itself given that we know the values of all lagged
+versions in between. For stationary SARIMA processes:</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{pacf}(k) = \frac{\mathrm{Cov}(X_t, X_{t+k} \mid X_{t+1}, \ldots, X_{t+k-1})}{\sqrt{\mathrm{Var}(X_t\mid X_{t+1},
+    \ldots, X_{t+k-1})\mathrm{Var}(X_{t+k}\mid X_{t+1}, \ldots, X_{t+k-1})}}\)</span></p>
+<p>The pacf is better suited to choose values for <span class="math notranslate nohighlight">\(p\)</span> since a purely autoregressive process of order <span class="math notranslate nohighlight">\(k\)</span> has
+<span class="math notranslate nohighlight">\(\mathrm{pacf}(\ell) = 0\)</span> for all <span class="math notranslate nohighlight">\(\ell &gt; k\)</span>.</p>
+<p>Next, we plot the PACF for our series.</p>
+</section>
+<section id="id6">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2f44e365baacc053ff566ccb3eb5fab9b39782cebd710715d22bb097cd58801e.png" src="_images/2f44e365baacc053ff566ccb3eb5fab9b39782cebd710715d22bb097cd58801e.png" />
+</div>
+</div>
+<p><strong>Question:</strong> Try to determine the order of the autoregressive part.</p>
+<ul class="simple">
+<li><p>The PACF plot falls below the significance threshold after lag <span class="math notranslate nohighlight">\(1\)</span> <span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(p=1\)</span></p></li>
+</ul>
+<p>We conclude that <span class="math notranslate nohighlight">\(\mathrm{SARIMA}(1,0,3)(1,1,0)_{7}\)</span> might be a good model for our time series.</p>
+</section>
+<section id="id7">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<p>Finally, we fit the model on our data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>SARIMAX Results</caption>
+<tr>
+  <th>Dep. Variable:</th>                <td>value</td>             <th>  No. Observations:  </th>    <td>215</td>   
+</tr>
+<tr>
+  <th>Model:</th>           <td>SARIMAX(1, 0, 3)x(1, 1, [], 7)</td> <th>  Log Likelihood     </th> <td>-1784.299</td>
+</tr>
+<tr>
+  <th>Date:</th>                   <td>Tue, 05 Mar 2024</td>        <th>  AIC                </th> <td>3580.597</td> 
+</tr>
+<tr>
+  <th>Time:</th>                       <td>09:36:26</td>            <th>  BIC                </th> <td>3600.622</td> 
+</tr>
+<tr>
+  <th>Sample:</th>                    <td>07-01-2014</td>           <th>  HQIC               </th> <td>3588.694</td> 
+</tr>
+<tr>
+  <th></th>                          <td>- 01-31-2015</td>          <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>               <td>opg</td>              <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+     <td></td>        <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>ar.L1</th>   <td>    0.3844</td> <td>    0.184</td> <td>    2.094</td> <td> 0.036</td> <td>    0.025</td> <td>    0.744</td>
+</tr>
+<tr>
+  <th>ma.L1</th>   <td>    0.3443</td> <td>    0.195</td> <td>    1.768</td> <td> 0.077</td> <td>   -0.037</td> <td>    0.726</td>
+</tr>
+<tr>
+  <th>ma.L2</th>   <td>    0.3175</td> <td>    0.144</td> <td>    2.202</td> <td> 0.028</td> <td>    0.035</td> <td>    0.600</td>
+</tr>
+<tr>
+  <th>ma.L3</th>   <td>    0.0983</td> <td>    0.102</td> <td>    0.960</td> <td> 0.337</td> <td>   -0.102</td> <td>    0.299</td>
+</tr>
+<tr>
+  <th>ar.S.L7</th> <td>   -0.2448</td> <td>    0.033</td> <td>   -7.353</td> <td> 0.000</td> <td>   -0.310</td> <td>   -0.180</td>
+</tr>
+<tr>
+  <th>sigma2</th>  <td> 1.549e+06</td> <td> 7.03e+04</td> <td>   22.039</td> <td> 0.000</td> <td> 1.41e+06</td> <td> 1.69e+06</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Ljung-Box (L1) (Q):</th>     <td>0.93</td> <th>  Jarque-Bera (JB):  </th> <td>533.67</td>
+</tr>
+<tr>
+  <th>Prob(Q):</th>                <td>0.33</td> <th>  Prob(JB):          </th>  <td>0.00</td> 
+</tr>
+<tr>
+  <th>Heteroskedasticity (H):</th> <td>2.52</td> <th>  Skew:              </th>  <td>-0.88</td>
+</tr>
+<tr>
+  <th>Prob(H) (two-sided):</th>    <td>0.00</td> <th>  Kurtosis:          </th>  <td>10.65</td>
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Covariance matrix calculated using the outer product of gradients (complex-step).</div></div>
+</div>
+</section>
+<section id="id8">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
+<p>We can use one step ahead prediction on our time series to perform anomaly detection.
+Statsmodels provides a confidence interval with the prediction based on the estimated variance of the error terms.
+We mark a point as anomaly if the true value falls outside the confidence interval of the prediction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;2014-07-14&#39;</span><span class="p">)</span>
+<span class="n">prediction_mean</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">predicted_mean</span>
+<span class="n">prediction_ci</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">prediction_mean</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;g--&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">prediction_ci</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">prediction_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">prediction_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="n">prediction_ci</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">prediction_mean</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">prediction_mean</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">14</span><span class="p">:])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+<span class="n">outlier</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">14</span><span class="p">:][</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">outlier</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">outlier</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/6x/yjqm1szs7f98bfmhnyrvk_hw0000gn/T/ipykernel_9774/883649573.py:8: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  outlier = df.iloc[14:][mask]
+</pre></div>
+</div>
+<img alt="_images/e0e7431c54a7649915d1f5d39ffbb37951a73c4a7cf1cf5cbf224d5cf3d0a03f.png" src="_images/e0e7431c54a7649915d1f5d39ffbb37951a73c4a7cf1cf5cbf224d5cf3d0a03f.png" />
+</div>
+</div>
+</section>
+<section id="id9">
+<h2>Fitting a SARIMA Model<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
+<p>We compare the list of known anomalies with our detection</p>
+<ul class="simple">
+<li><p>NYC Marathon - 2014-11-02</p></li>
+<li><p>Thanksgiving - 2014-11-27</p></li>
+<li><p>Christmas - 2014-12-25</p></li>
+<li><p>New Years - 2015-01-01</p></li>
+<li><p>Snow Blizzard - 2015-01-26</p></li>
+<li><p>Snow Blizzard - 2015-01-27</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outlier</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+    <tr>
+      <th>timestamp</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2014-11-27</th>
+      <td>10899.666667</td>
+    </tr>
+    <tr>
+      <th>2014-12-04</th>
+      <td>15795.895833</td>
+    </tr>
+    <tr>
+      <th>2014-12-25</th>
+      <td>7902.125000</td>
+    </tr>
+    <tr>
+      <th>2015-01-01</th>
+      <td>14383.479167</td>
+    </tr>
+    <tr>
+      <th>2015-01-02</th>
+      <td>12639.916667</td>
+    </tr>
+    <tr>
+      <th>2015-01-26</th>
+      <td>7818.979167</td>
+    </tr>
+    <tr>
+      <th>2015-01-27</th>
+      <td>4834.541667</td>
+    </tr>
+    <tr>
+      <th>2015-01-28</th>
+      <td>12947.562500</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Question:</strong> Compare our result and the known anomalies. Do you spot anything notable?</p>
+<img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;">
+<div class="md-slide title">Thank you for the attention, this concludes the section of A.D. for Time Series. </div>
+<!-- <div class="md-slide title">We will be happy to see you in another Transferlab training soon!</div> --></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-sarima-model">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partial-autocorrelation-function">Partial Autocorrelation Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Fitting a SARIMA Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Fitting a SARIMA Model</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By appliedAI TransferLab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,2374 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Extreme Value Theory and Anomaly Detection &#8212; Practical Anomaly Detection</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/configmacros"]}, "tex": {"packages": {"[+]": ["configmacros"]}, "macros": {"vect": ["{\\mathbf{\\boldsymbol{#1}} }", 1], "E": "{\\mathbb{E}}", "P": "{\\mathbb{P}}", "R": "{\\mathbb{R}}", "abs": ["{\\left| #1 \\right|}", 1], "simpl": ["{\\Delta^{#1} }", 1], "amax": "{\\text{argmax}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nb_06_extreme_value_theory_for_anomaly_detection';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Anomaly Detection on Time Series" href="nb_05_anomaly_detection_on_time_series.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/transferlab-logo.svg" class="logo__image only-light" alt="Practical Anomaly Detection - Home"/>
+    <script>document.write(`<img src="_static/transferlab-logo.svg" class="logo__image only-dark" alt="Practical Anomaly Detection - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    practical anomaly detection - Notebook Pages
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="nb_01_0_intro_anomaly_detection.html">Introduction to Anomaly Detection</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_01_1_intro_and_ad_taxonomy.html">Taxonomy of Anomaly Detection Approaches</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="nb_02_anomaly_detection_via_density_estimation.html">Anomaly Detection via Density Estimation</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_03_anomaly_detection_via_isolation.html">Anomaly Detection via Isolation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_04_anomaly_detection_via_reconstruction.html">Anomaly Detection via Reconstruction Error</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_05_anomaly_detection_on_time_series.html">Anomaly Detection on Time Series</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Extreme Value Theory and Anomaly Detection</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nb_06_extreme_value_theory_for_anomaly_detection.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Extreme Value Theory and Anomaly Detection</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Extreme Value Theory and Anomaly Detection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evt-in-a-nutshell">EVT in a Nutshell</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-significance-of-evt-theorems">Practical Significance of EVT Theorems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evt-in-action">EVT in Action</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-glance-at-the-tensorflow-probability-api">A glance at the tensorflow probability API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-playing-around-with-gev-parameters">Exercise 1: playing around with GEV parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-1">Solution Exercise 1:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-gev">Fitting the GEV</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1-mle-for-the-generalized-extreme-value-distribution">Exercise 2.1: MLE for the generalized extreme value distribution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q-q-plot">Q-Q Plot</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-of-exercise-2-1">Solution of exercise 2.1</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-2-1-finding-anomalies-from-the-gev">Solution exercise 2.1 - Finding anomalies from the GEV</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-uncertainty">Estimating the uncertainty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2-uncertainty-in-gev">Exercise 2.2: Uncertainty in GEV</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-2-2">Solution Exercise 2.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-gev-for-minima">Exercise 3: GEV for minima</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-of-exercise-3">Solution of exercise 3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-z-test">Comparison with Z-Test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-look-back-at-the-theory">A look back at the theory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-4-theoretical-bonus-outlining-the-proof-of-the-fisher-gnedenko-tripet-theorem">Exercise 4 (theoretical, bonus): outlining the proof of the Fisher-Gnedenko-Tripet theorem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-5-increase-the-block-size">Exercise 5: increase the block size</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-5">Solution exercise 5:</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#peaks-over-threshold-pot">Peaks over threshold (PoT)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-6-theoretical-bonus-deriving-the-second-theorem-of-evt">Exercise 6 (theoretical, bonus): deriving the second theorem of EVT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-7-using-the-gpd-for-anomaly-detection">Exercise 7: Using the GPD for anomaly detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-7">Solution Exercise 7:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusting-to-seasonality-and-trends">Adjusting to seasonality and trends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-about-evt-for-anomaly-detection">Confusion about EVT for anomaly detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evt-for-outlier-scores">EVT for outlier scores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-we-have-omitted">Things we have omitted</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-8">Exercise 8</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-of-exercise-8">Solution of exercise 8:</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p>Extreme Value Theory for Anomaly Detection
+<img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;"></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">tensorflow_probability</span> <span class="k">as</span> <span class="nn">tfp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">celluloid</span> <span class="kn">import</span> <span class="n">Camera</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="n">tfd</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">distributions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="extreme-value-theory-and-anomaly-detection">
+<h1>Extreme Value Theory and Anomaly Detection<a class="headerlink" href="#extreme-value-theory-and-anomaly-detection" title="Permalink to this heading">#</a></h1>
+<p>Extreme value theory (EVT) usually deals with tails of univariate probability distributions, i.e. with events that
+are rare because they are large.
+Anomaly detection deals with events that rare but not necessarily large. Therefore, the topic of anomaly detection is
+more general than EVT.</p>
+<p>Despite the smaller applicability of EVT techniques, they are still a valuable addition to the anomaly detectionist’s
+toolbox. In several situations, anomalies directly correspond to large deviations from some (possibly running) mean - e.g. for sensor data, intrusion attacks based on the number of calls and others.</p>
+<p>However, even for entirely different definitions of anomaly, most detection algorithms will produce a scalar outlier score for each datapoint.
+EVT can then be used as a probabilistic framework for analyzing the univariate distribution of outlier scores and help determine meaningful thresholds for separating anomalous from normal cases.</p>
+<section id="evt-in-a-nutshell">
+<h2>EVT in a Nutshell<a class="headerlink" href="#evt-in-a-nutshell" title="Permalink to this heading">#</a></h2>
+<p>There are two fundamental theorems of extreme value theory on which most results in that field are based. The first is concerned with the asymptotic distribution of block maxima of a sequence of i.i.d. random variables. The second one gives an expression for the distribution of excesses over a threshold.</p>
+<p>We will first state these theorems (in their standard formulation in the literature), then see how they can be applied to anomaly detection and after that highlight ideas of their proofs as well as some theoretical consequences.</p>
+<p>From now on let <span class="math notranslate nohighlight">\(X_1, X_2, ...\)</span> be a sequence of 1-dimensional i.i.d. random variables with cumulative distribution function <span class="math notranslate nohighlight">\(F\)</span>. Let <span class="math notranslate nohighlight">\(X\)</span> also be a r.v. with the same c.d.f.</p>
+<p>We define the <em>n-block maximum</em> as the random variable</p>
+<div class="math notranslate nohighlight">
+\[
+M_n := \max \{X_1, ..., X_n\}.
+\]</div>
+<p>Given a threshold <span class="math notranslate nohighlight">\(u\)</span>, <em>the excess over the threshold</em> is given by <span class="math notranslate nohighlight">\(X-u\)</span>.</p>
+<p>In EVT, we are typically interested in approximating <span class="math notranslate nohighlight">\(P(M_n&lt;z)\)</span> for large <span class="math notranslate nohighlight">\(n\)</span> and in approximating the distribution of excesses <span class="math notranslate nohighlight">\(P(X-u &lt; y \mid X &gt; u)\)</span> for large <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Fisher%E2%80%93Tippett%E2%80%93Gnedenko_theorem">Fisher-Tipett-Genedenko</a> theorem characterizes the possible limits of renormalized block maxima.</p>
+<p>If there exist sequences of real numbers <span class="math notranslate nohighlight">\(a_n&gt;0, b_n\)</span> such that the probability distributions
+$<span class="math notranslate nohighlight">\(
+P\left(\frac{M_n-b_n}{a_n}&lt;z \right)
+\)</span><span class="math notranslate nohighlight">\(
+converge to a _non-degenerate_ distribution \)</span>G(z)<span class="math notranslate nohighlight">\(, then \)</span>G(z)$ must be of the following form:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-b7da7bed-42a6-4657-81a5-5c57a1a489f1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-b7da7bed-42a6-4657-81a5-5c57a1a489f1" title="Permalink to this equation">#</a></span>\[\begin{equation}
+ P\left(\frac{M_n-b_n}{a_n}&lt;z \right) \xrightarrow[n\rightarrow \infty]{} G(z; \xi, \mu, \sigma) = \exp \left\{ -\left( 1 + \xi \left( \frac{z - \mu}{\sigma} \right) \right)^{- \frac{1}{\xi} } \right\} 
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\xi, \mu \in \mathbb{R}\)</span> and <span class="math notranslate nohighlight">\(\sigma &gt;0\)</span>. This function family is called the <em>Generalized Extreme Value distributions</em> (GEV).</p>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Pickands%E2%80%93Balkema%E2%80%93De_Haan_theorem">Pickands–Balkema–De Haan theorem</a> states that under the same conditions as above and for a threshold <span class="math notranslate nohighlight">\(u \in \mathbb{R}\)</span> going to infinity, the distribution of <em>excesses over the threshold <span class="math notranslate nohighlight">\(u\)</span></em> converges to a <em>Generalized Pareto Distribution</em> (GPD), i.e.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-35fe7491-3bc4-47fc-a6c3-1965ae0c62d6">
+<span class="eqno">(2)<a class="headerlink" href="#equation-35fe7491-3bc4-47fc-a6c3-1965ae0c62d6" title="Permalink to this equation">#</a></span>\[\begin{equation}
+P(X-u &lt; y \mid X &gt; u) \xrightarrow[u \rightarrow \infty]{} H(y; \xi, \tilde{\sigma})=1 - \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}} \ 
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(y&gt;0\)</span> and <span class="math notranslate nohighlight">\(1 + \frac{\xi \ y}{\tilde{\sigma}} &gt;0\)</span>. The parameter <span class="math notranslate nohighlight">\(\xi\)</span> takes the same value as for the GEV.</p>
+<p>We have highlighted the dependence of the limiting distributions on the parameters in both cases. In applications, these parameters will be estimated based on data.</p>
+</section>
+<section id="practical-significance-of-evt-theorems">
+<h2>Practical Significance of EVT Theorems<a class="headerlink" href="#practical-significance-of-evt-theorems" title="Permalink to this heading">#</a></h2>
+<p>Before we analyze the consequences of the above distributions in detail, let us discuss their practical significance. The distinctive feature of the GEV and GPD distributions is that they are of a very restricted form, belonging to a three and two parameter function family respectively. This <em>motivates</em> to model distributions of block maxima for finite but large <span class="math notranslate nohighlight">\(n\)</span> by the GEV distribution</p>
+<div class="math notranslate nohighlight">
+\[
+ P\left(\frac{M_n-b_n}{a_n}&lt;z \right) \approx G(z; \xi, \mu, \sigma) \Longleftrightarrow 
+ P\left( M_n &lt; z \right) \approx G(z; \xi, \mu\prime , \sigma\prime)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\prime=b_n+a_n \mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\prime=a_n \sigma\)</span>. Thus, fitting the coefficients <span class="math notranslate nohighlight">\(\xi, \mu\prime, \sigma\prime\)</span> to the observed values of <span class="math notranslate nohighlight">\(M_n\)</span>, e.g. by maximum likelihood estimation, also finds the “best” values of the renormalizing constants <span class="math notranslate nohighlight">\(a_n\)</span> and <span class="math notranslate nohighlight">\(b_n\)</span>.</p>
+<p>Similarly, fitting <span class="math notranslate nohighlight">\(\xi, \tilde{\sigma}\)</span> to observed excesses of a finite threshold <span class="math notranslate nohighlight">\(u\)</span> also finds the best renormalizing constants for the GPD.</p>
+<p>In the context of AD, modeling the distributions of <span class="math notranslate nohighlight">\(M_n\)</span> or <span class="math notranslate nohighlight">\(X-u\)</span> is useful for finding thresholds on outlier scores with probabilistic interpretations or for predicting the occurrence rates and sizes of anomalies.</p>
+<p>For example, given some complex outlier score based on sensor data of a factory process, we might be interested in the probability that this outlier score exceeds a certain threshold within a month. This could be achieved by fitting a GEV distribution to observed frequencies of monthly maxima of the score.</p>
+<p>The GPD can be used to directly estimate a cumulative univariate distribution <span class="math notranslate nohighlight">\(F(z)\)</span> for large enough <span class="math notranslate nohighlight">\(z\)</span>. Then one could use it to determine the anomaly threshold <span class="math notranslate nohighlight">\(z_{\text{th}}\)</span> by defining an anomalous upper quantile. E.g. solving <span class="math notranslate nohighlight">\(F(z_\text{th}) = 0.99\)</span> for <span class="math notranslate nohighlight">\(z_{\text{th}}\)</span> (where <span class="math notranslate nohighlight">\(F\)</span> was obtained by fitting the GPD to some outlier score) would declare approximately 1% of data points as anomalous. We will describe this in more detail below.</p>
+<section id="evt-in-action">
+<h3>EVT in Action<a class="headerlink" href="#evt-in-action" title="Permalink to this heading">#</a></h3>
+<p>Let us give a quick example for fitting a GEV on data and extracting insight from it. For that we will use the NYC taxi calls dataset - a collection of taxi calls per 30-minutes intervals that was collected for over a year.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span><span class="s1">&#39;nyc_taxi&#39;</span><span class="p">,</span><span class="s1">&#39;nyc_taxi.csv&#39;</span><span class="p">)</span>
+<span class="n">taxi_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">taxi_csv</span><span class="p">)</span>
+<span class="n">taxi_df</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">taxi_df</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])]</span>
+<span class="n">taxi_df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">taxi_df</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])]</span>
+<span class="n">taxi_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;n_calls&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">taxi_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_calls</th>
+      <th>time</th>
+      <th>date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>10844</td>
+      <td>00:00:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>8127</td>
+      <td>00:30:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6210</td>
+      <td>01:00:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4656</td>
+      <td>01:30:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3820</td>
+      <td>02:00:00</td>
+      <td>2014-07-01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Helper functions for normalizing data. In most cases it will be enough to use the normalize function</span>
+
+<span class="k">def</span> <span class="nf">normalize_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_series</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">normalized_data</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">normalized_data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_df</span><span class="p">(</span><span class="n">data_frame</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="n">normalized_data</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">normalized_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">data_frame</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">normalize_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">normalize_series</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">normalize_df</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported data type: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_df_normalized</span> <span class="o">=</span> <span class="n">taxi_df</span>
+<span class="n">taxi_df_normalized</span><span class="p">[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">taxi_df_normalized</span><span class="p">[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">])</span>
+<span class="n">taxi_df_normalized</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_calls</th>
+      <th>time</th>
+      <th>date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-0.618745</td>
+      <td>00:00:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-1.010291</td>
+      <td>00:30:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-1.286549</td>
+      <td>01:00:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-1.510496</td>
+      <td>01:30:00</td>
+      <td>2014-07-01</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-1.630971</td>
+      <td>02:00:00</td>
+      <td>2014-07-01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We can define a trainable GEV with tensorflow probability as following</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">trainable_xi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">xi</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xi</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">trainable_xi</span><span class="p">:</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xi&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tfd</span><span class="o">.</span><span class="n">GeneralizedExtremeValue</span><span class="p">(</span>
+        <span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mu&#39;</span><span class="p">),</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sigma&#39;</span><span class="p">),</span>
+        <span class="n">concentration</span><span class="o">=</span><span class="n">xi</span><span class="p">,</span>
+     <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="a-glance-at-the-tensorflow-probability-api">
+<h2>A glance at the tensorflow probability API<a class="headerlink" href="#a-glance-at-the-tensorflow-probability-api" title="Permalink to this heading">#</a></h2>
+<p>For solving the exercises in this notebook you will need to use basic properties of tensorflow probability distributions. They have a very intuitive and convenient API - you get access to the probability density, cdf, quantile function and so on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_gev</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probability density: </span><span class="si">{</span><span class="n">sample_gev</span><span class="o">.</span><span class="n">prob</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cdf: </span><span class="si">{</span><span class="n">sample_gev</span><span class="o">.</span><span class="n">cdf</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Quantile: </span><span class="si">{</span><span class="n">sample_gev</span><span class="o">.</span><span class="n">quantile</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trainable vars:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">sample_gev</span><span class="o">.</span><span class="n">trainable_variables</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Probability density: [0.18997937 0.30868637]
+Cdf: [0.64118039 0.46947339]
+Quantile: [0.40224482 4.16156525]
+Trainable vars:
+ (&lt;tf.Variable &#39;xi:0&#39; shape=() dtype=float64, numpy=0.5&gt;, &lt;tf.Variable &#39;mu:0&#39; shape=() dtype=float64, numpy=0.0&gt;, &lt;tf.Variable &#39;sigma:0&#39; shape=() dtype=float64, numpy=1.0&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-1-playing-around-with-gev-parameters">
+<h2>Exercise 1: playing around with GEV parameters<a class="headerlink" href="#exercise-1-playing-around-with-gev-parameters" title="Permalink to this heading">#</a></h2>
+<p>Plot the GEV probability distribution for different values of <span class="math notranslate nohighlight">\(\xi, \mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span>. How do they differ qualitatively?</p>
+<p>What are the domains of definition of <span class="math notranslate nohighlight">\(z\)</span> in the above analytic expression for <span class="math notranslate nohighlight">\(G(z)\)</span>? What values should the c.d.f. <span class="math notranslate nohighlight">\(G(z)\)</span> take outside these domains and how does this affect fitting  <span class="math notranslate nohighlight">\(\xi, \mu, \sigma\)</span> from data by maximum likelihood estimation?</p>
+<p>What expression for the GEV do we get in the limit <span class="math notranslate nohighlight">\(\xi \longrightarrow 0\)</span>?</p>
+<p>The three qualitatively different shapes of the GEV have their own names. For <span class="math notranslate nohighlight">\(\xi &gt;0\)</span> we get the <a class="reference external" href="https://en.wikipedia.org/wiki/Fr%C3%A9chet_distribution">Fréchet Distribution</a>, for <span class="math notranslate nohighlight">\(\xi&lt;0\)</span> the reverse <a class="reference external" href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull distribution</a> and for <span class="math notranslate nohighlight">\(\xi=0\)</span> the <a class="reference external" href="https://en.wikipedia.org/wiki/Gumbel_distribution">Gumbel distribution</a>. Note that using the Gumbel distribution in tensorflow probability is not exactly the same as using GEV with <span class="math notranslate nohighlight">\(\xi=0\)</span> due to rounding errors. Try it out!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gev</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">pdf</span> <span class="o">=</span> <span class="n">gev</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">pdf</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2d0300de90ff407218ca7eb2bf524a3b7cbc1585958b3f066e0b7b4d3aa0165e.png" src="_images/2d0300de90ff407218ca7eb2bf524a3b7cbc1585958b3f066e0b7b4d3aa0165e.png" />
+</div>
+</div>
+</section>
+<section id="solution-exercise-1">
+<h2>Solution Exercise 1:<a class="headerlink" href="#solution-exercise-1" title="Permalink to this heading">#</a></h2>
+<p>The cdf of the GEV distribution is well defined when <span class="math notranslate nohighlight">\(1 + \xi \left( \frac{z - \mu}{\sigma} \right) &gt; 0\)</span>. This is equivalent to</p>
+<div class="math notranslate nohighlight">
+\[
+ z &gt; \mu - \frac{\sigma}{\xi} \qquad \text{if $\xi&gt;0$}
+\]</div>
+<p>and
+$<span class="math notranslate nohighlight">\(
+ z &lt; \mu - \frac{|\sigma|}{\xi} \qquad \text{if \)</span>\xi&lt;0<span class="math notranslate nohighlight">\(}.
+\)</span>$</p>
+<p>Thus, for <span class="math notranslate nohighlight">\(\xi&gt;0\)</span>, the distribution has a left boundary, the probability of points lying to the left of it is zero. The value of the cdf there is zero.</p>
+<p>For <span class="math notranslate nohighlight">\(\xi&lt;0\)</span> there is a right boundary, the probability of points lying to the right of it is zero and the value of the cdf is 1.</p>
+<p>As <span class="math notranslate nohighlight">\(\xi\)</span> moves to zero from below, the right boundary is pushed to infinity. Similarly, if it approaches zero from above, the left boundary is pushed to negative infinity. At exactly <span class="math notranslate nohighlight">\(\xi=0\)</span>, the GEV becomes the Gumbel distribution which is well defined for all <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<p>We can group the numbers of calls according to the dates, thereby obtaining daily maxima and minima of calls. One way of detecting anomalies in the NYC taxi data set is by fitting a GEV to the distribution of these daily maxima. Here a histogram plot of the (normalized) maxima:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daily_grouped</span> <span class="o">=</span> <span class="n">taxi_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+<span class="n">daily_grouped</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">daily_grouped</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">daily_grouped</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">]</span>
+<span class="n">daily_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>max</th>
+      <th>min</th>
+      <th>sum</th>
+      <th>diff</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2014-07-01</th>
+      <td>1.795669</td>
+      <td>-1.884028</td>
+      <td>2.790492</td>
+      <td>3.679696</td>
+    </tr>
+    <tr>
+      <th>2014-07-02</th>
+      <td>1.691045</td>
+      <td>-1.823358</td>
+      <td>1.014052</td>
+      <td>3.514403</td>
+    </tr>
+    <tr>
+      <th>2014-07-03</th>
+      <td>2.139658</td>
+      <td>-1.756635</td>
+      <td>-2.372237</td>
+      <td>3.896293</td>
+    </tr>
+    <tr>
+      <th>2014-07-04</th>
+      <td>0.481677</td>
+      <td>-1.709367</td>
+      <td>-25.080606</td>
+      <td>2.191043</td>
+    </tr>
+    <tr>
+      <th>2014-07-05</th>
+      <td>0.438732</td>
+      <td>-1.819178</td>
+      <td>-24.661968</td>
+      <td>2.257910</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daily_grouped_normalized</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">daily_grouped</span><span class="p">)</span>
+<span class="n">daily_grouped_normalized</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>max</th>
+      <th>min</th>
+      <th>sum</th>
+      <th>diff</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2014-07-01</th>
+      <td>0.960450</td>
+      <td>-0.714018</td>
+      <td>0.208709</td>
+      <td>1.261851</td>
+    </tr>
+    <tr>
+      <th>2014-07-02</th>
+      <td>0.718429</td>
+      <td>-0.155274</td>
+      <td>0.075844</td>
+      <td>0.838539</td>
+    </tr>
+    <tr>
+      <th>2014-07-03</th>
+      <td>1.756184</td>
+      <td>0.459211</td>
+      <td>-0.177427</td>
+      <td>1.816547</td>
+    </tr>
+    <tr>
+      <th>2014-07-04</th>
+      <td>-2.079144</td>
+      <td>0.894527</td>
+      <td>-1.875853</td>
+      <td>-2.550535</td>
+    </tr>
+    <tr>
+      <th>2014-07-05</th>
+      <td>-2.178485</td>
+      <td>-0.116786</td>
+      <td>-1.844541</td>
+      <td>-2.379291</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Daily maxima of n_calls/(30 minutes)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/15dd578a5dbfa699baeaaec94e9435423e1c2d084a93cd8bda72ffe3ff941af9.png" src="_images/15dd578a5dbfa699baeaaec94e9435423e1c2d084a93cd8bda72ffe3ff941af9.png" />
+</div>
+</div>
+<p><strong>Q</strong>: Can you already spot the obvious anomalies? What caused them?</p>
+<p><strong>A</strong>: See below</p>
+<p><strong>Q</strong>: Which of the three qualitatively different shapes would make “physical” sense for the taxi calls data?</p>
+<p><strong>A</strong>: The Weibull shape - thus we expect <span class="math notranslate nohighlight">\(\xi&lt;0\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">maxima</span> <span class="o">=</span> <span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">]</span>
+<span class="n">maxima</span><span class="p">[(</span><span class="n">maxima</span> <span class="o">&gt;</span> <span class="mf">1.8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">maxima</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>date
+2014-09-06    1.885529
+2014-11-02    4.827113
+2014-12-25   -4.166655
+2015-01-01    1.839858
+2015-01-27   -4.010309
+Name: max, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>02/11 - NY marathon</p></li>
+<li><p>25/12 - Christmas</p></li>
+<li><p>27/01 - Snowstorm</p></li>
+<li><p>01/01 - New Years</p></li>
+<li><p>06/09 - Columbus day (big parade)</p></li>
+</ul>
+</section>
+<section id="fitting-the-gev">
+<h2>Fitting the GEV<a class="headerlink" href="#fitting-the-gev" title="Permalink to this heading">#</a></h2>
+<p>Now let us infer the parameters of the GEV from the data using maximum likelihood estimation. We will make gradient descent on the negative log likelihood of the GEV. Here a very simple training loop for a suitable initial choice for the shape parameter <span class="math notranslate nohighlight">\(\xi\)</span> (it is called “concentration”)  written out in detail:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we are going to be a bit fancy and show an animation of the function as it is being fitted</span>
+
+<span class="n">daily_max</span> <span class="o">=</span> <span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">2e-4</span><span class="p">)</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">sample_gev</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="o">=-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">trainable_xi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">camera</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">sample_gev</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">daily_max</span><span class="p">))</span>
+    <span class="n">gradients</span> <span class="o">=</span> <span class="n">tape</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">sample_gev</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gradients</span><span class="p">,</span> <span class="n">sample_gev</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">))</span>
+    <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+    
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">daily_max</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">sample_gev</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step</span><span class="si">=}</span><span class="s2">, Loss=</span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">snap</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Negative Log Likelihood&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;gradient steps&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<img alt="_images/61ee4a0612ff6c68cc0467fb54dc3c9abb1ec1a6cf77039e58e53b40bda3ead4.png" src="_images/61ee4a0612ff6c68cc0467fb54dc3c9abb1ec1a6cf77039e58e53b40bda3ead4.png" />
+</div>
+</div>
+<p>Seems like after 100 steps we have already converged. Let us have a quick look at the result</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bin_positions</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">daily_max</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bin_positions</span><span class="p">,</span> <span class="n">sample_gev</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">bin_positions</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6908378008049b76b0e21752876306533b095562a488826db944a7d967d61d6d.png" src="_images/6908378008049b76b0e21752876306533b095562a488826db944a7d967d61d6d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_gev</span><span class="o">.</span><span class="n">trainable_variables</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;tf.Variable &#39;xi:0&#39; shape=() dtype=float64, numpy=-0.19605527604088643&gt;,
+ &lt;tf.Variable &#39;mu:0&#39; shape=() dtype=float64, numpy=-0.3901123713168851&gt;,
+ &lt;tf.Variable &#39;sigma:0&#39; shape=() dtype=float64, numpy=1.1369220029896918&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Well, we probably can do better…</p>
+</section>
+<section id="exercise-2-1-mle-for-the-generalized-extreme-value-distribution">
+<h2>Exercise 2.1: MLE for the generalized extreme value distribution<a class="headerlink" href="#exercise-2-1-mle-for-the-generalized-extreme-value-distribution" title="Permalink to this heading">#</a></h2>
+<p>Find a better fit using:</p>
+<ol class="arabic simple">
+<li><p>Removing the obvious anomalies</p></li>
+<li><p>Profiling in the shape parameter <span class="math notranslate nohighlight">\(\xi\)</span> or using different initial values/learning rates for inferring <span class="math notranslate nohighlight">\(\xi\)</span></p></li>
+</ol>
+<p>Feel free to improve the code by defining new functions and so on!</p>
+<p>Evaluate the quality of your fit by visual inspection of a histogram and a Q-Q plot (more on that below).</p>
+<p>You can also use other statistical tools that you are familiar with.</p>
+<p>Use the fitted model to find “anomalies” for taxi calls corresponding to probabilities of less than <span class="math notranslate nohighlight">\(0.01\)</span>.</p>
+<section id="q-q-plot">
+<h3>Q-Q Plot<a class="headerlink" href="#q-q-plot" title="Permalink to this heading">#</a></h3>
+<p>A Q-Q plot is useful for visually comparing two distributions, or comparing a distribution with a dataset. We are interested in the latter. In a Q-Q plot the quantiles of one distribution are plotted against the quantiles of another. For a dataset, the natural choice of quantiles is given simply by the sorted data itself. The data points then roughly correspond to the <span class="math notranslate nohighlight">\(\frac{k}{n+1}\)</span>th percentiles, where  <span class="math notranslate nohighlight">\(n\)</span> is the number of samples and <span class="math notranslate nohighlight">\(k=1,...,n\)</span> (these are often called <em>plotting positions</em> and other choices for them are possible). The corresponding <em>theoretical quantiles</em> from some specified c.d.f. <span class="math notranslate nohighlight">\(F\)</span> are then given by <span class="math notranslate nohighlight">\(q_k \ \text{s.t} \ F(q_k) = \frac{k}{n+1}\)</span> (in our applications, <span class="math notranslate nohighlight">\(F\)</span> will generally be injective and the <span class="math notranslate nohighlight">\(q_k\)</span> uniquely defined).</p>
+<p>If the distribution is a good fit of the data, the resulting line will be close to the diagonal. Below we ask you to complete a simple implementation of the Q-Q plot for tensorflow-like distributions</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ArrayLike</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]</span>
+
+
+<span class="k">class</span> <span class="nc">TFDistributionProtocol</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">trainable_variables</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">]</span>
+        
+    <span class="k">def</span> <span class="nf">quantile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span><span class="p">:</span> <span class="o">...</span>    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qqplot</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="n">TFDistributionProtocol</span><span class="p">):</span>
+    <span class="n">num_observations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">observed_quantiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">plotting_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_observations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_observations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">theoretical_quantiles</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">plotting_positions</span><span class="p">)</span>
+    
+    <span class="n">plot_origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">theoretical_quantiles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">observed_quantiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theoretical_quantiles</span><span class="p">,</span> <span class="n">observed_quantiles</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theoretical_quantiles</span><span class="p">,</span> <span class="n">theoretical_quantiles</span><span class="p">)</span> <span class="c1"># adding a diagonal for visual comparison</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Theoretical quantiles of </span><span class="si">{</span><span class="n">dist</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Observed quantiles&quot;</span><span class="p">)</span>
+    
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="solution-of-exercise-2-1">
+<h2>Solution of exercise 2.1<a class="headerlink" href="#solution-of-exercise-2-1" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># setting up functions for normal and profile likelihood fit</span>
+
+<span class="k">def</span> <span class="nf">fit_dist</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="n">TFDistributionProtocol</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> 
+             <span class="n">plot_losses</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_animation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">HTML</span><span class="p">]]:</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    <span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">if</span> <span class="n">return_animation</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">camera</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>    
+
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">numpy</span><span class="p">()):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encountered nan after </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2"> steps&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">tape</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gradients</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">))</span>
+        <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">return_animation</span><span class="p">:</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">pdf</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step</span><span class="si">=}</span><span class="s2">, Loss=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+            <span class="n">camera</span><span class="o">.</span><span class="n">snap</span><span class="p">()</span>
+    
+
+    <span class="k">if</span> <span class="n">plot_losses</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Negative Log Likelihood&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;gradient steps&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">losses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">return_animation</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">,</span> <span class="n">HTML</span><span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">animate</span><span class="p">()</span><span class="o">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span> <span class="nf">profile_fit_dist</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">dist_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">TFDistributionProtocol</span><span class="p">],</span> <span class="n">xi_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> 
+                     <span class="n">num_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">TFDistributionProtocol</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fits the distribution to data and returns the final loss. If return_animation=True, returns the tuple</span>
+<span class="sd">    (final_loss, animation)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">minimal_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">infty</span>
+    <span class="n">optimal_dist</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">xi_values</span><span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">dist_factory</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">fit_dist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">plot_losses</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">loss</span> <span class="o">&lt;</span> <span class="n">minimal_loss</span><span class="p">:</span>
+            <span class="n">minimal_loss</span> <span class="o">=</span> <span class="n">loss</span>
+            <span class="n">optimal_dist</span> <span class="o">=</span> <span class="n">dist</span>
+    <span class="k">if</span> <span class="n">optimal_dist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find optimal dist, probably due to divergences during fit. &quot;</span>  
+                           <span class="s2">&quot;Try to find a better choice for xi_values&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">minimal_loss</span><span class="p">,</span> <span class="n">optimal_dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># removing obvious anomalies</span>
+<span class="n">daily_max_without_anomalies</span> <span class="o">=</span> <span class="n">daily_max</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span> <span class="n">daily_max</span> <span class="o">&lt;</span> <span class="mf">1.8</span><span class="p">,</span> <span class="n">daily_max</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Daily maxima without anomalies&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1029132819d1da0d47ce4e31934711f97389693646f7caaa94917057a04437ae.png" src="_images/1029132819d1da0d47ce4e31934711f97389693646f7caaa94917057a04437ae.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example with profile likelihood</span>
+
+<span class="n">xi_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">dist_factory</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xi</span><span class="p">:</span> <span class="n">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">trainable_xi</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">min_loss</span><span class="p">,</span> <span class="n">optimal_gev</span> <span class="o">=</span> <span class="n">profile_fit_dist</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">dist_factory</span><span class="p">,</span> <span class="n">xi_values</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minimal loss: </span><span class="si">{</span><span class="n">min_loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal xi: </span><span class="si">{</span><span class="n">optimal_gev</span><span class="o">.</span><span class="n">concentration</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">optimal_gev</span><span class="o">.</span><span class="n">trainable_variables</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Minimal loss: 252.73708563392216
+Optimal xi: -0.44482758620689655
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;tf.Variable &#39;mu:0&#39; shape=() dtype=float64, numpy=-0.21253119412529123&gt;,
+ &lt;tf.Variable &#39;sigma:0&#39; shape=() dtype=float64, numpy=0.896378037612195&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bin_positions</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bin_positions</span><span class="p">,</span> <span class="n">optimal_gev</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">bin_positions</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Result from profile likelihood&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/30fe144184dd92b3678755a7d191e8aab32fabf9ef72fbe551f664f9c4cf2f00.png" src="_images/30fe144184dd92b3678755a7d191e8aab32fabf9ef72fbe551f664f9c4cf2f00.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Solving with gradient descent on xi</span>
+<span class="n">daily_max_gev</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="o">=-</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">final_loss</span> <span class="o">=</span> <span class="n">fit_dist</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">daily_max_gev</span><span class="p">,</span> <span class="n">return_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<img alt="_images/bf53d7def6cec42ddcf484dc7ab5cc6188ceaedde6bec6828be910e9ccb59d7b.png" src="_images/bf53d7def6cec42ddcf484dc7ab5cc6188ceaedde6bec6828be910e9ccb59d7b.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here the values found by fitting</span>
+<span class="n">daily_max_gev</span><span class="o">.</span><span class="n">trainable_variables</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;tf.Variable &#39;xi:0&#39; shape=() dtype=float64, numpy=-0.4490658772874973&gt;,
+ &lt;tf.Variable &#39;mu:0&#39; shape=() dtype=float64, numpy=-0.2153160679049942&gt;,
+ &lt;tf.Variable &#39;sigma:0&#39; shape=() dtype=float64, numpy=0.905020869171821&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># and here the qqplot</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">daily_max_gev</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3def6bdd77a03c85dc711d7eebb308e64b9303614f871f6d1dab086bf40a117f.png" src="_images/3def6bdd77a03c85dc711d7eebb308e64b9303614f871f6d1dab086bf40a117f.png" />
+</div>
+</div>
+<section id="solution-exercise-2-1-finding-anomalies-from-the-gev">
+<h3>Solution exercise 2.1 - Finding anomalies from the GEV<a class="headerlink" href="#solution-exercise-2-1-finding-anomalies-from-the-gev" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#The fit looks quite good, apart from the lower region, which we are not really interested in. </span>
+<span class="c1">#Let us find the anomalies corresponding to the upper 1% quantile</span>
+<span class="n">upper_percentile</span> <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">upper_quantile</span> <span class="o">=</span> <span class="n">daily_max_gev</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">upper_percentile</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">upper_quantile</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.544639556561257
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># and here the anomalies above this threshold</span>
+<span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">][</span><span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">upper_quantile</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>date
+2014-07-03    1.756184
+2014-09-06    1.885529
+2014-11-02    4.827113
+2015-01-01    1.839858
+Name: max, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>In addition to the obvious anomalies found above, we caught the independence day (one day before it). We also have the probabilistic interpretation that for 99% of the days the maximal amount of calls per 30 minutes will not exceed the threshold found above (it should be rescaled back to the original value for this statement to hold).</p>
+</section>
+</section>
+<section id="estimating-the-uncertainty">
+<h2>Estimating the uncertainty<a class="headerlink" href="#estimating-the-uncertainty" title="Permalink to this heading">#</a></h2>
+<p>One benefit of the probabilistic approach is that we get confidence intervals almost for free. These can be used to estimate the robustness of our analysis (e.g. the determination of anomalies and the quality of the fit).</p>
+<p>Since we fitted our functions using MLE, which is known to be approximately normal, we get uncertainty estimates from the second derivatives of the loss function. Fortunately, tensorflow makes this extremely easy for us.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">observed_fisher_information</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="n">TFDistributionProtocol</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">t2</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">t1</span><span class="p">:</span>
+            <span class="n">nll</span> <span class="o">=</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="c1"># conversion needed b/c trainable_vars is a tuple, so gradients and jacobians are tuples too</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span>  
+            <span class="n">t1</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">nll</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mle_std_deviations</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">dist</span><span class="p">:</span> <span class="n">TFDistributionProtocol</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="n">observed_information_matrix</span> <span class="o">=</span> <span class="n">observed_fisher_information</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+    <span class="n">mle_covariance_matrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">observed_information_matrix</span><span class="p">)</span>
+    <span class="n">variances</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">tensor_diag_part</span><span class="p">(</span><span class="n">mle_covariance_matrix</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variances</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-2-uncertainty-in-gev">
+<h2>Exercise 2.2: Uncertainty in GEV<a class="headerlink" href="#exercise-2-2-uncertainty-in-gev" title="Permalink to this heading">#</a></h2>
+<p>Using the above functions, include error bars into the Q-Q plots of the maximum likelihood estimates of the GEV distribution found above.</p>
+</section>
+<section id="solution-exercise-2-2">
+<h2>Solution Exercise 2.2<a class="headerlink" href="#solution-exercise-2-2" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># finding the stddevs and adding/substracting them from the values found from fitting</span>
+<span class="n">std_devs</span> <span class="o">=</span> <span class="n">mle_std_deviations</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">daily_max_gev</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found std_devs: </span><span class="si">{</span><span class="n">std_devs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">coeff_fitted</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">daily_max_gev</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+<span class="n">coeff_upper</span> <span class="o">=</span> <span class="n">coeff_fitted</span> <span class="o">+</span> <span class="n">std_devs</span>
+<span class="n">coeff_lower</span> <span class="o">=</span> <span class="n">coeff_fitted</span> <span class="o">-</span> <span class="n">std_devs</span>
+
+<span class="c1"># creating GEVs corresponding to the boundaries of the confidence intervals found above</span>
+<span class="n">gev_upper</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="o">*</span><span class="n">coeff_upper</span><span class="p">)</span>
+<span class="n">gev_lower</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="o">*</span><span class="n">coeff_lower</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found std_devs: [0.02618123 0.06607897 0.04556484]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The qqplots for the original GEV and the GEVs at the boundaries</span>
+
+<span class="n">qqplot</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">daily_max_gev</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">gev_upper</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">gev_lower</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/babaa07d3c2a634e8cea35ef0c9c50e94be54020fd10c93772ae8f3972e42994.png" src="_images/babaa07d3c2a634e8cea35ef0c9c50e94be54020fd10c93772ae8f3972e42994.png" />
+</div>
+</div>
+</section>
+<section id="exercise-3-gev-for-minima">
+<h2>Exercise 3: GEV for minima<a class="headerlink" href="#exercise-3-gev-for-minima" title="Permalink to this heading">#</a></h2>
+<p>Now let us repeat the same analysis fitting the distribution of the daily minima using the same strategy. Since minima for a univariate random variable <span class="math notranslate nohighlight">\(X\)</span> correspond to maxima of <span class="math notranslate nohighlight">\(-X\)</span>, all we have to do is to fit a GEV to the minima multiplied by -1.</p>
+</section>
+<section id="solution-of-exercise-3">
+<h2>Solution of exercise 3<a class="headerlink" href="#solution-of-exercise-3" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neg_minima_series</span> <span class="o">=</span> <span class="o">-</span><span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">]</span>
+<span class="n">neg_daily_min</span> <span class="o">=</span> <span class="n">neg_minima_series</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">neg_daily_min</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Daily minima * (-1)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c39da68496e1b9672277f6652267da9c168eea00a53effbced0718229665d6a9.png" src="_images/c39da68496e1b9672277f6652267da9c168eea00a53effbced0718229665d6a9.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># identifying obvious anomalies</span>
+<span class="n">neg_minima_series</span><span class="p">[(</span><span class="n">neg_minima_series</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">neg_minima_series</span><span class="o">&lt;-</span><span class="mi">2</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>date
+2014-11-01   -4.168684
+2014-11-02   -2.561467
+2015-01-01   -2.683568
+2015-01-26    3.202483
+2015-01-27    3.442703
+Name: min, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># - 01/01 - New Year</span>
+<span class="c1"># - 01-02/11 - Marathon</span>
+<span class="c1"># - 26-27/01 - Snowstorm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neg_minima_without_anomalies</span> <span class="o">=</span> <span class="n">neg_daily_min</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">neg_daily_min</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">,</span> <span class="n">neg_daily_min</span><span class="o">&gt;-</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">neg_minima_without_anomalies</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Daily minima * (-1) without obvious anomalies&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e495c38996cd35772ae7a5118b445f2701c0b077b14e85941a03fc10ed13e664.png" src="_images/e495c38996cd35772ae7a5118b445f2701c0b077b14e85941a03fc10ed13e664.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daily_min_gev</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">final_loss</span> <span class="o">=</span> <span class="n">fit_dist</span><span class="p">(</span><span class="n">neg_minima_without_anomalies</span><span class="p">,</span> <span class="n">daily_min_gev</span><span class="p">,</span> <span class="n">return_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<img alt="_images/f0dae086e85418a9b6c0f9bd566be89834bbd972317e9682b9a66591eb19f0d7.png" src="_images/f0dae086e85418a9b6c0f9bd566be89834bbd972317e9682b9a66591eb19f0d7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qqplot</span><span class="p">(</span><span class="n">neg_minima_without_anomalies</span><span class="p">,</span> <span class="n">daily_min_gev</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ebf8ed8762fc728e0823c21bed80b5ede04fee22bd0063888398ee37412f00db.png" src="_images/ebf8ed8762fc728e0823c21bed80b5ede04fee22bd0063888398ee37412f00db.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit looks good in the region we are interested in, let us find the 1% quantile and the corresponding anomalies</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">upper_quantile</span> <span class="o">=</span> <span class="n">daily_min_gev</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.99</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">upper_quantile</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.5803475989870672
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neg_minima_series</span><span class="p">[</span><span class="n">neg_minima_series</span><span class="o">&gt;</span><span class="n">upper_quantile</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>date
+2015-01-26    3.202483
+2015-01-27    3.442703
+2015-01-28    1.755855
+Name: min, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only one non-obvious anomaly is found in the upper quantile, it is cause by the snowstorm responsible for the obvious anomalies we have seen above.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparison-with-z-test">
+<h2>Comparison with Z-Test<a class="headerlink" href="#comparison-with-z-test" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daily_means</span> <span class="o">=</span> <span class="n">daily_grouped_normalized</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">daily_means</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=-</span><span class="mf">2.</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3b9f87a0448c41778deb89242ebd157ebf2ff33faadd7531ba879dbf32e5228a.png" src="_images/3b9f87a0448c41778deb89242ebd157ebf2ff33faadd7531ba879dbf32e5228a.png" />
+</div>
+</div>
+<p>The big question here is: where to put the threshold? Clearly the assumption of a Gaussian distribution underlying the sum of daily calls is incorrect - the distribution seems skewed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">daily_means</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/de31be9c068bc3a21c2ebf609d7b65e159ecdc89af90b538c5c3b11182f9a974.png" src="_images/de31be9c068bc3a21c2ebf609d7b65e159ecdc89af90b538c5c3b11182f9a974.png" />
+</div>
+</div>
+<p>We can detect some anomalies with the Z-test, of course, but the probabilistic interpretation is going to be flawed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daily_means</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">daily_means</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>date
+2014-11-01    2.802000
+2014-11-27   -2.192533
+2014-12-25   -3.743349
+2014-12-26   -2.452098
+2015-01-26   -3.786365
+2015-01-27   -5.330402
+Name: sum, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-look-back-at-the-theory">
+<h2>A look back at the theory<a class="headerlink" href="#a-look-back-at-the-theory" title="Permalink to this heading">#</a></h2>
+<p>So, what have we really done and why does it make sense to use the GEV for such problems? What kind of guarantees does the Fisher-Tipett-Gnedenko theorem give us about the quality of the fit?</p>
+<p>Well, the truth is, not too many. First notice the following exact equality:</p>
+<div class="math notranslate nohighlight">
+\[
+P(M_n &lt; z) = P(X_1&lt; z \text{ and } X_2 &lt; z ... \text{ and  } X_n &lt; z) = F^n(z)
+\]</div>
+<p>So, if we know the cumulative distribution, there is no need to resort to the GEV. Typically, of course, we do not know it. The above equality implies:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\lim P(M_n &lt; z) =     
+    \begin{cases}
+      0 &amp; \text{if}\ F(z) &lt; 1 \\
+      1 &amp; \text{otherwise}
+    \end{cases}
+\end{split}\]</div>
+<p>We actually always know the exact limit of the distribution of the block-maxima! It is degenerate (either a step function of identical zero). In fact, this degenerate distribution can be seen as a limit of the GEV. It would correspond to normalizing constants <span class="math notranslate nohighlight">\(a_n=1, \ b_n=0\)</span>.</p>
+<p>While this observation is very simple and the difference between the cdf of block maxima <span class="math notranslate nohighlight">\(P(M_n &lt; z)\)</span> and its degenerate limit does decrease as <span class="math notranslate nohighlight">\(n\)</span> increases, this limiting distribution is unexpressive and fitting it to data does not provide probabilistic insight.</p>
+<p><strong>Q</strong>: How many parameters does the exact limit of <span class="math notranslate nohighlight">\(F^n\)</span> have? What would we get if we fit it to data?</p>
+<p><strong>A</strong>:</p>
+<p>Introducing the normalizing constants <span class="math notranslate nohighlight">\(a_n\)</span> and <span class="math notranslate nohighlight">\(b_n\)</span> <em>might</em> allow the distribution of renormalized block maxima to converge to something non-trivial. It also might not.</p>
+<p>In applications we usually care about modeling <span class="math notranslate nohighlight">\(M_n\)</span> for a <em>fixed <span class="math notranslate nohighlight">\(n_0\)</span></em> (or maybe for a few selected <span class="math notranslate nohighlight">\(n_i\)</span>). An arbitrary series of <span class="math notranslate nohighlight">\(a_n\)</span> and <span class="math notranslate nohighlight">\(b_n\)</span> that at some point helps convergence does not directly address our needs. In fact, this is also not what we do - by fitting the GEV parameters to data for our selected <span class="math notranslate nohighlight">\(n_0\)</span> we automatically find the <em>best</em> <span class="math notranslate nohighlight">\(a_{n_0}\)</span> and <span class="math notranslate nohighlight">\(b_{n_0}\)</span> that minimize the difference between <span class="math notranslate nohighlight">\(F^{n_0}(z)\)</span> and <span class="math notranslate nohighlight">\(G(z)\)</span>.</p>
+<p>Clearly <span class="math notranslate nohighlight">\(G(z)\)</span> is much more expressive than the degenerate exact limit and could potentially provide a good fit.</p>
+<p>So, the convergence that we really care about is to answer the question:</p>
+<p>How well do the best fits of <span class="math notranslate nohighlight">\(G(z)\)</span> for fixed <span class="math notranslate nohighlight">\(n\)</span> - let us call them <span class="math notranslate nohighlight">\(G_n(z)\)</span> - approximate the distributions <span class="math notranslate nohighlight">\(F^n(z)\)</span> as <span class="math notranslate nohighlight">\(n\)</span> increases? One could e.g. be interested in the infinity norm</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta_n := \sup_z | F^n(z) - G_n(z) |
+\]</div>
+<p>This is not the same as asking how well <span class="math notranslate nohighlight">\(G(z)\)</span> approximates some rescaled variant of <span class="math notranslate nohighlight">\(F^n(z)\)</span> with <span class="math notranslate nohighlight">\(n\)</span>-dependent normalization constants! That would be</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\Delta}_n(a_n, b_n) := \sup_z |F^n(a_n z + b_n) - G(z) |
+\]</div>
+<p>In the latter question, the choice of normalization constants matters, in the former it does not - they are implicitly determined by the best fit for each <span class="math notranslate nohighlight">\(n\)</span>. Since for <span class="math notranslate nohighlight">\(\Delta_n\)</span> the <span class="math notranslate nohighlight">\(a_n, b_n\)</span> have been optimized, one could reasonably expect a relation of the type</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta_n \approx \min_{a_n, b_n} \tilde{\Delta}_n(a_n, b_n)
+\]</div>
+<p>to hold.</p>
+<p>It is easy to see that given some normalizing sequences <span class="math notranslate nohighlight">\(a_n, b_n\)</span>, the convergence to a GEV is possible, than with other sequences <span class="math notranslate nohighlight">\(\tilde{a}_n, \tilde{b}_n\)</span> with some <span class="math notranslate nohighlight">\(a&gt;0, b\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\lim_{n\rightarrow \infty} \frac{\tilde{a}_n}{a_n} = a \quad,\quad \lim_{n \rightarrow \infty} \frac{b_n-\tilde{b}_n}{a_n} = b
+\]</div>
+<p>the rescaled <span class="math notranslate nohighlight">\(\frac{M_n-\tilde{b}_n}{\tilde{a_n}}\)</span> also converges to a GEV of the same type (with the same <span class="math notranslate nohighlight">\(\xi\)</span>). This is often formulated that a distribution <span class="math notranslate nohighlight">\(F\)</span> has  <em>a fixed domain of attraction</em>. However, the error rates <span class="math notranslate nohighlight">\(\tilde{\Delta}_n(\tilde{a}_n, \tilde{b}_n)\)</span> would be different from those associated to <span class="math notranslate nohighlight">\(a_n, b_n\)</span>.</p>
+<p>Unfortunately, theoretical bounds for the quantity of interest <span class="math notranslate nohighlight">\(\Delta_n\)</span> are hard to come by - we are not aware of any. They also highly depend on the fitting procedure, which is non-trivial, as we have seen above. There are some bounds for quantities of the type <span class="math notranslate nohighlight">\(\tilde{\Delta}_n(\tilde{a}_n, \tilde{b}_n)\)</span> (see the annotated literature reference) but they are rather loose and not really helpful in practice. Therefore, the EVT theorems are more of a motivation for selecting distribution families for fitting than a rigorous approach with guarantees. In practice the convergence and fit tend to work pretty well, though.</p>
+</section>
+<section id="exercise-4-theoretical-bonus-outlining-the-proof-of-the-fisher-gnedenko-tripet-theorem">
+<h2>Exercise 4 (theoretical, bonus): outlining the proof of the Fisher-Gnedenko-Tripet theorem<a class="headerlink" href="#exercise-4-theoretical-bonus-outlining-the-proof-of-the-fisher-gnedenko-tripet-theorem" title="Permalink to this heading">#</a></h2>
+<p>One may wonder how the statement of the Fisher-Gnedenko-Tripet theorem is obtained without providing bounds on convergence. The reason is that the limiting distribution of (renormalized) maxima must have a very special property - it must be max stable. It is instructive to go through a part of the proof to get a feeling for the EVT theorems. We will do so in this exercise.</p>
+<p><strong>Definition</strong>: A cumulative distribution function <span class="math notranslate nohighlight">\(D(z)\)</span> is called <em>max-stable</em> iff for all <span class="math notranslate nohighlight">\(n\in\mathbb{N} \ \exists \ \alpha_n&gt;0, \beta_n \in  \mathbb{R}\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+D^n(z) = D(\alpha_n z + \beta_n)
+\]</div>
+<p>Prove that from <span class="math notranslate nohighlight">\(\lim_{n\rightarrow \infty} P\left( \frac{M_n - b_n}{a_n} &lt; z \right) = G(z)\)</span> follows that <span class="math notranslate nohighlight">\(G(z)\)</span> is max-stable.</p>
+<p>This goes a long way towards proving the first EVT theorem. One can easily compute that the GEV distribution is max-stable and with more effort one can also prove that any max-stable distribution belongs to the GEV family. Thus, the proof of the theorem is very implicit and does not involve any convergence rates or bounds.</p>
+</section>
+<section id="exercise-5-increase-the-block-size">
+<h2>Exercise 5: increase the block size<a class="headerlink" href="#exercise-5-increase-the-block-size" title="Permalink to this heading">#</a></h2>
+<p>According to the line of thought above, increasing the block-size before determining the maxima should improve convergence. Of course, it also decreases the number of points for fitting so it increases variance. We will analyze uncertainties of the fitted GEV below.</p>
+<p>Repeat the fit of the GEV for 2-day maxima/minima. What do you think about the result?</p>
+<p><em>Hint: use the .reshape method of numpy arrays on the already computed daily maxima/minima</em></p>
+</section>
+<section id="solution-exercise-5">
+<h2>Solution exercise 5:<a class="headerlink" href="#solution-exercise-5" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bidaily_maxima</span> <span class="o">=</span> <span class="n">daily_max_without_anomalies</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bidaily_maxima</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Bidaily maxima&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e4e09d3f1bfdadc9a0e95f198eaacfd1b28944d9fa6486c883b30512ce3b70e4.png" src="_images/e4e09d3f1bfdadc9a0e95f198eaacfd1b28944d9fa6486c883b30512ce3b70e4.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bidaily_gev</span> <span class="o">=</span> <span class="n">get_gev</span><span class="p">(</span><span class="n">xi</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">fit_dist</span><span class="p">(</span><span class="n">bidaily_maxima</span><span class="p">,</span> <span class="n">bidaily_gev</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<img alt="_images/b3428b996c7ff41b35e56721c81abf8a3db4b67d03c789c561c3c2d9d6f37d0f.png" src="_images/b3428b996c7ff41b35e56721c81abf8a3db4b67d03c789c561c3c2d9d6f37d0f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bidaily_gev</span><span class="o">.</span><span class="n">trainable_variables</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;tf.Variable &#39;xi:0&#39; shape=() dtype=float64, numpy=-0.4352171270495099&gt;,
+ &lt;tf.Variable &#39;mu:0&#39; shape=() dtype=float64, numpy=0.0737917439054841&gt;,
+ &lt;tf.Variable &#39;sigma:0&#39; shape=() dtype=float64, numpy=0.7643633709060534&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The shape parameter should be independent of the size of the block (it is not affected by <span class="math notranslate nohighlight">\(a_n\)</span> and <span class="math notranslate nohighlight">\(b_n\)</span>) .
+Of course, since we find it from fitting, we shouldn’t be surprised to find a slightly different value.</p>
+<p>We get a better fit than before (less than half of the loss with half as many data points).
+But we have higher variance in the very important shape parameter <span class="math notranslate nohighlight">\(\xi\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">std_devs_daily</span> <span class="o">=</span> <span class="n">mle_std_deviations</span><span class="p">(</span><span class="n">daily_max_without_anomalies</span><span class="p">,</span> <span class="n">daily_max_gev</span><span class="p">)</span>
+<span class="n">std_devs_bidaily</span> <span class="o">=</span> <span class="n">mle_std_deviations</span><span class="p">(</span><span class="n">bidaily_maxima</span><span class="p">,</span> <span class="n">bidaily_gev</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Daily stddevs:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">std_devs_daily</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Biaily stddevs:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">std_devs_bidaily</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Daily stddevs:
+[0.02618123 0.06607897 0.04556484]
+Biaily stddevs:
+[0.03952068 0.07958698 0.05549258]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="peaks-over-threshold-pot">
+<h1>Peaks over threshold (PoT)<a class="headerlink" href="#peaks-over-threshold-pot" title="Permalink to this heading">#</a></h1>
+<p>So far we have only used the first theorem of EVT. As you might have noticed above, it can be somehow wasteful when it comes to data efficiency. Since the GEV is fitted on block-maxima, a huge number of data points remain unused for parameter estimation. The second theorem of EVT gives rise to a more efficient approach</p>
+<section id="exercise-6-theoretical-bonus-deriving-the-second-theorem-of-evt">
+<h2>Exercise 6 (theoretical, bonus): deriving the second theorem of EVT<a class="headerlink" href="#exercise-6-theoretical-bonus-deriving-the-second-theorem-of-evt" title="Permalink to this heading">#</a></h2>
+<p>Use the approximation <span class="math notranslate nohighlight">\(\ln(1+x) \approx 1 + x\)</span> for <span class="math notranslate nohighlight">\(|x| \ll 1\)</span> and <span class="math notranslate nohighlight">\(F(z) \approx 1\)</span> for large enough <span class="math notranslate nohighlight">\(z\)</span> to derive.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-3bbcdc82-631e-4753-9b40-f78ab03f8cb2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-3bbcdc82-631e-4753-9b40-f78ab03f8cb2" title="Permalink to this equation">#</a></span>\[\begin{equation}
+P(X-u &lt; y \mid X &gt; u) \approx 1 - \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}} \label{GPD-approx-original}
+\end{equation}\]</div>
+<p>for large enough <span class="math notranslate nohighlight">\(u\)</span> (this is a slightly less formal derivation of Pickards’ et. al. theorem). One could equivalently write</p>
+<div class="amsmath math notranslate nohighlight" id="equation-5621a9cf-77b7-4bbd-937a-8fd81247a4f7">
+<span class="eqno">(4)<a class="headerlink" href="#equation-5621a9cf-77b7-4bbd-937a-8fd81247a4f7" title="Permalink to this equation">#</a></span>\[\begin{equation}
+P(X-u &gt; y \mid X &gt; u) \approx \left( 1 + \frac{\xi \ y}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}
+\end{equation}\]</div>
+<p>What is the relation between <span class="math notranslate nohighlight">\(\tilde{\sigma}\)</span> and the normalizing coefficients of the first theorem of EVT?</p>
+<p>The above equation can be used to estimate the entire tail of the cdf <span class="math notranslate nohighlight">\(F\)</span> of <span class="math notranslate nohighlight">\(X\)</span> from a sample of size <span class="math notranslate nohighlight">\(N\)</span> obtained by sampling repeatedly from <span class="math notranslate nohighlight">\(F\)</span>. First note that for a single <span class="math notranslate nohighlight">\(u\)</span> we can approximate the cdf through the sample statistics as:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-2b1ef38c-9ccd-4b41-8494-22c376d435cb">
+<span class="eqno">(5)<a class="headerlink" href="#equation-2b1ef38c-9ccd-4b41-8494-22c376d435cb" title="Permalink to this equation">#</a></span>\[\begin{equation}
+1-F(u) = P(X&gt;u) \approx \frac{N_u}{N}
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(N_u\)</span> is the number of samples with values above <span class="math notranslate nohighlight">\(u\)</span>. Interpreting <span class="math notranslate nohighlight">\(u\)</span> as a threshold, we will call those samples <em>peaks over threshold</em> (PoT) and <span class="math notranslate nohighlight">\(N_u\)</span> is simply their count.</p>
+<p><strong>Q</strong>: What should <span class="math notranslate nohighlight">\(u\)</span> and the data set fulfill in order for the above approximation to be accurate?</p>
+<p><strong>A</strong>: It should be small enough such that many data points are larger than it. Then the approximation in <span class="math notranslate nohighlight">\(P(X&gt;u) \approx \frac{N_u}{N}\)</span> holds (the estimator is not too biased).</p>
+<p>Now we can perform a series of approximations for <span class="math notranslate nohighlight">\(z&gt;u\)</span> to get to the tail-distribution. First using <span class="math notranslate nohighlight">\(P(X&gt;u) \approx \frac{N_u}{N}\)</span> we get</p>
+<div class="math notranslate nohighlight">
+\[
+P(X&gt;z) = P(X&gt;z \cap X&gt;u) = P(X&gt;z \mid X&gt;u) P(X&gt;u) \approx \frac{N_u}{N} P(X&gt;z \mid X&gt;u)
+\]</div>
+<p>Now we use the GDP theorem to approximate</p>
+<div class="math notranslate nohighlight">
+\[
+P(X&gt;z \mid X&gt;u) = P(X-u &gt; z -u \mid X&gt;u) \approx
+    \left( 1 + \frac{\xi (z-u)}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}
+\]</div>
+<p>Putting everything together gives</p>
+<div class="math notranslate nohighlight">
+\[
+P(X&gt;z) \approx \frac{N_u}{N}  \left( 1 + \frac{\xi (z-u)}{\tilde{\sigma}} \right)^{-\frac{1}{\xi}}
+\]</div>
+<p><strong>Q</strong>: Intuitively, what does <span class="math notranslate nohighlight">\(u\)</span> need to fulfill for both approximations to hold?</p>
+<p><strong>A</strong>: <span class="math notranslate nohighlight">\(u\)</span> should be small enough such that the approximation <span class="math notranslate nohighlight">\(P(X&gt;u) \approx \frac{N_u}{N}\)</span> holds and sufficiently large such that the generalized pareto distribution is a good estimate of the tail of the distribution for values larger than <span class="math notranslate nohighlight">\(u\)</span>. Intuitively, it should be at the <em>beginning of the tail</em>, where for values larger than <span class="math notranslate nohighlight">\(u\)</span> only the tail behavior plays a role - i.e. no more local extrema or other specifics of the underlying distribution of the data.</p>
+</section>
+<section id="exercise-7-using-the-gpd-for-anomaly-detection">
+<h2>Exercise 7: Using the GPD for anomaly detection<a class="headerlink" href="#exercise-7-using-the-gpd-for-anomaly-detection" title="Permalink to this heading">#</a></h2>
+<p>This exercise lets you explore the second theorem of EVT for anomaly detection. Here we let you calculate and code on your own, without giving too many hints. You can follow the GEV-fitting code above for solving this exercise. Feel free to ask for hints if you are stuck!</p>
+<ol class="arabic simple">
+<li><p>Using the results above, find an approximation of the upper quantile <span class="math notranslate nohighlight">\(z_q\)</span> such that <span class="math notranslate nohighlight">\(P(X&gt;z_q) &lt; q\)</span> (assuming <span class="math notranslate nohighlight">\(z_q &gt; u\)</span>).</p></li>
+<li><p>What is the relation of this quantile to the quantile of the generalized pareto distribution?</p></li>
+<li><p>Select a threshold <span class="math notranslate nohighlight">\(u\)</span> and fit the generalized pareto distribution to the peaks over this threshold using tensorflow-probability and the same tricks that were used above for fitting the GEV distribution. You might want to use the profile likelihood fitting.</p></li>
+<li><p>Determine anomalies from the quantile function.</p></li>
+<li><p>What advantages do you see in fitting the GPD with PoT compared to fitting GEV distribution using block-maxima for anomaly detection? What are the disadvantages?</p></li>
+<li><p>Check the quality of your fit and perform an uncertainty analysis as above for the GEV.</p></li>
+</ol>
+</section>
+<section id="solution-exercise-7">
+<h2>Solution Exercise 7:<a class="headerlink" href="#solution-exercise-7" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We define the creation of the GPD analogous to the GEV above</span>
+
+<span class="k">def</span> <span class="nf">get_gpd</span><span class="p">(</span><span class="n">xi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="n">sigma</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">trainable_xi</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">xi</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xi</span><span class="p">,</span> <span class="n">sigma</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">trainable_xi</span><span class="p">:</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xi&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tfd</span><span class="o">.</span><span class="n">GeneralizedPareto</span><span class="p">(</span>
+        <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sigma&#39;</span><span class="p">),</span>
+        <span class="n">concentration</span><span class="o">=</span><span class="n">xi</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># GPD is fit directly on the thresholded data, no need for grouping</span>
+
+<span class="n">n_calls</span> <span class="o">=</span> <span class="n">taxi_df_normalized</span><span class="p">[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ae609ce2d3546ed0f37470ab6ef9937b4483f888147042173e6adb9d271f3321.png" src="_images/ae609ce2d3546ed0f37470ab6ef9937b4483f888147042173e6adb9d271f3321.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># seems like u=1 gives a good value for the beginning of &quot;tail behaviour&quot;</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">thresholded_n_calls</span> <span class="o">=</span> <span class="n">n_calls</span><span class="p">[</span><span class="n">n_calls</span><span class="o">&gt;</span><span class="n">u</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">thresholded_n_calls</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2de97be6b9cef26b0668a0efff5951a3e1a362283d3800f7fb8a0859b69b1bf4.png" src="_images/2de97be6b9cef26b0668a0efff5951a3e1a362283d3800f7fb8a0859b69b1bf4.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># obvious anomalies</span>
+<span class="n">taxi_df_normalized</span><span class="p">[</span><span class="n">taxi_df_normalized</span><span class="p">[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">]</span><span class="o">&gt;</span> <span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_calls</th>
+      <th>time</th>
+      <th>date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>134</th>
+      <td>2.139658</td>
+      <td>19:00:00</td>
+      <td>2014-07-03</td>
+    </tr>
+    <tr>
+      <th>3261</th>
+      <td>2.186926</td>
+      <td>22:30:00</td>
+      <td>2014-09-06</td>
+    </tr>
+    <tr>
+      <th>3262</th>
+      <td>2.195573</td>
+      <td>23:00:00</td>
+      <td>2014-09-06</td>
+    </tr>
+    <tr>
+      <th>5954</th>
+      <td>3.467197</td>
+      <td>01:00:00</td>
+      <td>2014-11-02</td>
+    </tr>
+    <tr>
+      <th>5955</th>
+      <td>2.892920</td>
+      <td>01:30:00</td>
+      <td>2014-11-02</td>
+    </tr>
+    <tr>
+      <th>8833</th>
+      <td>2.076538</td>
+      <td>00:30:00</td>
+      <td>2015-01-01</td>
+    </tr>
+    <tr>
+      <th>8834</th>
+      <td>2.175830</td>
+      <td>01:00:00</td>
+      <td>2015-01-01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we filter out some calls on (one day before) independence day, Columbus day, the marathon and New Year</span>
+
+<span class="n">cleaned_thresholded_calls</span> <span class="o">=</span> <span class="n">thresholded_n_calls</span><span class="p">[</span><span class="n">thresholded_n_calls</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Thresholded calls without obvious anomalies&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/59c7890b954561c8bd21d61bd626a9aac65e6a3ea5bf5311ef276f8dd4d6eb07.png" src="_images/59c7890b954561c8bd21d61bd626a9aac65e6a3ea5bf5311ef276f8dd4d6eb07.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fitting the gpd. We need a small lr to not hit singularities</span>
+<span class="c1"># We bypass fitting xi here, instead using the xi found from fitting the GEV above. </span>
+<span class="c1"># Theory suggests that it should be close to the optimal value. </span>
+<span class="c1"># We could also profile around it or try full gradient, of course. The latter is brittle</span>
+
+
+<span class="n">xi_gev</span> <span class="o">=</span> <span class="n">daily_max_gev</span><span class="o">.</span><span class="n">concentration</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using xi=</span><span class="si">{</span><span class="n">xi_gev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">gpd</span> <span class="o">=</span> <span class="n">get_gpd</span><span class="p">(</span><span class="n">xi</span><span class="o">=</span><span class="n">xi_gev</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trainable_xi</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">fit_dist</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">,</span> <span class="n">gpd</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">return_animation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:At this time, the v2.11+ optimizer `tf.keras.optimizers.SGD` runs slowly on M1/M2 Macs, please use the legacy Keras optimizer instead, located at `tf.keras.optimizers.legacy.SGD`.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using xi=-0.4490658772874973
+</pre></div>
+</div>
+<img alt="_images/6f7082a3e1919cea730036a977d12eb061aaf33c02440bf21c3bfe85901726c9.png" src="_images/6f7082a3e1919cea730036a977d12eb061aaf33c02440bf21c3bfe85901726c9.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># now the qqplot and the stddev</span>
+
+<span class="n">std</span> <span class="o">=</span> <span class="n">mle_std_deviations</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">,</span> <span class="n">gpd</span><span class="p">)</span>
+
+<span class="n">fitted_coeff</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+<span class="n">coeff_upper</span> <span class="o">=</span> <span class="n">fitted_coeff</span> <span class="o">+</span> <span class="n">std</span>
+<span class="n">coeff_lower</span> <span class="o">=</span> <span class="n">fitted_coeff</span> <span class="o">-</span> <span class="n">std</span>
+
+<span class="n">gpd_upper</span> <span class="o">=</span> <span class="n">get_gpd</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">concentration</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="o">*</span><span class="n">coeff_upper</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="n">gpd_lower</span> <span class="o">=</span> <span class="n">get_gpd</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">concentration</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="o">*</span><span class="n">coeff_lower</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qqplot</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">,</span> <span class="n">gpd</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">,</span> <span class="n">gpd_upper</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">,</span> <span class="n">gpd_lower</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2f72b53abf49fa4bd11ef648732b3a53c093dc2918b8123ef2814fe4a82ef6de.png" src="_images/2f72b53abf49fa4bd11ef648732b3a53c093dc2918b8123ef2814fe4a82ef6de.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># finding the threshold corresponding to probability of 0.01 of the non-conditioned tail</span>
+<span class="c1"># For that, we rescale with our estimate of N_u</span>
+
+<span class="n">N_u</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cleaned_thresholded_calls</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">thresholded_n_calls</span><span class="p">)</span>
+<span class="n">percentile</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span> <span class="n">N_u</span><span class="o">*</span><span class="mf">0.01</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">gpd</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">percentile</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">q</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.877599494949569
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># and the anomalies lying above it. We find thesame ones</span>
+
+<span class="n">n_calls</span> <span class="o">=</span> <span class="n">taxi_df_normalized</span><span class="p">[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">]</span>
+<span class="n">taxi_df_normalized</span><span class="p">[</span><span class="n">taxi_df_normalized</span><span class="p">[</span><span class="s2">&quot;n_calls&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>n_calls</th>
+      <th>time</th>
+      <th>date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>134</th>
+      <td>2.139658</td>
+      <td>19:00:00</td>
+      <td>2014-07-03</td>
+    </tr>
+    <tr>
+      <th>3261</th>
+      <td>2.186926</td>
+      <td>22:30:00</td>
+      <td>2014-09-06</td>
+    </tr>
+    <tr>
+      <th>3262</th>
+      <td>2.195573</td>
+      <td>23:00:00</td>
+      <td>2014-09-06</td>
+    </tr>
+    <tr>
+      <th>3263</th>
+      <td>1.920468</td>
+      <td>23:30:00</td>
+      <td>2014-09-06</td>
+    </tr>
+    <tr>
+      <th>5279</th>
+      <td>1.943813</td>
+      <td>23:30:00</td>
+      <td>2014-10-18</td>
+    </tr>
+    <tr>
+      <th>5942</th>
+      <td>1.910956</td>
+      <td>19:00:00</td>
+      <td>2014-11-01</td>
+    </tr>
+    <tr>
+      <th>5954</th>
+      <td>3.467197</td>
+      <td>01:00:00</td>
+      <td>2014-11-02</td>
+    </tr>
+    <tr>
+      <th>5955</th>
+      <td>2.892920</td>
+      <td>01:30:00</td>
+      <td>2014-11-02</td>
+    </tr>
+    <tr>
+      <th>6959</th>
+      <td>1.921620</td>
+      <td>23:30:00</td>
+      <td>2014-11-22</td>
+    </tr>
+    <tr>
+      <th>8833</th>
+      <td>2.076538</td>
+      <td>00:30:00</td>
+      <td>2015-01-01</td>
+    </tr>
+    <tr>
+      <th>8834</th>
+      <td>2.175830</td>
+      <td>01:00:00</td>
+      <td>2015-01-01</td>
+    </tr>
+    <tr>
+      <th>8835</th>
+      <td>1.903751</td>
+      <td>01:30:00</td>
+      <td>2015-01-01</td>
+    </tr>
+    <tr>
+      <th>9310</th>
+      <td>1.896978</td>
+      <td>23:00:00</td>
+      <td>2015-01-10</td>
+    </tr>
+    <tr>
+      <th>9311</th>
+      <td>1.911389</td>
+      <td>23:30:00</td>
+      <td>2015-01-10</td>
+    </tr>
+    <tr>
+      <th>10310</th>
+      <td>1.969465</td>
+      <td>19:00:00</td>
+      <td>2015-01-31</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="results">
+<h3>Results:<a class="headerlink" href="#results" title="Permalink to this heading">#</a></h3>
+<p>We found new candidates for anomalies (or rare events). The 10.01.2015 was the day following Charlie Hebdo related terrorist attacks, there was a large march in Paris. Maybe there was additional movement across New York’s large Jewish community. See e.g. <a class="reference external" href="https://www.vogue.com/article/jesuischarlie-new-york-demonstration-charlie-hebdo">this article</a></p>
+<p>We could not find events that could have caused the large numbers of calls on the 18/10/2014 and the 22/11/2014.</p>
+<p>We also now have a probabilistic model for the tail of n_calls/30 minutes which might be useful for planning taxi availabilities on a more granular level than just per-day.</p>
+</section>
+</section>
+<section id="adjusting-to-seasonality-and-trends">
+<h2>Adjusting to seasonality and trends<a class="headerlink" href="#adjusting-to-seasonality-and-trends" title="Permalink to this heading">#</a></h2>
+<p>So far, we have completely ignored the time-series aspect of our data set. When using EVT for time series, as will often be the case in practice, seasonality, trends and so on need to be taken into account.</p>
+<p>We have already seen a treatment of these topics for time series forecasting. Without going into details, we want to mention that the time-dependency can be to some extent taken into account in EVT by allowing for time-dependent parameters <span class="math notranslate nohighlight">\(\xi(t), \mu(t), \sigma(t)\)</span>.</p>
+<p>There exist multiple strategies for finding these time dependent functions from data, the most straightforward one being MLE-fitting with sliding windows over a sample. One could also easily include known modulations into the MLE fitting, e.g. something like</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(t) : = \mu_0 \sin(t)
+\]</div>
+<p>might do the job if one knows that the underlying mean vary with <span class="math notranslate nohighlight">\(\sin(t)\)</span>. Then, one only needs to fit <span class="math notranslate nohighlight">\(\mu_0\)</span>.</p>
+</section>
+<section id="confusion-about-evt-for-anomaly-detection">
+<h2>Confusion about EVT for anomaly detection<a class="headerlink" href="#confusion-about-evt-for-anomaly-detection" title="Permalink to this heading">#</a></h2>
+<p>Unfortunately, there are some incorrect claims about applications of EVT in the AD literature. The claims often involve an incorrect analysis of EVT for multivariate and multimodal distributions.</p>
+<p>Note that the EVT theorems apply to univariate distributions. They also ignore multimodality as only tail-behaviour plays a role for them.</p>
+<p>Results of EVT from one dimension cannot be directly transferred to higher dimensions, even for Gaussians. The cdf of the Mahalanobis radius is simply not dimension independent, see <a class="reference external" href="https://upload.wikimedia.org/wikipedia/commons/a/a2/Cumulative_function_n_dimensional_Gaussians_12.2013.pdf">here</a> for an exact expression for it. The attempt to do that leads to a bad fit and is sometimes called <em>failure of classical EVT</em>. Similar  approaches and resulting claims have been tried on Gaussian mixtures.</p>
+</section>
+<section id="evt-for-outlier-scores">
+<h2>EVT for outlier scores<a class="headerlink" href="#evt-for-outlier-scores" title="Permalink to this heading">#</a></h2>
+<p>Th NYC taxi data is very simple, we could apply EVT to it directly. For multidimensional data these techniques don’t work out of the box. However, as mentioned in the beginning, virtually all AD algorithms will produce a 1-dimensional score which can then be given a probabilistic meaning through EVT. We will explore this approach in the last exercise of this section.</p>
+</section>
+<section id="things-we-have-omitted">
+<h2>Things we have omitted<a class="headerlink" href="#things-we-have-omitted" title="Permalink to this heading">#</a></h2>
+<p>There are many ways to extend the ideas presented here</p>
+<p>The PoT method can be adapted to work on streams in a memory efficient way, by automatically stripping off obvious anomalies and adjusting the threshold</p>
+<p>We have seen how MLE with gradient descent is brittle and subject to divergences. There is a lot of literature containing bags of tricks for finding the MLE estimators for GEV and GPT distributions in a smarter, more robust way.</p>
+<p>One can also give up on MLE and use <em>goodness-of-fit</em> objectives to minimize the difference with the empirical cdf given by the data.</p>
+<p>Generally, there is a large body of literature on EVT, although more in the engineering/math directions than for AD.</p>
+</section>
+<section id="exercise-8">
+<h2>Exercise 8<a class="headerlink" href="#exercise-8" title="Permalink to this heading">#</a></h2>
+<p>Using the anomaly scores from a data set and algorithm from yesterday (you can choose your favorite), perform an EVT analysis along the lines of what was done above. What are your conclusions? In which situations can such an analysis be useful in practical situations?</p>
+</section>
+<section id="solution-of-exercise-8">
+<h2>Solution of exercise 8:<a class="headerlink" href="#solution-of-exercise-8" title="Permalink to this heading">#</a></h2>
+<p>Left to the reader</p>
+<img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;">
+<div class="md-slide title">Thank you for the attention, this concludes the A.D. training. </div>
+<div class="md-slide title">We will be happy to see you in another Transferlab training soon!</div></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nb_05_anomaly_detection_on_time_series.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Anomaly Detection on Time Series</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Extreme Value Theory and Anomaly Detection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evt-in-a-nutshell">EVT in a Nutshell</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-significance-of-evt-theorems">Practical Significance of EVT Theorems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evt-in-action">EVT in Action</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-glance-at-the-tensorflow-probability-api">A glance at the tensorflow probability API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-playing-around-with-gev-parameters">Exercise 1: playing around with GEV parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-1">Solution Exercise 1:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-the-gev">Fitting the GEV</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1-mle-for-the-generalized-extreme-value-distribution">Exercise 2.1: MLE for the generalized extreme value distribution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#q-q-plot">Q-Q Plot</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-of-exercise-2-1">Solution of exercise 2.1</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-2-1-finding-anomalies-from-the-gev">Solution exercise 2.1 - Finding anomalies from the GEV</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-uncertainty">Estimating the uncertainty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2-uncertainty-in-gev">Exercise 2.2: Uncertainty in GEV</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-2-2">Solution Exercise 2.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-gev-for-minima">Exercise 3: GEV for minima</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-of-exercise-3">Solution of exercise 3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-with-z-test">Comparison with Z-Test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-look-back-at-the-theory">A look back at the theory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-4-theoretical-bonus-outlining-the-proof-of-the-fisher-gnedenko-tripet-theorem">Exercise 4 (theoretical, bonus): outlining the proof of the Fisher-Gnedenko-Tripet theorem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-5-increase-the-block-size">Exercise 5: increase the block size</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-5">Solution exercise 5:</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#peaks-over-threshold-pot">Peaks over threshold (PoT)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-6-theoretical-bonus-deriving-the-second-theorem-of-evt">Exercise 6 (theoretical, bonus): deriving the second theorem of EVT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-7-using-the-gpd-for-anomaly-detection">Exercise 7: Using the GPD for anomaly detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-exercise-7">Solution Exercise 7:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adjusting-to-seasonality-and-trends">Adjusting to seasonality and trends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confusion-about-evt-for-anomaly-detection">Confusion about EVT for anomaly detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evt-for-outlier-scores">EVT for outlier scores</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-we-have-omitted">Things we have omitted</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-8">Exercise 8</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-of-exercise-8">Solution of exercise 8:</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By appliedAI TransferLab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

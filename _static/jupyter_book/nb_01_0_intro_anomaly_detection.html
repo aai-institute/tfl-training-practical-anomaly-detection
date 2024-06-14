@@ -1,0 +1,1161 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Introduction to Anomaly Detection &#8212; Practical Anomaly Detection</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"loader": {"load": ["[tex]/configmacros"]}, "tex": {"packages": {"[+]": ["configmacros"]}, "macros": {"vect": ["{\\mathbf{\\boldsymbol{#1}} }", 1], "E": "{\\mathbb{E}}", "P": "{\\mathbb{P}}", "R": "{\\mathbb{R}}", "abs": ["{\\left| #1 \\right|}", 1], "simpl": ["{\\Delta^{#1} }", 1], "amax": "{\\text{argmax}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"1eb0e712cc2c44168948a66e33f0507b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "12839853c4c14452bb1fc71d9306af7b": {"model_name": "VBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": ["widget-interact"], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "VBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "VBoxView", "box_style": "", "children": ["IPY_MODEL_6496eaf01b704dc5a4d66bd58bf12d75", "IPY_MODEL_a3abe66c78c1462382dc8c855f41eba9"], "layout": "IPY_MODEL_1eb0e712cc2c44168948a66e33f0507b", "tabbable": null, "tooltip": null}}, "5000667757b149fc95a01a788b8959fc": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "272a38ae2b074df396be531eb31127a6": {"model_name": "SliderStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "SliderStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "description_width": "", "handle_color": null}}, "6496eaf01b704dc5a4d66bd58bf12d75": {"model_name": "FloatSliderModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatSliderModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "FloatSliderView", "behavior": "drag-tap", "continuous_update": true, "description": "threshold", "description_allow_html": false, "disabled": false, "layout": "IPY_MODEL_5000667757b149fc95a01a788b8959fc", "max": 6.0, "min": 0.0, "orientation": "horizontal", "readout": true, "readout_format": ".2f", "step": 0.1, "style": "IPY_MODEL_272a38ae2b074df396be531eb31127a6", "tabbable": null, "tooltip": null, "value": 3.0}}, "6737e6ee2abc4912bf9a5cc4804d5c7d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a3abe66c78c1462382dc8c855f41eba9": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_6737e6ee2abc4912bf9a5cc4804d5c7d", "msg_id": "", "outputs": [], "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nb_01_0_intro_anomaly_detection';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Taxonomy of Anomaly Detection Approaches" href="nb_01_1_intro_and_ad_taxonomy.html" />
+    <link rel="prev" title="practical anomaly detection - Notebook Pages" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/transferlab-logo.svg" class="logo__image only-light" alt="Practical Anomaly Detection - Home"/>
+    <script>document.write(`<img src="_static/transferlab-logo.svg" class="logo__image only-dark" alt="Practical Anomaly Detection - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    practical anomaly detection - Notebook Pages
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction to Anomaly Detection</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_01_1_intro_and_ad_taxonomy.html">Taxonomy of Anomaly Detection Approaches</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="nb_02_anomaly_detection_via_density_estimation.html">Anomaly Detection via Density Estimation</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_03_anomaly_detection_via_isolation.html">Anomaly Detection via Isolation</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_04_anomaly_detection_via_reconstruction.html">Anomaly Detection via Reconstruction Error</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_05_anomaly_detection_on_time_series.html">Anomaly Detection on Time Series</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="nb_06_extreme_value_theory_for_anomaly_detection.html">Extreme Value Theory and Anomaly Detection</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nb_01_0_intro_anomaly_detection.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introduction to Anomaly Detection</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Introduction to Anomaly Detection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-an-anomaly">What is an Anomaly?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anomalies-can-be-hard-to-detect">Anomalies Can be Hard to Detect</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-relevance-of-anomaly-detection">Practical Relevance of Anomaly Detection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictive-maintenance">Predictive Maintenance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fraud-detection">Fraud Detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intrusion-detection">Intrusion Detection</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#relevance-of-unsupervised-machine-learning-in-ad">Relevance of Unsupervised Machine Learning in AD</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#question">Question</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contamination-framework">Contamination Framework</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#does-the-contamination-framework-always-apply">Does the Contamination Framework Always Apply?</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-metrics">Evaluation Metrics</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-recall">Precision, Recall</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#f-1-score"><span class="math notranslate nohighlight">\(F_1\)</span> Score</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-thresholds">Evaluating Thresholds</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-matrix">Cost Matrix</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#our-first-anomaly-detection-approach">Our First Anomaly Detection Approach</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-of-mahalanobis-distance">Motivation of Mahalanobis Distance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-find-optimal-threshold-and-evaluate-on-test-set">Task: Find optimal threshold and evaluate on test set.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell tag_remove-input tag_remove-input-nbconv docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html"><style>/*
+This file is mainly copy-pasta from rise's examples
+https://github.com/damianavila/RISE/blob/master/examples/rise.css
+that was further customized for appliedAI purposes
+*/
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&display=swap');
+
+
+body {
+    font-family: 'Work Sans', sans-serif !important;
+    text-transform: initial !important;
+    letter-spacing: initial !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    text-size-adjust: 100% !important;
+    ‑webkit‑text‑size‑adjust: 100% !important;
+}
+
+
+.reveal, div.text_cell_render, .md-slide, .sidebar-wrapper {
+    font-size: 1.5rem !important;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #00747b !important;
+}
+
+.filename {
+    font-size: 2.4rem !important;
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.reveal, .md-slide {
+    color: white !important;
+}
+
+h1, h2 {
+    color: #00747b !important;
+}
+
+h3, h4, h5, h6 {
+    color: #808080 !important;
+}
+
+.reveal p, .reveal ol, .reveal dl, .reveal ul,
+div.text_cell_render {
+    color: #212529 !important;
+}
+
+/*copied from stackoverflow, better spacing between list items*/
+li + li {
+  margin-top: 0.2em;
+}
+
+body.rise-enabled .reveal ol, body.rise-enabled .reveal dl, body.rise-enabled .reveal ul {
+    margin-left: 0.1em;
+    margin-top: 0.2em;
+}
+
+.reveal .rendered_html h1:first-child,
+.reveal .rendered_html h2:first-child,
+.reveal .rendered_html h3:first-child,
+.reveal .rendered_html h4:first-child,
+.reveal .rendered_html h5:first-child {
+    margin-top: 0.2em;
+}
+
+.CodeMirror-lines, .output_text {
+    font-size: 1.5rem !important;
+}
+
+
+h1.plan, h2.plan, h3.plan {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+ul.plan>li>span.plan-bold {
+    font-size: 110%;
+    padding: 4px;
+    font-weight: bold;
+    background-color: #eee;
+}
+
+ul.plan>li>ul.subplan>li>span.plan-bold {
+    font-weight: bold;
+}
+
+.plan-strike {
+    opacity: 0.4;
+/*    text-decoration: line-through; */
+}
+
+div.plan-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+/*
+ * this is to void xarray's html output to show the fallback textual representation
+ * see also
+   * xarray.md and
+   * https://github.com/damianavila/RISE/issues/594
+ */
+.reveal pre.xr-text-repr-fallback {
+    display: none;
+}
+
+#toc-header, .toc-item li {
+    margin: auto !important;
+    color: #808080 !important;
+}
+
+#toc, #toc-wrapper, .toc-item-num, #toc a, .toc {
+    margin: auto !important;
+    color: #00747b !important;
+}
+
+#toc-wrapper {
+    top: auto !important;
+    bottom: auto !important;
+    margin-top: 2rem !important;
+    color: #00747b !important;
+}
+
+
+#rise-header {
+    margin: 10px;
+    left: 5%;
+}
+
+#rise-footer {
+    margin: 10px;
+    right: 5%;
+}
+
+#rise-backimage {
+    opacity: 0.70;
+}
+
+.reveal img {
+    max-width: 100%;
+}
+
+
+.md-slide.title {
+  position: relative;
+  top: -50%;
+  margin-left: 5%;
+}</style></div></div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="introduction-to-anomaly-detection">
+<h1>Introduction to Anomaly Detection<a class="headerlink" href="#introduction-to-anomaly-detection" title="Permalink to this heading">#</a></h1>
+<img src="_static/images/aai_presentation_first_slide.svg" alt="Snow" style="width:100%;"><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
+
+<span class="kn">from</span> <span class="nn">tfl_training_anomaly_detection.exercise_tools</span> <span class="kn">import</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">visualize_mahalanobis</span>
+
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="what-is-an-anomaly">
+<h2>What is an Anomaly?<a class="headerlink" href="#what-is-an-anomaly" title="Permalink to this heading">#</a></h2>
+<center>
+<img src="_static/images/fish.jpg" align="center">
+</center><p>Grubbs, 1969:</p>
+<blockquote>
+<div><p>An outlying observation, or “outlier,” is one that appears to deviate markedly from other members of
+the sample in which it occurs.</p>
+</div></blockquote>
+<p>Hawkins, 1980:</p>
+<blockquote>
+<div><p>An outlier is an observation that deviates so much from other observations as to arouse suspicion that it was
+generated by a different mechanism.</p>
+</div></blockquote>
+<p>Chandola et al., 2009:</p>
+<blockquote>
+<div><p>Anomalies are patterns in data that do not conform to a well defined notion of normal behavior</p>
+</div></blockquote>
+</section>
+<section id="anomalies-can-be-hard-to-detect">
+<h2>Anomalies Can be Hard to Detect<a class="headerlink" href="#anomalies-can-be-hard-to-detect" title="Permalink to this heading">#</a></h2>
+<center>
+<img src="_static/images/waldo.jpg" align="center" width="800">
+</center></section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="practical-relevance-of-anomaly-detection">
+<h1>Practical Relevance of Anomaly Detection<a class="headerlink" href="#practical-relevance-of-anomaly-detection" title="Permalink to this heading">#</a></h1>
+<section id="predictive-maintenance">
+<h2>Predictive Maintenance<a class="headerlink" href="#predictive-maintenance" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Determine condition of in-service equipment</p></li>
+<li><p>Optimize maintenance cycle</p></li>
+<li><p>Too frequent inspections cause unnecessary costs and downtime</p></li>
+<li><p>Too infrequent inspections can lead to failures or even breaking of the equipment</p></li>
+</ul>
+<center>
+<img src="_static/images/failure.jpg" align="center" width="200">
+</center>
+<p><strong>Anomaly Detection:</strong> Sensory data can provide valuable information about the condition of the component. Increasingly
+abnormal readings may indicate a wear of the equipment.</p>
+</section>
+<section id="fraud-detection">
+<h2>Fraud Detection<a class="headerlink" href="#fraud-detection" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Identify fraudulent transactions, e.g. credit card</p></li>
+<li><p>Prevent criminal activities</p></li>
+<li><p>Avoid financial or other  damages for the involved parties</p></li>
+</ul>
+<center>
+<img src="_static/images/fraud.jpg" align="center" width="300">
+</center>
+<p><strong>Anomaly Detection:</strong> Fraudulent transactions can often be identified through unusual destinations, amounts,
+or network topology (over several transactions).</p>
+</section>
+<section id="intrusion-detection">
+<h2>Intrusion Detection<a class="headerlink" href="#intrusion-detection" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Detect attacks against a network</p></li>
+<li><p>Protect nodes against unauthorized access</p></li>
+</ul>
+<center>
+<img src="_static/images/cyber.jpg" align="center" width="400">
+</center>
+<p><strong>Anomaly Detection</strong>
+Malicious connections can leaf unusual footprints, e.g., used protocol, ports, number of packages, IP, duration, etc.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="relevance-of-unsupervised-machine-learning-in-ad">
+<h1>Relevance of Unsupervised Machine Learning in AD<a class="headerlink" href="#relevance-of-unsupervised-machine-learning-in-ad" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Due to the difficulty of identifying anomalies one often has no labeled data available</p></li>
+<li><p>Even if labels are available, anomalies are rare and the data sets are heavily imbalanced</p></li>
+<li><p>Often, we don’t want to restrict the system to anomalies that we have encountered in the past</p></li>
+<li><p>The information that is available heavily influences the applicable techniques:</p>
+<ul>
+<li><p>Is the distribution of nominal data known?</p></li>
+<li><p>Is there clean data (without anomalies) for training?</p></li>
+<li><p>Do we have labeled anomalies for evaluation?</p></li>
+<li><p>How large is the proportion of anomalies?</p></li>
+<li><p>How much noise is in the data?</p></li>
+</ul>
+</li>
+</ul>
+<section id="question">
+<h2>Question<a class="headerlink" href="#question" title="Permalink to this heading">#</a></h2>
+<p>Where do you think you can benefit from anomaly detection?</p>
+<ul class="simple">
+<li><p>Which problem do you want to solve?</p></li>
+<li><p>How does it translate into an anomaly detection problem?</p></li>
+<li><p>What data is available (dimensionality, time dependence, <span class="math notranslate nohighlight">\(\ldots\)</span>)?</p>
+<ul>
+<li><p>Clean data (without anomalies) available?</p></li>
+<li><p>Labeled anomalies available?</p></li>
+<li><p>Proportion of outliers?</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="contamination-framework">
+<h1>Contamination Framework<a class="headerlink" href="#contamination-framework" title="Permalink to this heading">#</a></h1>
+<img align="right"  src="_static/images/contamination.png" style="margin: 0px 100px" width="500">
+<ul class="simple">
+<li><p>Unsupervised Scenario</p></li>
+<li><p>Two distributions:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(F_0\)</span> generates normal points</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_1\)</span> generates anomalies</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span> relative frequency of <span class="math notranslate nohighlight">\(F_1\)</span></p></li>
+</ul>
+</li>
+<li><p>Data set <span class="math notranslate nohighlight">\(D \stackrel{\text{IID}}{\sim} F=(1-p)F_0 + pF_1\)</span></p></li>
+</ul>
+<p><strong>Task:</strong> Estimate if a given <span class="math notranslate nohighlight">\(x \in D\)</span> is anomalous</p>
+<p><strong>Assumptions:</strong></p>
+<ul class="simple">
+<li><p><em>Few</em>: <span class="math notranslate nohighlight">\(p \ll 1/2\)</span></p></li>
+<li><p><em>Outlying</em>: <span class="math notranslate nohighlight">\(F_0\)</span> and <span class="math notranslate nohighlight">\(F_1\)</span> do not overlap too much</p></li>
+<li><p><em>Sparse</em>: <span class="math notranslate nohighlight">\(F_1\)</span> is less clustered than <span class="math notranslate nohighlight">\(F_0\)</span></p></li>
+</ul>
+<section id="does-the-contamination-framework-always-apply">
+<h2>Does the Contamination Framework Always Apply?<a class="headerlink" href="#does-the-contamination-framework-always-apply" title="Permalink to this heading">#</a></h2>
+<p>No!</p>
+<ul class="simple">
+<li><p>We might have clean data without anomalies available for training</p></li>
+<li><p>In an adversarial scenario, like fraud detection, the opponent might change her behavior over time to evade detection
+<span class="math notranslate nohighlight">\(\Rightarrow\)</span> <span class="math notranslate nohighlight">\(F_1\)</span> might not be well-defined</p></li>
+<li><p>The degree to which the three assumptions are true can vary for each specific problem</p></li>
+<li><p>Some assumptions might even be false in some scenarios</p></li>
+</ul>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="evaluation-metrics">
+<h1>Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Accuracy is not a good measure in anomaly detection:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(1\%\)</span> anomalies <span class="math notranslate nohighlight">\(\Rightarrow\)</span> always predicting nominal gives <span class="math notranslate nohighlight">\(99\%\)</span> accuracy!</p></li>
+</ul>
+</li>
+<li><p>Better measures are precision, recall and <span class="math notranslate nohighlight">\(F_1\)</span></p></li>
+<li><p>The confusion matrix divides a test set according to the predictions and ground truth</p></li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Confusion Matrix</p></th>
+<th class="head"><p>Actual Nominal</p></th>
+<th class="head"><p>Actual Anomaly</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Predicted Nominal</strong></p></td>
+<td><p>True Negative (TN)</p></td>
+<td><p>False Negative (FN)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Predicted Anomaly</strong></p></td>
+<td><p>False Positive (FP)</p></td>
+<td><p>True Positive (TP)</p></td>
+</tr>
+</tbody>
+</table>
+<section id="precision-recall">
+<h2>Precision, Recall<a class="headerlink" href="#precision-recall" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Precision is defined as</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FP}}\]</div>
+<p>It estimates the probability that an observation really is anomalous given that the detection system predicted it to be.</p>
+<ul class="simple">
+<li><p>Recall is defined as</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FN}}\]</div>
+<p>It estimates the probability that an observation will be predicted to be anomalous given that it really is.</p>
+</section>
+<section id="f-1-score">
+<h2><span class="math notranslate nohighlight">\(F_1\)</span> Score<a class="headerlink" href="#f-1-score" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(F_1\)</span> is defined as the harmonic mean of precision and recall</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[2\cdot \frac{\text{Precision}\cdot \text{Recall}}{\text{Precision} + \text{Recall}}\]</div>
+<p>It balances between precision and recall.</p>
+</section>
+<section id="evaluating-thresholds">
+<h2>Evaluating Thresholds<a class="headerlink" href="#evaluating-thresholds" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Most anomaly detection algorithms output an anomaly score where higher values mean more anomalous.</p></li>
+<li><p>We need to set a decision threshold <span class="math notranslate nohighlight">\(\tau\)</span> in order to compute precision, recall and <span class="math notranslate nohighlight">\(F_1\)</span>.
+<img src="_static/images/example_roc_pr.png" width="400" align="right"></p></li>
+<li><p>The precision-recall (PR) curve plots the pairs</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\{(\text{Recall}(\tau), \text{Precision}(\tau)) \mid \tau_{\text{min}} \leq \tau \leq \tau_{\text{max}}\}\]</div>
+<ul class="simple">
+<li><p>The receiver-operator-characteristics curve (ROC) plots the true positive rate (TPR) against the false positive rate (FPR) for the possible thresholds</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\mathrm{TPR(\tau)} = \frac{\mathrm{TP(\tau)}}{\mathrm{TP(\tau)}+\mathrm{FN(\tau)}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathrm{FPR(\tau)} = \frac{\mathrm{FP(\tau)}}{\mathrm{FP}(\tau)+\mathrm{TN}(\tau)}\)</span></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="cost-matrix">
+<h2>Cost Matrix<a class="headerlink" href="#cost-matrix" title="Permalink to this heading">#</a></h2>
+<p>Choosing the optimal threshold does not only depend on the values of our metrics but also on the cost associated to the confusion matrix. Similarly to precision, recall, etc. the confusion matrix has to be understood as a function of the threshold. For each threshold we obtain different numbers of true positives, false positives… . The associated costs e.g. for the false positives are the expected costs that a falsely positive prediction generates (profits are represented as negative costs). Other than the confusion matrix, the cost matrix does not depend on <span class="math notranslate nohighlight">\(\tau\)</span>.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Cost Matrix</p></th>
+<th class="head"><p>Actual Nominal</p></th>
+<th class="head"><p>Actual Anomaly</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Predicted Nominal</strong></p></td>
+<td><p>Cost of  TN (CTN)</p></td>
+<td><p>Cost of FN(CFN)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Predicted Anomaly</strong></p></td>
+<td><p>Cost of FP (CFP)</p></td>
+<td><p>Cost of TP (CTP)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Our goal is to set the threshold such that the expected empirical costs will be minimized</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align*}
+\tau_{\text{opt}}=\arg\min_\tau \frac{\mathrm{TP}(\tau)\cdot \mathrm{CTP} + \mathrm{FP}(\tau)\cdot \mathrm{CFP} + \mathrm{TN}(\tau)\cdot \mathrm{CTN} + \mathrm{FN}(\tau)\cdot \mathrm{CFN}}{N}
+\end{align*}
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(N\)</span> is the total number of samples.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="our-first-anomaly-detection-approach">
+<h1>Our First Anomaly Detection Approach<a class="headerlink" href="#our-first-anomaly-detection-approach" title="Permalink to this heading">#</a></h1>
+<p>Let’s have a look at a simple probabilistic anomaly score.</p>
+<ul class="simple">
+<li><p>If the distribution of nominal data is known then we can use <span class="math notranslate nohighlight">\(-\log p(x)\)</span>, also known as the surprise.</p></li>
+<li><p>If only the covariance <span class="math notranslate nohighlight">\(\Sigma\)</span> and the mean <span class="math notranslate nohighlight">\(\mu\)</span> is known, we can compute the Mahalanobis distance to the mean <span class="math notranslate nohighlight">\(\sqrt{(x-\mu)^T\Sigma^{-1}(x-\mu)}\)</span> can be used.</p>
+<ul>
+<li><p>Only applicable if nominal distribution is unimodally centered around the mean.</p></li>
+<li><p>Extension for mixture models with means <span class="math notranslate nohighlight">\(\mu_1,\ldots,\mu_k\)</span> and covariance matrices  <span class="math notranslate nohighlight">\(\Sigma_1,\ldots,\Sigma_k\)</span>: <span class="math notranslate nohighlight">\(\min_{1\leq i \leq k}\sqrt{(x-\mu_i)^T\Sigma_i^{-1}(x-\mu_i)}\)</span></p></li>
+</ul>
+</li>
+</ul>
+<section id="motivation-of-mahalanobis-distance">
+<h2>Motivation of Mahalanobis Distance<a class="headerlink" href="#motivation-of-mahalanobis-distance" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The Mahalanobis distance is motivated by the surprise of a Gaussian:</p></li>
+</ul>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+-\log p(x) &amp;= -\log \frac{1}{(2\pi)^{\frac{m}{2}}\sqrt{|\det(\Sigma)|}}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)\\ 
+&amp;= \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) + c
+\end{align*}\]</div>
+<ul class="simple">
+<li><p>Since monotonous transformations (such as <span class="math notranslate nohighlight">\(\sqrt{\cdot}\)</span> or adding a constant) don’t change the outlier ranking this is equivalent to the Mahalanobis distance</p></li>
+</ul>
+</section>
+<section id="exercise">
+<h2>Exercise<a class="headerlink" href="#exercise" title="Permalink to this heading">#</a></h2>
+<p>Try the outlier scores for yourself in a simple synthetic scenario. We have prepared the <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> function for you. Try to find the optimal threshold for the dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nominal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">anomaly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">nominal</span><span class="p">,</span> <span class="n">anomaly</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">310</span><span class="p">)</span>
+<span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5b8f1324d2010dc6eabaabea3fe82e26f8d0db33303b3048b903d61ce88b6d2f.png" src="_images/5b8f1324d2010dc6eabaabea3fe82e26f8d0db33303b3048b903d61ce88b6d2f.png" />
+</div>
+</div>
+<p><strong>Fit a Gaussian</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Sigma_diag</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># assumes independant components</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">Std: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">Sigma_diag</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean: [0.12698056 0.00663621]
+Std: [1.3049857 1.7497876]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id1">
+<h2>Question<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>How did the contamination influence the parameter estimation?</p>
+<p><strong>Compute scores and evaluate</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mahalanobis distance from the mean of N(mu, Sigma)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">data</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">Sigma_diag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">mu</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> 
+<span class="n">curves</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7cc7e5e020b9ac1ab6e932ede4ae48c9c6e59789cabfbe45f56753800467e787.png" src="_images/7cc7e5e020b9ac1ab6e932ede4ae48c9c6e59789cabfbe45f56753800467e787.png" />
+</div>
+</div>
+<p><strong>Choose a threshold</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_mahalanotis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma_diag</span><span class="p">,</span> <span class="n">thr</span><span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="c1"># Visualize Data</span>
+    <span class="n">scatter_gt</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mu</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Ground Truth&#39;</span><span class="p">)</span>
+    <span class="n">handles</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scatter_gt</span><span class="o">.</span><span class="n">legend_elements</span><span class="p">()</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Nominal&#39;</span><span class="p">,</span> <span class="s1">&#39;Anomaly&#39;</span><span class="p">])</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="c1"># Draw descicion contour</span>
+    <span class="n">descion_border</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">(</span>
+        <span class="n">mu</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma_diag</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">thr</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma_diag</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">thr</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+        <span class="n">fill</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">descion_border</span><span class="p">)</span>
+    
+    <span class="c1"># Evaluate threshold</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">&gt;</span>  <span class="n">thr</span>
+
+    <span class="n">precision</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Precision: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">Recall: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">F1: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1</span><span class="p">))</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thr</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="nd">@interact</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">set_threshold</span><span class="p">(</span><span class="n">threshold</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">thr</span>
+    <span class="n">thr</span> <span class="o">=</span> <span class="n">threshold</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "12839853c4c14452bb1fc71d9306af7b"}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visualize_mahalanobis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma_diag</span><span class="p">,</span> <span class="n">thr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c1038a79d6422611572109ffb91683eeb58d2696038c7ab865985dd4ff012842.png" src="_images/c1038a79d6422611572109ffb91683eeb58d2696038c7ab865985dd4ff012842.png" />
+</div>
+</div>
+</section>
+<section id="task-find-optimal-threshold-and-evaluate-on-test-set">
+<h2>Task: Find optimal threshold and evaluate on test set.<a class="headerlink" href="#task-find-optimal-threshold-and-evaluate-on-test-set" title="Permalink to this heading">#</a></h2>
+<p>Choose good threshold. You may write additional code to determine the threshold.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thr_opt</span> <span class="o">=</span> <span class="mf">3.2</span> <span class="c1"># </span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))])</span>
+
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">y_test</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">scores_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">data_test</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">Sigma_diag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">data_test</span> <span class="o">-</span> <span class="n">mu</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> 
+
+<span class="n">visualize_mahalanotis</span><span class="p">(</span><span class="n">data_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">scores_test</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma_diag</span><span class="p">,</span> <span class="n">thr_opt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/4191e0f5c8d5b6e3a5e336dea0a3ec44fbdf368e64725b88fca4b657f017791a.png" src="_images/4191e0f5c8d5b6e3a5e336dea0a3ec44fbdf368e64725b88fca4b657f017791a.png" />
+</div>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Anomalies are patterns in data that do not conform to a well defined notion of normal behavior.</p></li>
+<li><p>Detecting anomalies can be very valuable in a broad spectrum of industry sectors and company divisions.</p></li>
+<li><p>Anomaly detection uses mostly unsupervised techniques.</p></li>
+<li><p>Outlier scores measure the degree of outlyingness.</p></li>
+<li><p>If some statistical properties of the nominal distribution are known then the surprise or the Mahalanobis distance can be used as an outlier score.</p></li>
+<li><p>Evaluation metrics: precision, recall, <span class="math notranslate nohighlight">\(F_1\)</span>, ROC (AUC), PR (AUC).</p></li>
+</ul>
+<img src="_static/images/aai_presentation_last_slide.svg" alt="Snow" style="width:100%;"></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">practical anomaly detection - Notebook Pages</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nb_01_1_intro_and_ad_taxonomy.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Taxonomy of Anomaly Detection Approaches</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Introduction to Anomaly Detection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-an-anomaly">What is an Anomaly?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anomalies-can-be-hard-to-detect">Anomalies Can be Hard to Detect</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-relevance-of-anomaly-detection">Practical Relevance of Anomaly Detection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictive-maintenance">Predictive Maintenance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fraud-detection">Fraud Detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intrusion-detection">Intrusion Detection</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#relevance-of-unsupervised-machine-learning-in-ad">Relevance of Unsupervised Machine Learning in AD</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#question">Question</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contamination-framework">Contamination Framework</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#does-the-contamination-framework-always-apply">Does the Contamination Framework Always Apply?</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-metrics">Evaluation Metrics</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-recall">Precision, Recall</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#f-1-score"><span class="math notranslate nohighlight">\(F_1\)</span> Score</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-thresholds">Evaluating Thresholds</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-matrix">Cost Matrix</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#our-first-anomaly-detection-approach">Our First Anomaly Detection Approach</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-of-mahalanobis-distance">Motivation of Mahalanobis Distance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-find-optimal-threshold-and-evaluate-on-test-set">Task: Find optimal threshold and evaluate on test set.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By appliedAI TransferLab
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
